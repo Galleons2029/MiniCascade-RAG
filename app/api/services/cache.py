@@ -7,10 +7,14 @@
 这里是文件说明
 """
 
+import os
 from redis import Redis as Dragonfly, ConnectionPool
 from pydantic import BaseModel
 
-conn_pool = ConnectionPool(host='localhost', port=6379, db=0)
+DF_HOST = os.getenv("DRAGONFLY_HOST", "localhost")
+DF_PORT = int(os.getenv("DRAGONFLY_PORT", "6379"))
+
+conn_pool = ConnectionPool(host=DF_HOST, port=DF_PORT, db=0)
 dragonfly_client = Dragonfly(connection_pool=conn_pool)
 
 def get_dragonfly():
@@ -38,7 +42,7 @@ class DataService:
     def create_chat_session(
             self,
             new_chat_session: ChatSessionCreate,
-            new_chat_histories: (ChatHistoryCreate, ChatHistoryCreate)
+            new_chat_histories: tuple[ChatHistoryCreate, ChatHistoryCreate]
     ) -> ChatSessionResponse:
         # Create a new chat session.
         chat_session = ChatSession(llm_name=new_chat_session.llm_name)
@@ -66,7 +70,7 @@ class DataService:
     def add_chat_histories(
             self,
             prev_chat_session_response: ChatSessionResponse,
-            new_chat_histories: (ChatHistoryCreate, ChatHistoryCreate),
+            new_chat_histories: tuple[ChatHistoryCreate, ChatHistoryCreate],
     ) -> ChatSessionResponse:
         # Add the new chat history entries.
         chat_session_id = prev_chat_session_response.chat_session_id
@@ -106,7 +110,7 @@ class DataService:
     def __chat_history_schema_to_model(
             chat_session_id: int,
             chat_history: ChatHistoryCreate,
-    ):
+    ) -> ChatHistory:
         return ChatHistory(
             chat_session_id=chat_session_id,
             is_human_message=chat_history.is_human_message,
@@ -131,7 +135,7 @@ class _DataCacheService:
         return f"chat_histories_by_session_id:{chat_session_id}"
 
     @staticmethod
-    def chat_history_tuple_to_response(chat_history: (str, float)) -> ChatHistoryResponse:
+    def chat_history_tuple_to_response(chat_history: tuple[str, float]) -> ChatHistoryResponse:
         # Note that the sorted-set value is the content, and the score is the ID.
         prefixed_content = chat_history[0].decode('utf-8', errors='replace')
         if len(prefixed_content) < 2:
@@ -143,7 +147,7 @@ class _DataCacheService:
             is_human_message=(prefix == _DataCacheService.HUMAN_MESSAGE_PREFIX),
         )
 
-    def add_chat_histories(self, chat_session_id: int, chat_histories: List[ChatHistoryResponse]) -> ():
+    def add_chat_histories(self, chat_session_id: int, chat_histories: List[ChatHistoryResponse]) -> None:
         key = self.key_chat_histories(chat_session_id)
         mapping = {}
         for history in chat_histories:

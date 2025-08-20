@@ -89,6 +89,8 @@ services:
       dockerfile: .docker/Dockerfile.app
     environment:
       DEBUG: "false"
+      DRAGONFLY_HOST: dragonfly
+      DRAGONFLY_PORT: "6379"
     env_file:
       - .env
     depends_on:
@@ -96,6 +98,8 @@ services:
       - mq
       - qdrant
     restart: always
+    ports:
+      - "9011:9011"
 
 volumes:
   qdrant-data:
