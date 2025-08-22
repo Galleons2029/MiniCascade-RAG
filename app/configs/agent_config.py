@@ -206,6 +206,31 @@ class AgentConfig:
         # Apply environment-specific settings
         self.apply_environment_settings()
 
+        # Intent taxonomy and prompts
+        self.INTENT_LABELS = parse_list_from_env(
+            "INTENT_LABELS",
+            ["qa", "write", "search", "exec", "smalltalk", "other"],
+        )
+        # Optional: map to descriptions for prompt reuse
+        self.INTENT_DESCRIPTIONS = json.loads(
+            os.getenv(
+                "INTENT_DESCRIPTIONS",
+                json.dumps(
+                    {
+                        "qa": "Question answering over provided or retrievable context.",
+                        "write": "Generate or improve text (e.g., summarize, draft, rewrite).",
+                        "search": "Find information on the web or knowledge base.",
+                        "exec": "Execute a concrete task or call a tool/service.",
+                        "smalltalk": "Casual conversation without task intent.",
+                        "other": "Unclear or unsupported intent.",
+                    }
+                ),
+            )
+        )
+
+        # RAG defaults
+        self.RAG_DEFAULT_DOC_NAMES = parse_list_from_env("RAG_DEFAULT_DOC_NAMES", ["dir_default"])
+
     def apply_environment_settings(self):
         """Apply environment-specific settings based on the current environment."""
         env_settings = {
