@@ -9,9 +9,12 @@ RAG 知识库平台 API 终端
 
 from typing import Annotated
 import logging
-from fastapi import FastAPI, APIRouter, Header, HTTPException
-from pydantic import BaseModel
-from app.api.v1 import inference_v1
+
+from fastapi import FastAPI, Request, APIRouter, Header, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
+from pydantic import BaseModel, ValidationError
+from app.api.v1 import inference_v1, doc_parse, chat_v1
 from contextlib import asynccontextmanager
 from app.core.db.postgre import engine
 
@@ -32,10 +35,16 @@ async def lifespan(app: FastAPI):
     await engine.dispose()  # 释放连接池
 
 
-api_router = APIRouter()
+api_router = FastAPI(
+    title="Cascade-RAG",
+    summary="多智体级联 RAG 后端",
+    version="1.1.0",
+    lifespan=lifespan,
+)
 
 
 api_router.include_router(inference_v1.router, prefix="/inference", tags=["inference-v1"])
+api_router.include_router(chat_v1.router, prefix="/api", tags=["chat-v1"])
 
 # api_router.include_router(chat_v3.router, prefix="/v3", tags=["chat-v3"])
 # api_router.include_router(chat_v2.router, prefix="/v1", tags=["chat-v2"])
@@ -80,7 +89,7 @@ if __name__ == "__main__":
     import uvicorn
 
     uvicorn.run(
-        "routers:api_router",
+        "app.api.router:api_router",
         host="0.0.0.0",
         port=9011,
         # reload=True,

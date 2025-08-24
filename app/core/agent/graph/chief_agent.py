@@ -39,6 +39,11 @@ from app.configs import (
     agent_config as settings,
 )
 from app.core.agent.tools import tools
+from app.core.agent.graph.intent_agent import build_intent_graph
+from app.core.agent.graph.entity_agent import build_entity_graph
+from app.core.agent.graph.context_agent import build_context_graph
+from app.core.agent.graph.rewrite_agent import build_rewrite_graph
+from app.core.agent.graph.rag_agent import build_rag_graph
 from app.core.logger_utils import logger
 #from app.core.metrics import llm_inference_duration_seconds
 from app.core.prompts import SYSTEM_PROMPT
@@ -179,6 +184,8 @@ class LangGraphAgent:
 
         raise Exception(f"Failed to get a response from the LLM after {max_retries} attempts")
 
+    # (Removed: intent detection is now in intent_agent.py)
+
     # Define our tool node
     async def _tool_call(self, state: GraphState) -> GraphState:
         """Process tool calls from the last message.
@@ -228,15 +235,84 @@ class LangGraphAgent:
         if self._graph is None:
             try:
                 graph_builder = StateGraph(GraphState)
+                # Compile the intent sub-graph, then mount it as a node via subgraph
+                intent_subgraph = build_intent_graph(self.llm)
+                graph_builder.add_node("detect_intent", intent_subgraph)
+
+                # Subgraphs
+                entity_sub = build_entity_graph(self.llm)
+                context_sub = build_context_graph()
+                rewrite_sub = build_rewrite_graph(self.llm)
+                rag_sub = build_rag_graph()
+
+                async def _route_rag(state: GraphState) -> dict:
+                    return {}
+                async def _route_search(state: GraphState) -> dict:
+                    return {}
+                async def _route_exec(state: GraphState) -> dict:
+                    return {}
+                async def _route_smalltalk(state: GraphState) -> dict:
+                    return {}
+                async def _route_other(state: GraphState) -> dict:
+                    return {}
+
+                graph_builder.add_node("route_rag", _route_rag)
+                graph_builder.add_node("route_search", _route_search)
+                graph_builder.add_node("route_exec", _route_exec)
+                graph_builder.add_node("route_smalltalk", _route_smalltalk)
+                graph_builder.add_node("route_other", _route_other)
+
+                # Main chat/tool nodes
                 graph_builder.add_node("chat", self._chat)
                 graph_builder.add_node("tool_call", self._tool_call)
+
+                # Conditional routing from detect_intent by state.intent
+                def _route_by_intent(state: GraphState):
+                    i = (state.intent or "other").lower()
+                    if i in ("qa", "write"):
+                        return "route_rag"
+                    if i == "search":
+                        return "route_search"
+                    if i == "exec":
+                        return "route_exec"
+                    if i == "smalltalk":
+                        return "route_smalltalk"
+                    return "route_other"
+
                 graph_builder.add_conditional_edges(
-                    "chat",
-                    self._should_continue,
-                    {"continue": "tool_call", "end": END},
+                    "detect_intent",
+                    _route_by_intent,
+                    {
+                        "route_rag": "route_rag",
+                        "route_search": "route_search",
+                        "route_exec": "route_exec",
+                        "route_smalltalk": "route_smalltalk",
+                        "route_other": "route_other",
+                    },
+                )
+
+                # Route RAG chain: entity -> context -> rewrite -> rag -> chat
+                graph_builder.add_node("entity_extraction", entity_sub)
+                graph_builder.add_node("context_resolution", context_sub)
+                graph_builder.add_node("query_rewrite", rewrite_sub)
+                graph_builder.add_node("rag_retrieval", rag_sub)
+
+                graph_builder.add_edge("route_rag", "entity_extraction")
+                graph_builder.add_edge("entity_extraction", "context_resolution")
+                graph_builder.add_edge("context_resolution", "query_rewrite")
+                graph_builder.add_edge("query_rewrite", "rag_retrieval")
+                graph_builder.add_edge("rag_retrieval", "chat")
+
+                # Other routes go directly to chat for now
+                for node in ["route_search", "route_exec", "route_smalltalk", "route_other"]:
+                    graph_builder.add_edge(node, "chat")
+
+                # Chat <-> Tool loop and finish at chat
+                graph_builder.add_conditional_edges(
+                    "chat", self._should_continue, {"continue": "tool_call", "end": END}
                 )
                 graph_builder.add_edge("tool_call", "chat")
-                graph_builder.set_entry_point("chat")
+                graph_builder.set_entry_point("detect_intent")
                 graph_builder.set_finish_point("chat")
 
                 # Get connection pool (maybe None in production if DB unavailable)

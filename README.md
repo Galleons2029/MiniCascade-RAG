@@ -24,6 +24,9 @@ cp .env.example .env
 docker compose up -d
 ```
 
+### Documentation
+- 详见 `docs/agent_architecture.md`：Agent 架构与流水线说明（意图→实体→上下文→改写→RAG→生成）
+
 ### Deployment
 #### uv environment
 Enter project directory, use：

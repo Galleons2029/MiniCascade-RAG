@@ -26,6 +26,18 @@ class GraphState(BaseModel):
         default_factory=list, description="The messages in the conversation"
     )
     session_id: str = Field(..., description="The unique identifier for the conversation session")
+    intent: str | None = Field(default=None, description="Detected user intent label")
+    intent_confidence: float | None = Field(default=None, description="Confidence of detected intent [0,1]")
+    # Entity & context resolution
+    entities: dict | None = Field(default=None, description="Extracted entities/slots from user message")
+    time_text: str | None = Field(default=None, description="Normalized time expression text (e.g., 上个月/上周)")
+    time_range: dict | None = Field(default=None, description="Resolved time range, e.g., {start,end,granularity}")
+    context_frame: dict | None = Field(default=None, description="Conversation frame for multi-turn coreference")
+    # Query rewrite
+    rewritten_query: str | None = Field(default=None, description="Rewritten query for retrieval/execution")
+    # RAG context
+    context_docs: list[str] | None = Field(default=None, description="Top passages for grounding")
+    doc_names: list[str] | None = Field(default=None, description="Target collections/namespaces for retrieval")
 
     @field_validator("session_id")
     @classmethod
