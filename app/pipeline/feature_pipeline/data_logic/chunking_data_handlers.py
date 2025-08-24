@@ -2,8 +2,12 @@ import hashlib
 from abc import ABC, abstractmethod
 
 from app.pipeline.feature_pipeline.models.base import DataModel
-from app.pipeline.feature_pipeline.models.chunk import ArticleChunkModel, DocumentChunkModel, PostChunkModel, RepositoryChunkModel
-from app.pipeline.feature_pipeline.models.clean import ArticleCleanedModel, DocumentCleanedModel, PostCleanedModel, RepositoryCleanedModel
+from app.pipeline.feature_pipeline.models.chunk import (
+    ArticleChunkModel, DocumentChunkModel, PostChunkModel, RepositoryChunkModel
+)
+from app.pipeline.feature_pipeline.models.clean import (
+    ArticleCleanedModel, DocumentCleanedModel, PostCleanedModel, RepositoryCleanedModel
+)
 from app.pipeline.feature_pipeline.utils.chunking import chunk_text
 
 from app.core import get_logger

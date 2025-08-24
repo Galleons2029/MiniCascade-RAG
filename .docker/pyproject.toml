@@ -10,6 +10,8 @@ readme = "README.md"
 
 [tool.ruff]
 line-length = 88
+
+[tool.ruff.lint]
 select = [
     "F401",
     "F403",

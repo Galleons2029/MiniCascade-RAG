@@ -9,7 +9,15 @@
 
 import os
 from redis import Redis as Dragonfly, ConnectionPool
-from pydantic import BaseModel
+from typing import List, Union
+
+from fastapi import HTTPException
+from sqlmodel import Session
+from app.models.schemas.chatsession import ChatSession, ChatHistory
+from app.models.chat_message import (
+    ChatSessionCreate, ChatHistoryCreate,
+    ChatSessionResponse, ChatHistoryResponse
+)
 
 DF_HOST = os.getenv("DRAGONFLY_HOST", "localhost")
 DF_PORT = int(os.getenv("DRAGONFLY_PORT", "6379"))
@@ -20,17 +28,6 @@ dragonfly_client = Dragonfly(connection_pool=conn_pool)
 def get_dragonfly():
     return dragonfly_client
 
-from typing import List, Union
-
-from fastapi import HTTPException
-from redis import Redis as Dragonfly
-from sqlmodel import Session
-
-from app.models.chat_message import (
-    ChatSessionCreate, ChatHistoryCreate, ChatHistoryCreate,
-    ChatSessionResponse, ChatHistoryResponse
-)
-from app.models.schemas.chatsession import ChatSession, ChatHistory
 
 class DataService:
     def __init__(self, db: Session, df: Dragonfly):

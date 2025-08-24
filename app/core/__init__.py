@@ -1,4 +1,4 @@
-from . import db, logger_utils, opik_utils
+from . import db, logger_utils
 from .logger_utils import get_logger
 
 logger = get_logger(__file__)

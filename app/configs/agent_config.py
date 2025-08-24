@@ -10,17 +10,9 @@ for the application. It includes environment detection, .env file loading, and
 configuration value parsing.
 """
 
-import json
 import os
 from enum import Enum
 from pathlib import Path
-from typing import (
-    Any,
-    Dict,
-    List,
-    Optional,
-    Union,
-)
 
 from dotenv import load_dotenv
 

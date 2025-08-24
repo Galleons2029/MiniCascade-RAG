@@ -1,7 +1,7 @@
 import json
 import time
 from datetime import datetime
-from typing import Generic, Iterable, List, Optional, TypeVar, Any, Dict, Iterator
+from typing import Generic, List, Optional, TypeVar
 
 from bytewax.inputs import FixedPartitionedSource, StatefulSourcePartition
 from app.configs import pipeline_config

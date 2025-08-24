@@ -1,8 +1,5 @@
-import opik
 from app.core.config import settings
 from langchain_openai import ChatOpenAI
-from opik.integrations.langchain import OpikTracer
-from typing import List
 
 from app.core.rag.prompt_templates import QueryExpansionTemplate
 

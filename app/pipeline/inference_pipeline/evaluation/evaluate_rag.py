@@ -1,10 +1,9 @@
 import argparse
-from typing import List, Optional
 
 from app.core.config import settings
 from app.core.logger_utils import get_logger
 from app.core.opik_utils import create_dataset_from_artifacts
-from llm_twin import LLMTwin
+from app.pipeline.inference_pipeline.reasoning import ReasoningPipeline
 
 # TODO: 重写幻觉检测模块替换opik
 # from opik.evaluation import evaluate
@@ -24,7 +23,7 @@ logger.warning(
 
 
 def evaluation_task(x: dict) -> dict:
-    inference_pipeline = LLMTwin(mock=False)
+    inference_pipeline = ReasoningPipeline(mock=False)
     result = inference_pipeline.generate(
         query=x["instruction"],
         enable_rag=True,
@@ -68,21 +67,21 @@ def main() -> None:
         logger.error("Dataset can't be created. Exiting.")
         exit(1)
 
-    experiment_config = {
-        "model_id": settings.MODEL_ID,
-        "embedding_model_id": settings.EMBEDDING_MODEL_ID,
-    }
-    scoring_metrics = [
-        Hallucination(),
-        ContextRecall(),
-        ContextPrecision(),
-    ]
-    evaluate(
-        dataset=dataset,
-        task=evaluation_task,
-        scoring_metrics=scoring_metrics,
-        experiment_config=experiment_config,
-    )
+    # experiment_config = {
+    #     "model_id": settings.MODEL_ID,
+    #     "embedding_model_id": settings.EMBEDDING_MODEL_ID,
+    # }
+    # scoring_metrics = [
+    #     Hallucination(),
+    #     ContextRecall(),
+    #     ContextPrecision(),
+    # ]
+    # evaluate(
+    #     dataset=dataset,
+    #     task=evaluation_task,
+    #     scoring_metrics=scoring_metrics,
+    #     experiment_config=experiment_config,
+    # )
 
 
 if __name__ == "__main__":

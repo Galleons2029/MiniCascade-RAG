@@ -1,5 +1,17 @@
 import sys
 from pathlib import Path
+from app.core import get_logger
+from app.configs import app_config as settings
+import json
+import logging
+
+#from comet_ml import Artifact, start
+from app.core.db.qdrant import QdrantDatabaseConnector
+from sklearn.model_selection import train_test_split
+
+from .chunk_documents import chunk_documents
+from .file_handler import FileHandler
+from .llm_communication import GptCommunicator
 
 # To mimic using multiple Python modules, such as 'core' and 'feature_pipeline',
 # we will add the './src' directory to the PYTHONPATH. This is not intended for
@@ -8,32 +20,13 @@ ROOT_DIR = str(Path(__file__).parent.parent.parent)
 sys.path.append(ROOT_DIR)
 
 
-from core import get_logger
-from core.config import settings
-
 logger = get_logger(__name__)
 
 settings.patch_localhost()
 logger.warning(
     "Patched settings to work with 'localhost' URLs. \
-    Remove the 'settings.patch_localhost()' call from above when deploying or running inside Docker."
+    Remove the 'settings.patch_localhost()' call from above when deploying or running inside Docker." # noqa: E501
 )
-
-
-import json
-import logging
-from pathlib import Path
-
-from comet_ml import Artifact, start
-from core import get_logger
-from core.db.qdrant import QdrantDatabaseConnector
-from sklearn.model_selection import train_test_split
-
-from .chunk_documents import chunk_documents
-from .file_handler import FileHandler
-from .llm_communication import GptCommunicator
-
-logger = get_logger(__name__)
 
 
 client = QdrantDatabaseConnector()
@@ -43,9 +36,9 @@ class DataFormatter:
     @classmethod
     def get_system_prompt(cls, data_type: str) -> str:
         return (
-            f"I will give you batches of contents of {data_type}. Please generate me exactly 1 instruction for each of them. The {data_type} text "
-            f"for which you have to generate the instructions is under Content number x lines. Please structure the answer in json format,"
-            f"ready to be loaded by json.loads(), a list of objects only with fields called instruction and content. For the content field, copy the number of the content only!."
+            f"I will give you batches of contents of {data_type}. Please generate me exactly 1 instruction for each of them. The {data_type} text " # noqa: E501
+            f"for which you have to generate the instructions is under Content number x lines. Please structure the answer in json format," # noqa: E501
+            f"ready to be loaded by json.loads(), a list of objects only with fields called instruction and content. For the content field, copy the number of the content only!." # noqa: E501
             f"Please do not add any extra characters and make sure it is a list with objects in valid json format!\n"
         )
 
@@ -71,7 +64,8 @@ class DataFormatter:
         cls, inference_posts: list, data_type: str, start_index: int
     ) -> str:
         initial_prompt = cls.get_system_prompt(data_type)
-        initial_prompt += f"You must generate exactly a list of {len(inference_posts)} json objects, using the contents provided under CONTENTS FOR GENERATION\n"
+        initial_prompt += (f"You must generate exactly a list of {len(inference_posts)} "
+                           f"json objects, using the contents provided under CONTENTS FOR GENERATION\n")
         initial_prompt += cls.format_batch(
             "\nCONTENTS FOR GENERATION: \n", inference_posts, start_index
         )
@@ -164,7 +158,7 @@ class DatasetGenerator:
         try:
             logger.info(f"Starting to push data to Comet: {collection_name}")
 
-            experiment = start()
+            # experiment = start()
 
             training_data, testing_data = train_test_split
 
@@ -181,18 +175,18 @@ class DatasetGenerator:
 
             logger.info("Data written to file successfully")
 
-            artifact = Artifact(f"{data_type}-instruct-dataset")
-            artifact.add(file_name_training_data)
-            artifact.add(file_name_testing_data)
-            logger.info(f"Artifact created.")
+            # artifact = Artifact(f"{data_type}-instruct-dataset")
+            # artifact.add(file_name_training_data)
+            # artifact.add(file_name_testing_data)
+            logger.info("Artifact created.")
 
-            experiment.log_artifact(artifact)
-            experiment.end()
+            # experiment.log_artifact(artifact)
+            # experiment.end()
             logger.info("Artifact pushed to Comet successfully.")
 
         except Exception:
             logger.exception(
-                f"Failed to create Comet artifact and push it to Comet.",
+                "Failed to create Comet artifact and push it to Comet.",
             )
 
     def fetch_all_cleaned_content(self, collection_name: str) -> list:

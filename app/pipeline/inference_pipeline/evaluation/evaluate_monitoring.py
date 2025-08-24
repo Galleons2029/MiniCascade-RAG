@@ -1,5 +1,4 @@
 import argparse
-from typing import List, Optional
 
 import opik
 from config import settings

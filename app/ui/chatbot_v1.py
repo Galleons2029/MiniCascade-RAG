@@ -23,7 +23,10 @@ from app.core import logger_utils
 logger = logger_utils.get_logger(__name__)
 
 sleep_time = 0.3
-model = ChatOpenAI(model=settings.MODEL_PATH, api_key=settings.KEY, base_url=settings.LOCAL,extra_body={"chat_template_kwargs": {"enable_thinking": False}},)
+model = ChatOpenAI(model=settings.MODEL_PATH,
+                   api_key=settings.KEY,
+                   base_url=settings.LOCAL,
+                   extra_body={"chat_template_kwargs": {"enable_thinking": False}},)
 query_expansion_template = QueryExpansionTemplate()
 prompt = query_expansion_template.create_template(3)
 chain = prompt | model

@@ -7,54 +7,17 @@
 推理 API 接口
 """
 
-#from app.api.dependency import langfuse
-from contextlib import asynccontextmanager
-from langfuse.openai import OpenAI
 from dotenv import load_dotenv
 import os
 from fastapi import APIRouter
-from fastapi.responses import StreamingResponse
-from langfuse.openai import OpenAI, AsyncOpenAI
-
-import fastapi
+from app.pipeline.inference_pipeline.reasoning import ReasoningPipeline
 
 load_dotenv()
 api_key = os.getenv('API_KEY')
 
 router = APIRouter()
 
-
-@asynccontextmanager
-async def lifespan(_app: fastapi.FastAPI):
-    async with Database.connect() as db:
-        yield {'db': db}
-
-
-app = fastapi.FastAPI(lifespan=lifespan)
-
-
-# Initialize the OpenAI client, pointing it to the DeepSeek Inference API
-client = OpenAI(
-    base_url="https://api.siliconflow.cn/v1",  # Replace with the DeepSeek model endpoint URL
-    api_key=os.getenv('API_KEY'),  # Replace with your DeepSeek API key
-)
-
-
-completion = client.chat.completions.create(
-  name="test-chat",
-  model="deepseek-ai/DeepSeek-R1-0528-Qwen3-8B",
-  messages=[
-      {"role": "system", "content": "You are a very accurate calculator. You output only the result of the calculation."},
-      {"role": "user", "content": "1 + 1 = "}],
-  temperature=0,
-  metadata={"someMetadataKey": "someValue"},
-)
-
-print(completion)
-
-from app.pipeline.inference_pipeline.reasoning import ReasoningPipeline
-
-llm_twin = ReasoningPipeline(mock=False)
+llm = ReasoningPipeline(mock=False)
 
 
 def predict(message: str, history: list[list[str]], author: str) -> str:
@@ -71,7 +34,7 @@ def predict(message: str, history: list[list[str]], author: str) -> str:
     """
 
     query = f"我是{author}。请写关于：{message}"
-    response = llm_twin.generate(
+    response = llm.generate(
         query=query, enable_rag=True, sample_for_evaluation=False
     )
 

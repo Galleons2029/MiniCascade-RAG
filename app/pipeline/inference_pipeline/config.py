@@ -38,7 +38,7 @@ class Settings(BaseSettings):
 
     MAX_INPUT_TOKENS: int = 1536  # Max length of input text.
     MAX_TOTAL_TOKENS: int = 2048  # Max length of the generation (including input text).
-    MAX_BATCH_TOTAL_TOKENS: int = 2048  # Limits the number of tokens that can be processed in parallel during the generation.
+    MAX_BATCH_TOTAL_TOKENS: int = 2048  # Limits the number of tokens that can be processed in parallel during the generation. # noqa: E501
 
     Silicon_api_key1: str | None = "sk-gxijztovbtakciuwjwwqyaoxarjfvhuargxkoawhuzsanssm"
     Silicon_api_key2: str | None = "sk-kutnkphezarrglswegiqwwaywqqwkvanwjobmwmdjututqkf"

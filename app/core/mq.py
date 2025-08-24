@@ -1,5 +1,4 @@
-import json
-from typing import Any, Dict, Self, List
+from typing import Self, List
 
 import pika
 from pika.adapters.blocking_connection import BlockingChannel

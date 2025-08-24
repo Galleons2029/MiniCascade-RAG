@@ -3,7 +3,6 @@ import os
 import random
 import tempfile
 from pathlib import Path
-from typing import Any, Dict, List, Optional
 
 from tqdm import tqdm
 
@@ -14,9 +13,8 @@ logger = get_logger(__name__)
 
 try:
     import opik
-    from comet_ml import Experiment
     from opik.configurator.configure import OpikConfigurator
-except:
+except Exception:
     logger.info("Could not import Opik and Comet.")
 
 
@@ -45,7 +43,7 @@ def configure_opik() -> None:
         logger.info("Opik configured successfully.")
     else:
         logger.warning(
-            "COMET_API_KEY and COMET_PROJECT are not set. Set them to enable prompt monitoring with Opik (powered by Comet ML)."
+            "COMET_API_KEY and COMET_PROJECT are not set. Set them to enable prompt monitoring with Opik (powered by Comet ML)." # noqa: E501
         )
 
 
@@ -65,11 +63,12 @@ def create_dataset_from_artifacts(
 
         return dataset
 
-    experiment = Experiment(
-        workspace=settings.COMET_WORKSPACE,
-        project_name=settings.COMET_PROJECT,
-        api_key=settings.COMET_API_KEY,
-    )
+    # experiment = Experiment(
+    #     workspace=settings.COMET_WORKSPACE,
+    #     project_name=settings.COMET_PROJECT,
+    #     api_key=settings.COMET_API_KEY,
+    # )
+    experiment = []
     dataset_items = []
     with tempfile.TemporaryDirectory() as tmp_dir:
         for artifact_name in tqdm(artifact_names):

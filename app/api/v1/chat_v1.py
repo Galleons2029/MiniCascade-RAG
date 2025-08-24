@@ -8,16 +8,12 @@
 """
 
 #from app.api.dependency import langfuse
-from contextlib import asynccontextmanager
-from langfuse.openai import OpenAI
 from dotenv import load_dotenv
 import os
 from fastapi import APIRouter, Depends, HTTPException
-from fastapi.responses import StreamingResponse
-from langfuse.openai import OpenAI, AsyncOpenAI
 from langchain_core.messages import AIMessage, BaseMessage, HumanMessage
 from app.models.chat_message import ChatMessageCreate, ChatSessionCreate, ChatHistoryCreate, ChatSessionResponse
-from sqlmodel import Session, select
+from sqlmodel import Session
 from app.core.db.postgre import get_session
 from app.api.services.cache import get_dragonfly, DataService
 from redis import Redis as Dragonfly

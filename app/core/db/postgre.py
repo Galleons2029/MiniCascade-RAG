@@ -12,10 +12,10 @@ from app.configs import postgres_config
 from app.core.logger_utils import get_logger
 from contextlib import contextmanager
 from typing import Any, Generator, Optional
-from sqlmodel import SQLModel, Session, create_engine
+from sqlmodel import Session, create_engine
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncEngine
 from contextlib import asynccontextmanager
-from sqlalchemy.ext.asyncio import async_sessionmaker, AsyncSession
+from sqlalchemy.ext.asyncio import async_sessionmaker
 
 logger = get_logger(__file__)
 engine: AsyncEngine = create_async_engine(
@@ -66,7 +66,9 @@ class PostgreSQLConnector:
                 if all([host, port, user, password, database]):
                     dsn = f"postgresql+psycopg://{user}:{password}@{host}:{port}/{database}"
                 else:
-                    logger.error("PostgreSQL 配置缺失，无法初始化连接。请提供 POSTGRES_DATABASE_URL 或完整的主机/端口/用户名/密码/数据库名。")
+                    logger.error(
+                        "PostgreSQL 配置缺失，无法初始化连接。请提供 POSTGRES_DATABASE_URL 或完整的主机/端口/用户名/密码/数据库名。" # noqa: E501
+                    )
                     raise RuntimeError("PostgreSQL configuration is incomplete")
 
             try:

@@ -6,13 +6,11 @@
 """
 依赖配置脚本
 """
-#from app.api.dependency import langfuse
-from langfuse.openai import OpenAI
+from langfuse import Langfuse
 from dotenv import load_dotenv
 import os
 load_dotenv()
 
-from langfuse import Langfuse
 
 langfuse = Langfuse(
   secret_key=os.getenv('SECRET_KEY'),

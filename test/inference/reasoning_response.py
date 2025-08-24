@@ -4,7 +4,7 @@
 # @File    : reasoning_response.py
 
 """
-这里是文件说明
+推理接口响应测试脚本
 """
 
 from openai import OpenAI

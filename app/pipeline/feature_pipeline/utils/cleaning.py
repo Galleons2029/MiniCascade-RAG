@@ -2,7 +2,6 @@ import re
 
 from unstructured.cleaners.core import (
     clean,
-    clean_non_ascii_chars,
     replace_unicode_quotes,
 )
 

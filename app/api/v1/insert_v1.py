@@ -9,11 +9,10 @@
 
 import logging
 from fastapi import APIRouter
-from qdrant_client import QdrantClient, models
-from qdrant_client.http.models import Filter, FieldCondition, MatchValue
+from qdrant_client import models
 from app.core.db.qdrant import QdrantClientManager
-from app.configs import qdrant_config, llm_config
-from typing import List, Optional
+from app.configs import qdrant_config
+from typing import List
 from app.core.rag.embedding import image_embedding, embedd_text_tolist
 
 # 配置日志
@@ -42,8 +41,8 @@ async def image_search(image: str) -> List[int]:
     Returns:
         tuple[int, List[Dict]]: (成功更新数量, 失败的更新记录列表)
     """
-    updated_count = 0
-    failed_updates = []
+    #updated_count = 0
+    #failed_updates = []
 
     with QdrantClientManager.get_client_context() as qdrant_client:
 

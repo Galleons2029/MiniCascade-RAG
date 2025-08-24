@@ -38,6 +38,7 @@ dependencies = [
     "qdrant-client>=1.14.2",
     "ragas>=0.3.0",
     "redis>=6.4.0",
+    "scikit-learn>=1.7.1",
     "sqlmodel>=0.0.24",
     "structlog>=25.3.0",
     # "unstructured>=0.17.2",
@@ -49,7 +50,21 @@ dependencies = [
 
 
 [[tool.uv.index]]
-url = "https://mirrors.tuna.tsinghua.edu.cn/pypi/web/simple"
+url = "https://pypi.tuna.tsinghua.edu.cn/simple"
 default = true
 
+[dependency-groups]
+dev = [
+    "ruff>=0.12.9",
+]
+
+[tool.ruff]
+# Set the maximum line length to 121.
+line-length = 121
+
+[tool.ruff.lint]
+# Add the `line-too-long` rule to the enforced rule set. By default, Ruff omits rules that
+# overlap with the use of a formatter, like Black, but we can override this behavior by
+# explicitly adding the rule.
+extend-select = ["E501"]
 

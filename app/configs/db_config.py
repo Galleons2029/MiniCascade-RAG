@@ -7,11 +7,13 @@
 数据库连接配置
 """
 
-from pydantic.fields import FieldInfo
-from pydantic_settings import BaseSettings, PydanticBaseSettingsSource, SettingsConfigDict, TomlConfigSettingsSource
+from pathlib import Path
+from pydantic_settings import BaseSettings, SettingsConfigDict
 from pydantic import PostgresDsn, Field
+ROOT_DIR = Path(__file__).resolve().parents[2] / '.env'
 
 class PostgresConfig(BaseSettings):
+    model_config = SettingsConfigDict(env_file=ROOT_DIR, env_file_encoding="utf-8", extra='ignore')
 
     DEBUG: bool = True
     POSTGRES_DATABASE_HOST: str = 'localhost'
@@ -46,10 +48,9 @@ class PostgresConfig(BaseSettings):
             f"@{self.PG_HOST}:{self.PG_PORT}/{self.PG_DB}"
         )
 
-    class Config:
-        env_file = ".env"
 
 class QdrantConfig(BaseSettings):
+    model_config = SettingsConfigDict(env_file=ROOT_DIR, env_file_encoding="utf-8", extra='ignore')
 
     DEBUG: bool = True
     COLLECTION_TEST: str | None = 'multi_demo'
@@ -62,7 +63,3 @@ class QdrantConfig(BaseSettings):
     POOL_RECYCLE: int = 1800  # 秒，避免空闲连接被中断
     ECHO_SQL: bool = False
     COMMAND_TIMEOUT: float = 5.0  # 秒，asyncpg 全局命令超时
-
-
-    class Config:
-        env_file = ".env"

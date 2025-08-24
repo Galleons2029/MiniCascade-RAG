@@ -1,7 +1,12 @@
 from abc import ABC, abstractmethod
 
 from app.pipeline.feature_pipeline.models.base import DataModel
-from app.pipeline.feature_pipeline.models.chunk import ArticleChunkModel, DocumentChunkModel, PostChunkModel, RepositoryChunkModel
+from app.pipeline.feature_pipeline.models.chunk import (
+    ArticleChunkModel,
+    DocumentChunkModel,
+    PostChunkModel,
+    RepositoryChunkModel
+)
 from app.pipeline.feature_pipeline.models.embedded_chunk import (
     ArticleEmbeddedChunkModel,
     PostEmbeddedChunkModel,

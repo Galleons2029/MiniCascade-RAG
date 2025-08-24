@@ -2,8 +2,6 @@
 # TODO: 引入 LMCache 加速推理 https://github.com/LMCache/LMCache
 """
 
-import sys
-from pathlib import Path
 
 # 为了模拟使用多个Python模块，如'core'和'feature_pipeline'，
 # 我们将'./src'目录添加到PYTHONPATH中。这不适用于生产环境，
@@ -13,7 +11,6 @@ from pathlib import Path
 #sys.path.append(ROOT_DIR)
 
 from app.core import logger_utils
-from app.core.config import settings
 from reasoning import ReasoningPipeline
 
 

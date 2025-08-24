@@ -1,6 +1,4 @@
-from typing import Any, Dict
 
-from bytewax.dataflow import Dataflow
 from bytewax.outputs import DynamicSink, StatelessSinkPartition
 from app.core import get_logger
 from app.core.db.qdrant import QdrantDatabaseConnector

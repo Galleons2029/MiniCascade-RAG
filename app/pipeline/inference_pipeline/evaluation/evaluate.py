@@ -1,5 +1,4 @@
 import argparse
-from typing import List, Optional
 
 from config import settings
 from app.core.logger_utils import get_logger

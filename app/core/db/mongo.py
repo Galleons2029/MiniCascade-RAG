@@ -20,7 +20,7 @@ class MongoDatabaseConnector:
                 #     f"成功连接到数据库，URI: {settings.MONGO_DATABASE_HOST}"
                 # )
             except ConnectionFailure:
-                logger.error(f"无法连接到数据库。")
+                logger.error("无法连接到数据库。")
 
                 raise
 

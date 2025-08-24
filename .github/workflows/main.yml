@@ -1,4 +1,4 @@
-name: Python package
+name: backend
 
 on: [push]
 
@@ -27,5 +27,5 @@ jobs:
         run: uv sync --locked --all-extras --dev
 
       - name: Run tests
-        run: uv run pytest tests
+        run: uv run pytest test
 

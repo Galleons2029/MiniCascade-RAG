@@ -1,8 +1,15 @@
 from abc import ABC, abstractmethod
 
 from app.pipeline.feature_pipeline.models.base import DataModel
-from app.pipeline.feature_pipeline.models.clean import ArticleCleanedModel, DocumentCleanedModel, PostCleanedModel, RepositoryCleanedModel
-from app.pipeline.feature_pipeline.models.raw import ArticleRawModel, PostsRawModel, RepositoryRawModel, DocumentRawModel
+from app.pipeline.feature_pipeline.models.clean import (
+    ArticleCleanedModel,
+    DocumentCleanedModel,
+    PostCleanedModel,
+    RepositoryCleanedModel
+)
+from app.pipeline.feature_pipeline.models.raw import (
+    ArticleRawModel, PostsRawModel, RepositoryRawModel, DocumentRawModel
+)
 from app.pipeline.feature_pipeline.utils.cleaning import clean_text
 from pydantic import ValidationError
 

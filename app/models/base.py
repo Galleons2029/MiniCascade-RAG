@@ -8,8 +8,7 @@ Base models and common imports for all models.
 """
 
 from datetime import datetime, UTC
-from typing import List, Optional
-from sqlmodel import Field, SQLModel, Relationship
+from sqlmodel import Field, SQLModel
 
 
 class BaseModel(SQLModel):

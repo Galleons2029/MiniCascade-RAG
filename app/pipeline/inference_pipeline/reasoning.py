@@ -1,5 +1,4 @@
 import pprint
-from typing import List, Optional
 
 #import sagemaker
 from app.pipeline.inference_pipeline.config import settings
@@ -53,7 +52,7 @@ class ReasoningPipeline:
         prompt_template_variables = {"question": query}
 
         if enable_rag is True:
-            logger.debug(f"开始检索。")
+            logger.debug("开始检索。")
 
             retriever = VectorRetriever(query=query)
 
@@ -79,7 +78,7 @@ class ReasoningPipeline:
         answer = self.call_llm_service(messages=messages)
         logger.debug(f"Answer: {answer}")
 
-        num_answer_tokens = compute_num_tokens(answer)
+        #num_answer_tokens = compute_num_tokens(answer)
         # opik_context.update_current_trace(
         #     tags=["rag"],
         #     metadata={

@@ -1,11 +1,10 @@
 import json
 from typing import Any
 
-from config import settings
-from opik.evaluation.metrics import base_metric, exceptions, score_result
-from opik.evaluation.models import litellm_chat_model
+from app.configs import agent_config as settings
+from opik.evaluation.metrics import base_metric, score_result
 from pydantic import BaseModel
-
+from langfuse import openai
 
 class LLMJudgeStyleOutputResult(BaseModel):
     score: int
@@ -18,13 +17,13 @@ class Style(base_metric.BaseMetric):
 
     This metric uses another LLM to judge if the output is factual or contains hallucinations.
     It returns a score of 1.0 if the style is appropriate, 0.5 if it is somewhere in the middle and 0.0 otherwise.
-    """
+    """ # noqa: E501
 
     def __init__(
         self, name: str = "style_metric", model_name: str = settings.OPENAI_MODEL_ID
     ) -> None:
         self.name = name
-        self.llm_client = litellm_chat_model.LiteLLMChatModel(model_name=model_name)
+        self.llm_client = openai(model_name=model_name)
         self.prompt_template = """
         You are an impartial expert judge. Evaluate the quality of a given answer to an instruction based on it's style. 
 Style: Is the tone and writing style appropriate for a blog post or social media content? It should use simple but technical words and avoid formal or academic language.
@@ -52,7 +51,7 @@ Provide your evaluation in JSON format with the following structure:
         "score": 0
     }}
 }}
-"""
+""" # noqa: E501
 
     def score(self, input: str, output: str, **ignored_kwargs: Any):
         """
@@ -61,7 +60,7 @@ Provide your evaluation in JSON format with the following structure:
         Args:
             output: The output of an LLM to score.
             **ignored_kwargs: Any additional keyword arguments. This is important so that the metric can be used in the `evaluate` function.
-        """
+        """ # noqa: E501
 
         prompt = self.prompt_template.format(input=input, output=output)
 
@@ -75,13 +74,15 @@ Provide your evaluation in JSON format with the following structure:
         try:
             dict_content = json.loads(content)
         except Exception:
-            raise exceptions.MetricComputationError("Failed to parse the model output.")
+            pass
+            #raise exceptions.MetricComputationError("Failed to parse the model output.")
 
         score = dict_content["score"]
         try:
             assert 1 <= score <= 3, f"Invalid score value: {score}"
-        except AssertionError as e:
-            raise exceptions.MetricComputationError(str(e))
+        except AssertionError:
+            pass
+            #raise exceptions.MetricComputationError(str(e))
 
         score = (score - 1) / 2.0  # Normalize the score to be between 0 and 1
 

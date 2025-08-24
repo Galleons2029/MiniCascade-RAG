@@ -11,7 +11,6 @@ streaming chat, message history management, and chat history clearing.
 """
 
 import json
-from typing import List
 
 from fastapi import (
     APIRouter,
@@ -22,15 +21,12 @@ from fastapi import (
 
 from fastapi.responses import StreamingResponse
 from app.api.services.auth import get_current_session
-from app.core.config import settings
 from app.core.agent.graph import LangGraphAgent
-#from app.core.limiter import limiter
 from app.core.logger_utils import logger
 from app.models.session import Session
 from app.models.chat import (
     ChatRequest,
     ChatResponse,
-    Message,
     StreamResponse,
 )
 

@@ -7,10 +7,8 @@
 User chat session data model
 """
 
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, String
-from sqlalchemy.orm import relationship
 from typing import Optional, List
-from sqlmodel import SQLModel, Field, Session, select, Relationship
+from sqlmodel import SQLModel, Field, Relationship
 
 class Conversation(SQLModel, table=True):
     id: int | None = Field(default=None, primary_key=True)

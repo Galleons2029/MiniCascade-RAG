@@ -1,3 +1,12 @@
+# -*- coding: utf-8 -*-
+# @Time   : 2025/8/4 13:55
+# @Author : Galleons
+# @File   : main_client.py
+
+"""
+此处用于配置 MCP 服务端
+"""
+
 import asyncio
 from fastmcp import Client
 

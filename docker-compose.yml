@@ -101,6 +101,8 @@ services:
     ports:
       - "9011:9011"
 
+
+
 volumes:
   qdrant-data:
   #timescaledb_data:

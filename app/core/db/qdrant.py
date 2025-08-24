@@ -4,7 +4,7 @@
 # @File    : qdrant.py
 
 
-from typing import List, Optional
+from typing import Optional
 
 from qdrant_client import QdrantClient
 from qdrant_client.http import models
@@ -33,7 +33,7 @@ class QdrantDatabaseConnector:
                     host=settings.QDRANT_DATABASE_HOST,
                     port=settings.QDRANT_DATABASE_PORT,
                 )
-                logger.debug(f"Qdrant连接成功")
+                logger.debug("Qdrant连接成功")
 
     def get_collection(self, collection_name: str):
         return self._instance.get_collection(collection_name=collection_name)

@@ -11,11 +11,13 @@ from pathlib import Path
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
-ROOT_DIR = str(Path(__file__).parent.parent.parent)+'/.env'
+ROOT_DIR = Path(__file__).resolve().parents[2] / '.env'
 
 
 class LLMConfig(BaseSettings):
     model_config = SettingsConfigDict(env_file=ROOT_DIR, env_file_encoding="utf-8", extra='ignore')
+
+    LLM_MODEL: str | None = None
 
     # Embeddings config
     EMBEDDING_MODEL_ID: str = "bge-m3"
@@ -37,3 +39,4 @@ if __name__ == '__main__':
     config = LLMConfig()
     print(config.ALI_KEY)
     print(ROOT_DIR)
+    print(config.LLM_MODEL)

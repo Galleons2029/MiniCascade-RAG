@@ -24,18 +24,16 @@ from fastapi.security import (
     HTTPBearer,
 )
 
-from app.core.config import settings
-from app.core.limiter import limiter
-from app.core.logging import logger
+from app.core.logger_utils import logger
 from app.models.session import Session
 from app.models.user import User
-from app.schemas.auth import (
+from app.models.auth import (
     SessionResponse,
     TokenResponse,
     UserCreate,
     UserResponse,
 )
-from app.services.database import DatabaseService
+from app.core.db.db_services import DatabaseService
 from app.utils.auth import (
     create_access_token,
     verify_token,
@@ -150,7 +148,6 @@ async def get_current_session(
 
 
 @router.post("/register", response_model=UserResponse)
-@limiter.limit(settings.RATE_LIMIT_ENDPOINTS["register"][0])
 async def register_user(request: Request, user_data: UserCreate):
     """Register a new user.
 
@@ -186,7 +183,6 @@ async def register_user(request: Request, user_data: UserCreate):
 
 
 @router.post("/login", response_model=TokenResponse)
-@limiter.limit(settings.RATE_LIMIT_ENDPOINTS["login"][0])
 async def login(
     request: Request, username: str = Form(...), password: str = Form(...), grant_type: str = Form(default="password")
 ):

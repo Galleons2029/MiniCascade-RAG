@@ -33,7 +33,7 @@ class GptCommunicator:
             return json.loads(self.clean_response(response))
         except Exception:
             logger.exception(
-                f"Skipping batch! An error occurred while communicating with API."
+                "Skipping batch! An error occurred while communicating with API."
             )
 
             return []

@@ -1,5 +1,3 @@
-from langchain_openai import ChatOpenAI
-from typing import List
 
 from app.core.config import settings
 import requests
@@ -51,7 +49,6 @@ class Reranker:
 
 
 if __name__ == "__main__":
-    import time
 
 
     #from xinference.client import Client
