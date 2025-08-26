@@ -252,3 +252,9 @@ class DatabaseService:
 
 # Create a singleton instance
 database_service = DatabaseService()
+
+
+# Dependency for FastAPI routes that need a synchronous Session
+def get_sync_session() -> Session:
+    with Session(database_service.engine) as session:
+        yield session

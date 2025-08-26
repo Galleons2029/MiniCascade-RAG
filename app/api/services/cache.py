@@ -57,9 +57,12 @@ class DataService:
         # We will cache the chat history entries in Dragonfly.
         ru = _DataCacheService(self.df)
         chat_histories = [chat_history_human, chat_history_ai]
-        chat_history_responses = [ChatHistoryResponse(v.id, v.content, v.is_human_message) for v in chat_histories]
+        chat_history_responses = [
+            ChatHistoryResponse(id=v.id, content=v.content, is_human_message=v.is_human_message)
+            for v in chat_histories
+        ]
         ru.add_chat_histories(chat_session.id, chat_history_responses)
-        return ChatSessionResponse(chat_session.id, chat_history_responses)
+        return ChatSessionResponse(chat_session_id=chat_session.id, chat_histories=chat_history_responses)
 
     # Add two chat history entries to an existing chat session.
     # The first chat history entry is a prompt (human message), and the second is a response (AI message).
@@ -79,7 +82,10 @@ class DataService:
         # Cache the chat history entries in Dragonfly.
         ru = _DataCacheService(self.df)
         chat_histories = [chat_history_human, chat_history_ai]
-        chat_history_responses = [ChatHistoryResponse(v.id, v.content, v.is_human_message) for v in chat_histories]
+        chat_history_responses = [
+            ChatHistoryResponse(id=v.id, content=v.content, is_human_message=v.is_human_message)
+            for v in chat_histories
+        ]
         ru.add_chat_histories(chat_session_id, chat_history_responses)
         prev_chat_session_response.chat_histories.extend(chat_history_responses)
         return prev_chat_session_response
@@ -90,7 +96,7 @@ class DataService:
         ru = _DataCacheService(self.df)
         chat_history_responses = ru.read_chat_histories(chat_session_id)
         if chat_history_responses is not None and len(chat_history_responses) > 0:
-            return ChatSessionResponse(chat_session_id, chat_history_responses)
+            return ChatSessionResponse(chat_session_id=chat_session_id, chat_histories=chat_history_responses)
         # If the chat history entries are not cached in Dragonfly, read from the database.
         # Then cache them in Dragonfly.
         chat_histories = self.db.query(ChatHistory) \
@@ -99,9 +105,12 @@ class DataService:
             .all()
         if chat_histories is None or len(chat_histories) == 0:
             return None
-        chat_history_responses = [ChatHistoryResponse(v.id, v.content, v.is_human_message) for v in chat_histories]
+        chat_history_responses = [
+            ChatHistoryResponse(id=v.id, content=v.content, is_human_message=v.is_human_message)
+            for v in chat_histories
+        ]
         ru.add_chat_histories(chat_session_id, chat_history_responses)
-        return ChatSessionResponse(chat_session_id, chat_history_responses)
+        return ChatSessionResponse(chat_session_id=chat_session_id, chat_histories=chat_history_responses)
 
     @staticmethod
     def __chat_history_schema_to_model(

@@ -14,16 +14,22 @@ from fastapi import APIRouter, Depends, HTTPException
 from langchain_core.messages import AIMessage, BaseMessage, HumanMessage
 from app.models.chat_message import ChatMessageCreate, ChatSessionCreate, ChatHistoryCreate, ChatSessionResponse
 from sqlmodel import Session
-from app.core.db.postgre import get_session
+from app.core.db.db_services import get_sync_session
 from app.api.services.cache import get_dragonfly, DataService
 from redis import Redis as Dragonfly
 from langchain_openai import ChatOpenAI
+from app.configs import llm_config
 
 load_dotenv()
-api_key = os.getenv('API_KEY')
 
 router = APIRouter()
-chat_api_client = ChatOpenAI(model='LARGE_LANGUAGE_MODEL_NAME', temperature=0.2)
+
+# Prefer SiliconFlow/OpenAI-compatible env from config; fall back to env vars
+_api_key = os.getenv("LLM_API_KEY") or os.getenv("OPENAI_API_KEY") or llm_config.SILICON_KEY
+_model = llm_config.LLM_MODEL or os.getenv("LLM_MODEL") or "Qwen/Qwen2.5-7B-Instruct"
+_base_url = llm_config.SILICON_BASE_URL
+
+chat_api_client = ChatOpenAI(model=_model, temperature=0.2, api_key=_api_key, base_url=_base_url)
 
 
 def get_chat():
@@ -51,7 +57,7 @@ def __messages_to_histories(
 @router.post("/chat")
 async def new_chat(
        chat_message_human: ChatMessageCreate,
-       db: Session = Depends(get_session),
+       db: Session = Depends(get_sync_session),
        df: Dragonfly = Depends(get_dragonfly),
        chat: ChatOpenAI = Depends(get_chat),
 ) -> ChatSessionResponse:
@@ -70,7 +76,7 @@ async def new_chat(
 async def continue_chat(
         chat_id: int,
         chat_message_human: ChatMessageCreate,
-        db: Session = Depends(get_session),
+        db: Session = Depends(get_sync_session),
         df: Dragonfly = Depends(get_dragonfly),
         chat: ChatOpenAI = Depends(get_chat),
 ) -> ChatSessionResponse:
@@ -102,7 +108,7 @@ async def continue_chat(
 @router.get("/chat/{chat_id}")
 async def read_chat_histories(
         chat_id: int,
-        db: Session = Depends(get_session),
+        db: Session = Depends(get_sync_session),
         df: Dragonfly = Depends(get_dragonfly),
 ) -> ChatSessionResponse:
     srv = DataService(db, df)

@@ -16,6 +16,8 @@ RUN mkdir -p $WORKSPACE_ROOT
 COPY --from=ghcr.io/astral-sh/uv:0.7.12 /uv /uvx /bin/
 
 
+ENV UV_HTTP_TIMEOUT=300 UV_INDEX_URL=https://pypi.tuna.tsinghua.edu.cn/simple
+
 # 4. Set Working Directory
 WORKDIR $WORKSPACE_ROOT
 
@@ -31,11 +33,9 @@ COPY ./app .
 
 # 7. Expose Port
 # Expose the default port for Gradio applications
-EXPOSE 7860
+EXPOSE 9011
 
 # 8. Set Default Command
 # Run the Gradio application, binding to 0.0.0.0 to make it accessible outside the container
-CMD ["uv", "run", "/app/ui/chatbot_v1.py"]
-
-CMD ["uv", "run", "/app/ui/gradio_chat.py"]
+CMD ["uv", "run", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "9011"]
 
