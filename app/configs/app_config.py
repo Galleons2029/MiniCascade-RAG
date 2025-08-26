@@ -55,5 +55,5 @@ class AppConfig(BaseSettings):
 
 
 
-    ENVIRONMENT: str = get_environment()
+    ENVIRONMENT: Environment = get_environment()
 

@@ -12,7 +12,11 @@ gracefully.
 
 from langchain_community.tools import DuckDuckGoSearchResults
 
-#duckduckgo_search_tool = DuckDuckGoSearchResults(num_results=10, handle_tool_error=True)
+# Expose a ready-to-use DuckDuckGo search tool for LangGraph
+duckduckgo_search_tool = DuckDuckGoSearchResults(
+    num_results=10,
+    handle_tool_error=True,
+)
 
 
 if __name__ == '__main__':

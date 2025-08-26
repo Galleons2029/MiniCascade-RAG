@@ -1,4 +1,11 @@
 services:
+  mongo:
+    image: mongo:6
+    container_name: mongo
+    ports:
+      - "27017:27017"
+    restart: always
+
   mq:
     image: rabbitmq:4-management
     container_name: mq
@@ -89,13 +96,21 @@ services:
       dockerfile: .docker/Dockerfile.app
     environment:
       DEBUG: "false"
+      DRAGONFLY_HOST: dragonfly
+      DRAGONFLY_PORT: "6379"
+      MONGO_DATABASE_HOST: mongodb://mongo:27017
+      MONGO_DATABASE_NAME: twin
+      POSTGRES_URL: postgresql+psycopg://admin:password@postgres_db:5432/postgres
     env_file:
       - .env
     depends_on:
+      - mongo
       - dragonfly
       - mq
       - qdrant
     restart: always
+    ports:
+      - "9011:9011"
 
 
 

@@ -27,7 +27,7 @@ from fastapi.responses import JSONResponse
 from langfuse import Langfuse
 
 from app.api.router import api_router
-from app.core.config import settings
+from app.configs import agent_config as settings
 from app.core.logger_utils import logger
 from app.core.db.db_services import database_service
 
@@ -59,7 +59,7 @@ app = FastAPI(
     title=settings.PROJECT_NAME,
     version=settings.VERSION,
     description=settings.DESCRIPTION,
-    openapi_url=f"{settings.API_V1_STR}/openapi.json",
+    openapi_url="/openapi.json",
     lifespan=lifespan,
 )
 
@@ -105,8 +105,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Include API router
-app.include_router(api_router, prefix=settings.API_V1_STR)
+# Mount sub-application at API prefix
+app.mount(settings.API_V1_STR, api_router)
 
 
 @app.get("/")
