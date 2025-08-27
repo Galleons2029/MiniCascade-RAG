@@ -15,7 +15,10 @@ from tqdm import tqdm
 from pathlib import Path
 from datasets import Dataset
 from ragas import evaluate
+from ragas.llms import LangchainLLMWrapper
 from ragas.metrics import faithfulness, answer_relevancy, context_precision, context_recall
+from langchain_openai import ChatOpenAI
+
 from dotenv import load_dotenv
 
 #配置
@@ -122,8 +125,13 @@ def main():
             })
 
     dataset = Dataset.from_list(data_records)
+    evaluator_llm = LangchainLLMWrapper(ChatOpenAI(model='deepseek-ai/DeepSeek-V3',
+                                                   api_key=os.getenv("SILICON_KEY"), # 硅基流动API KEY
+                                                   base_url="https://api.siliconflow.cn/v1", # 硅基流动代理 URL
+                                                   temperature=0))
+        
     metrics = [faithfulness, answer_relevancy, context_precision, context_recall]
-    results = evaluate(dataset=dataset, metrics=metrics)
+    results = evaluate(dataset=dataset, metrics=metrics, llm=evaluator_llm)
     results_df = results.to_pandas()
 
     #评测指标
@@ -158,5 +166,6 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
