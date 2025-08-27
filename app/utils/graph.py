@@ -14,16 +14,27 @@ from app.configs.agent_config import settings
 from app.models import Message
 
 
-def dump_messages(messages: list[Message]) -> list[dict]:
+def dump_messages(messages) -> list[dict]:
     """Dump the messages to a list of dictionaries.
 
     Args:
-        messages (list[Message]): The messages to dump.
+        messages: The messages to dump (can be Message objects or dicts).
 
     Returns:
         list[dict]: The dumped messages.
     """
-    return [message.model_dump() for message in messages]
+    result = []
+    for message in messages:
+        if isinstance(message, dict):
+            # Already a dict, use as-is
+            result.append(message)
+        elif hasattr(message, 'model_dump'):
+            # Message object, convert to dict
+            result.append(message.model_dump())
+        else:
+            # Fallback: assume it's a string content
+            result.append({"role": "user", "content": str(message)})
+    return result
 
 
 def prepare_messages(messages: list[Message], llm: BaseChatModel, system_prompt: str) -> list[Message]:

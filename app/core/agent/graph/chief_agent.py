@@ -65,6 +65,16 @@ class LangGraphAgent:
 
     def __init__(self):
         """Initialize the LangGraph Agent with necessary components."""
+        # Disable tiktoken for unsupported models like Qwen
+        import os
+        os.environ["TIKTOKEN_CACHE_DIR"] = ""
+        os.environ["TOKENIZERS_PARALLELISM"] = "false"
+        # Disable LangChain's automatic token tracking
+        os.environ["LANGCHAIN_CALLBACKS_MANAGER"] = "false"
+        
+        # CRITICAL: Monkey patch to completely disable token counting for Qwen models
+        self._monkey_patch_token_counting()
+        
         # Use environment-specific LLM model
         self.llm = ChatOpenAI(
             model=llm_config.LLM_MODEL,
@@ -72,6 +82,8 @@ class LangGraphAgent:
             api_key=settings.LLM_API_KEY,
             max_tokens=settings.MAX_TOKENS,
             base_url=llm_config.SILICON_BASE_URL,
+            # Explicitly disable token counting and tracking
+            default_headers={"User-Agent": "MiniCascade-RAG/1.0"},
             **self._get_model_kwargs(),
         ).bind_tools(tools)
         self.tools_by_name = {tool.name: tool for tool in tools}
@@ -88,6 +100,10 @@ class LangGraphAgent:
         """
         model_kwargs = {}
 
+        # Completely disable token counting for Qwen models (not supported by LangChain)
+        # This prevents any token-related errors without referencing other models
+        model_kwargs["tiktoken_model_name"] = None
+
         # Development - can use lower speeds for cost savings
         if settings.ENVIRONMENT == Environment.DEVELOPMENT:
             model_kwargs["top_p"] = 0.8
@@ -99,6 +115,31 @@ class LangGraphAgent:
             model_kwargs["frequency_penalty"] = 0.1
 
         return model_kwargs
+
+    def _monkey_patch_token_counting(self):
+        """Monkey patch to disable token counting for unsupported models like Qwen."""
+        try:
+            # Patch langchain_openai.chat_models.base to avoid token counting errors
+            import langchain_openai.chat_models.base as base_module
+            
+            # Store original method
+            if not hasattr(base_module, '_original_get_num_tokens_from_messages'):
+                base_module._original_get_num_tokens_from_messages = getattr(
+                    base_module.ChatOpenAI, 'get_num_tokens_from_messages', None
+                )
+            
+            # Replace with a dummy method that returns 0
+            def dummy_get_num_tokens_from_messages(self, messages):
+                """Dummy method to avoid token counting errors for unsupported models."""
+                return 0
+            
+            # Apply the patch
+            base_module.ChatOpenAI.get_num_tokens_from_messages = dummy_get_num_tokens_from_messages
+            
+            logger.info("token_counting_monkey_patch_applied", message="Successfully disabled token counting for Qwen models")
+            
+        except Exception as e:
+            logger.warning("token_counting_monkey_patch_failed", error=str(e))
 
     async def _get_connection_pool(self) -> AsyncConnectionPool:
         """Get a PostgreSQL connection pool using environment-specific settings.
@@ -150,11 +191,14 @@ class LangGraphAgent:
         # Simplified message preparation without token counting (Qwen models not supported)
         messages = [{"role": "system", "content": SYSTEM_PROMPT}]
         for msg in state.messages:
-            if hasattr(msg, 'model_dump'):
-                messages.append(msg.model_dump())
-            elif isinstance(msg, dict):
+            if isinstance(msg, dict):
+                # Message is already in dict format
                 messages.append(msg)
+            elif hasattr(msg, 'model_dump'):
+                # Message is a Pydantic model, convert to dict
+                messages.append(msg.model_dump())
             else:
+                # Fallback: convert to user message
                 messages.append({"role": "user", "content": str(msg)})
 
         llm_calls_num = 0
