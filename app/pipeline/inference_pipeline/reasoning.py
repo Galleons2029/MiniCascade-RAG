@@ -2,6 +2,7 @@ import pprint
 
 #import sagemaker
 from app.pipeline.inference_pipeline.config import settings
+from app.configs import llm_config
 from app.core import logger_utils
 #from app.core.opik_utils import add_to_dataset_with_sampling
 from app.core.rag.retriever import VectorRetriever
@@ -10,7 +11,7 @@ from langchain.prompts import PromptTemplate
 #from opik import opik_context
 from app.pipeline.inference_pipeline.prompt_templates import InferenceTemplate
 #from sagemaker.huggingface.model import HuggingFacePredictor
-from app.pipeline.inference_pipeline.utils import compute_num_tokens, truncate_text_to_max_tokens
+#from app.pipeline.inference_pipeline.utils import compute_num_tokens, truncate_text_to_max_tokens
 from langchain_openai import ChatOpenAI
 
 # TODO:使用langfuse进行后台管理
@@ -23,8 +24,8 @@ class ReasoningPipeline:
     def __init__(self, mock: bool = False) -> None:
         self._mock = mock
         self._llm_endpoint = ChatOpenAI(
-            model=settings.Silicon_model_v1,
-            api_key=settings.Silicon_api_key3,
+            model=llm_config.FREE_LLM_MODEL,
+            api_key=llm_config.SILICON_KEY,
             base_url=settings.Silicon_base_url,
         )
         self.prompt_template_builder = InferenceTemplate()
@@ -58,8 +59,9 @@ class ReasoningPipeline:
 
             multiquery = retriever.multi_query(to_expand_to_n_queries=3)
 
+
             hits = retriever.retrieve_top_k(
-                k=settings.TOP_K, collections=doc_names, generated_queries=multiquery
+                k=settings.TOP_K, collections=doc_names, generated_queries=multiquery,
             )
             logger.debug(f"检索结果：{hits}")
 
@@ -110,18 +112,20 @@ class ReasoningPipeline:
     ) -> tuple[list[dict[str, str]], int]:
         prompt = prompt_template.format(**prompt_template_variables)
 
-        num_system_prompt_tokens = compute_num_tokens(system_prompt)
-        prompt, prompt_num_tokens = truncate_text_to_max_tokens(
-            prompt, max_tokens=settings.MAX_INPUT_TOKENS - num_system_prompt_tokens
-        )
-        total_input_tokens = num_system_prompt_tokens + prompt_num_tokens
+        #num_system_prompt_tokens = compute_num_tokens(system_prompt)
+        # prompt, prompt_num_tokens = truncate_text_to_max_tokens(
+        #     prompt, max_tokens=settings.MAX_INPUT_TOKENS - num_system_prompt_tokens
+        # )
+        #total_input_tokens = num_system_prompt_tokens + prompt_num_tokens
 
         messages = [
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": prompt},
         ]
 
-        return messages, total_input_tokens
+        # return messages, total_input_tokens
+
+        return messages, -1
 
     #@opik.track(name="inference_pipeline.call_llm_service")
     def call_llm_service(self, messages: list[dict[str, str]]) -> str:

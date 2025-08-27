@@ -11,13 +11,19 @@ from datetime import datetime
 from app.core.config import settings
 
 
-def load_system_prompt():
+def load_system_prompt(prompt_path: str, agent_name: str, **kwargs):
     """Load the system prompt from the file."""
-    with open(os.path.join(os.path.dirname(__file__), "system.md"), "r") as f:
+    with open(os.path.join(os.path.dirname(__file__), prompt_path), "r") as f:
         return f.read().format(
-            agent_name=settings.PROJECT_NAME + " Agent",
+            agent_name=agent_name,
             current_date_and_time=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
         )
 
 
-SYSTEM_PROMPT = load_system_prompt()
+SYSTEM_PROMPT = load_system_prompt(prompt_path="system.md",
+                                   agent_name="chief agent"
+                                   )
+COORDINATOR_PROMPT = load_system_prompt(prompt_path="coordinator.md",
+                                        agent_name="Task Coordinator Agent"
+                                        )
+

@@ -71,13 +71,17 @@ class VectorRetriever:
     def multi_query(self, to_expand_to_n_queries: int = 3, stream: bool | None = False):
         # TODO: 完善流式管道
         if stream:
+            logger.debug(f"进入类型{stream}")
             return self._query_expander.generate_response(
             self.query, to_expand_to_n=to_expand_to_n_queries
         )
         else:
+            logger.debug(f"进入生成查询中。。。。")
+
             generated_queries = self._query_expander.generate_response(
-                self.query, to_expand_to_n=to_expand_to_n_queries
+                self.query, to_expand_to_n=to_expand_to_n_queries, stream=stream
             )
+            logger.debug(f"生成generated_queries：{type(generated_queries)}")
             return generated_queries
 
     #@opik.track(name="retriever.retrieve_top_k")
@@ -85,24 +89,17 @@ class VectorRetriever:
                        k: int,
                        collections: list[str],
                        filter_setting: dict | None = None,
-                       generated_queries = list[str]
+                       generated_queries = list[str],
+                       to_expand_to_n_queries: int = 3,
                        ) -> list:
 
+        generated_queries = self._query_expander.generate_response(
+            self.query, to_expand_to_n=to_expand_to_n_queries
+        )
         logger.info(
             "成功进行多查询检索",
             num_queries=len(generated_queries),
         )
-
-        #author_id = self._metadata_extractor.generate_response(self.query)
-        #author_id = None
-        # if author_id:
-        #     logger.info(
-        #         "Successfully extracted the author_id from the query.",
-        #         author_id=author_id,
-        #     )
-        # else:
-        #     logger.warning("Did not found any author data in the user's prompt.")
-
         with concurrent.futures.ThreadPoolExecutor() as executor:
             search_tasks = [
                 executor.submit(self._search_single_query, query, collections, filter_setting, k)

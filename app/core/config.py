@@ -17,6 +17,7 @@ class AppSettings(BaseSettings):
 
     # 硅基流动API
     Silicon_base_url: str | None = "https://api.siliconflow.cn/v1"
+    SILICON_KEY: str | None = 'EMPTY'
 
     Silicon_model_v1: str | None = "Qwen/Qwen3-32B"
     Silicon_model_mini: str | None = "Qwen/Qwen2.5-7B-Instruct"
@@ -24,18 +25,17 @@ class AppSettings(BaseSettings):
 
     MODEL_PATH: str = "/data/model_weights/Qwen3-4B"
     LOCAL: str = 'http://localhost:9011/v1'
-    KEY: str = 'EMPTY'
 
     # 消息队列配置
     RABBITMQ_DEFAULT_USERNAME: str = "guest"
     RABBITMQ_DEFAULT_PASSWORD: str = "guest"
-    RABBITMQ_HOST: str = "mq"
+    RABBITMQ_HOST: str = "localhost" # localhost in local deployment, mq in docker
     RABBITMQ_PORT: int = 5672
     RABBITMQ_QUEUE_NAME: str = "rag_test"
 
     # QdrantDB配置
     QDRANT_CLOUD_URL: str = "str"
-    QDRANT_DATABASE_HOST: str = "qdrant"
+    QDRANT_DATABASE_HOST: str = "localhost" # localhost in local deployment, qdrant in docker
     QDRANT_DATABASE_PORT: int = 6333
     USE_QDRANT_CLOUD: bool = False
     QDRANT_APIKEY: str | None = None

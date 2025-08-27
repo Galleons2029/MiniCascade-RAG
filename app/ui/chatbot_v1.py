@@ -23,9 +23,9 @@ from app.core import logger_utils
 logger = logger_utils.get_logger(__name__)
 
 sleep_time = 0.3
-model = ChatOpenAI(model=settings.MODEL_PATH,
-                   api_key=settings.KEY,
-                   base_url=settings.LOCAL,
+model = ChatOpenAI(model=settings.Silicon_model_v1,
+                   api_key=settings.SILICON_KEY,
+                   base_url=settings.Silicon_base_url,
                    extra_body={"chat_template_kwargs": {"enable_thinking": False}},)
 query_expansion_template = QueryExpansionTemplate()
 prompt = query_expansion_template.create_template(3)
@@ -39,18 +39,19 @@ def format_prompt(
 ) -> tuple[list[dict[str, str]], int]:
     prompt = prompt_template.format(**prompt_template_variables)
 
-    num_system_prompt_tokens = compute_num_tokens(system_prompt)
-    prompt, prompt_num_tokens = truncate_text_to_max_tokens(
-        prompt, max_tokens=settings.MAX_INPUT_TOKENS - num_system_prompt_tokens
-    )
-    total_input_tokens = num_system_prompt_tokens + prompt_num_tokens
+    # num_system_prompt_tokens = compute_num_tokens(system_prompt)
+    # prompt, prompt_num_tokens = truncate_text_to_max_tokens(
+    #     prompt, max_tokens=settings.MAX_INPUT_TOKENS - num_system_prompt_tokens
+    # )
+    # total_input_tokens = num_system_prompt_tokens + prompt_num_tokens
 
     messages = [
         {"role": "system", "content": system_prompt},
         {"role": "user", "content": prompt},
     ]
 
-    return messages, total_input_tokens
+    # return messages, total_input_tokens
+    return messages
 
 def user_message(msg, chat_history):
     """
@@ -94,7 +95,7 @@ def simulate_thinking_chat(prompt: str, history: list):
     ]
     logger.debug(stripped_queries)
     hits = retriever.retrieve_top_k(
-        k=3, collections=['zsk_demo'], generated_queries=stripped_queries
+        k=3, collections=['zsk_test1'], generated_queries=stripped_queries
     )
 
 
@@ -120,7 +121,7 @@ def simulate_thinking_chat(prompt: str, history: list):
     start_time = time.time()
     context = retriever.rerank(hits=hits, keep_top_k=3)
     prompt_template_variables["context"] = context
-    messages, input_num_tokens = format_prompt(
+    messages = format_prompt(
         system_prompt, prompt_template, prompt_template_variables
     )
     yield history
@@ -131,7 +132,7 @@ def simulate_thinking_chat(prompt: str, history: list):
 
     from openai import OpenAI
 
-    client = OpenAI(api_key="sk-jkcrphotzrjcdttdpbdzczufqryzmeogzbvwbtpabuitgnzx",
+    client = OpenAI(api_key=settings.SILICON_KEY,
                     base_url="https://api.siliconflow.cn/v1")
     answer = client.chat.completions.create(
         # model='Pro/deepseek-ai/DeepSeek-R1',

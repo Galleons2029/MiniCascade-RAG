@@ -12,6 +12,7 @@ import logging
 #from xinference.client import Client
 import numpy as np
 import requests
+from app.configs import llm_config
 
 # 配置日志
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -35,7 +36,7 @@ logger = logging.getLogger(__name__)
 
 url = "https://api.siliconflow.cn/v1/embeddings"
 headers = {
-    "Authorization": "Bearer sk-ulkoelnhlbxhkhpoggtemmamkgnnoshpirggznctlevxlcqy",
+    "Authorization": f"Bearer {llm_config.SILICON_KEY}",
     "Content-Type": "application/json"
 }
 

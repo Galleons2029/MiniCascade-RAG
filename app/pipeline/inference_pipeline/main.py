@@ -13,7 +13,6 @@
 from app.core import logger_utils
 from reasoning import ReasoningPipeline
 
-
 #settings.patch_localhost()
 
 logger = logger_utils.get_logger(__name__)
@@ -31,13 +30,12 @@ if __name__ == "__main__":
 
     query = """
             你好，我是张三。
-                    
             你能帮我写一段关于RAG的文章段落吗？
             我特别感兴趣的是如何设计一个RAG系统。
         """
 
     response = inference_endpoint.generate(
-        query=query, enable_rag=True, sample_for_evaluation=True, doc_names=['ddddd']
+        query=query, enable_rag=True, sample_for_evaluation=False, doc_names=['zsk_test1']
     )
 
     logger.info("=" * 50)

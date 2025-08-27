@@ -28,7 +28,7 @@ class Reranker:
         }
 
         headers = {
-            "Authorization": f"Bearer {settings.Silicon_api_key3}",
+            "Authorization": f"Bearer {settings.SILICON_KEY}",
             "Content-Type": "application/json"
         }
 
@@ -43,21 +43,21 @@ class Reranker:
         reranked_passages = [passages[idx] for idx in ranked_indices]
         #reranked_passages =  model.rerank(passages, query, return_documents=True)
 
-        return [ i['document']['text'] for i in reranked_passages['results']]
+        #return [ i['document']['text'] for i in reranked_passages['results']]
 
-        #return reranked_passages
+        return reranked_passages
 
 
 if __name__ == "__main__":
 
 
     #from xinference.client import Client
-    from FlagEmbedding import FlagReranker
-
-    # Setting use_fp16 to True speeds up computation with a slight performance degradation (if using gpu)
-    reranker = FlagReranker(
-        '/root/.cache/huggingface/hub/models--BAAI--bge-reranker-v2-m3/snapshots/12e974610ba9083ed95f3edf08d7e899581f4de4'
-        , devices=["cuda:2"], use_fp16=True)
+    # from FlagEmbedding import FlagReranker
+    #
+    # # Setting use_fp16 to True speeds up computation with a slight performance degradation (if using gpu)
+    # reranker = FlagReranker(
+    #     '/root/.cache/huggingface/hub/models--BAAI--bge-reranker-v2-m3/snapshots/12e974610ba9083ed95f3edf08d7e899581f4de4'
+    #     , devices=["cuda:2"], use_fp16=True)
     #client = Client("http://localhost:9997")
 
     #model = client.get_model('bge-reranker-v2-m3')
@@ -70,9 +70,9 @@ if __name__ == "__main__":
         "A man is riding a horse.",
         "A woman is playing violin."
     ]
-    #response = model.rerank(passages, query, return_documents=True)
-    #ans = [ i['document']['text'] for i in response['results']]
-    #print(ans)
+    # response = model.rerank(passages, query, return_documents=True)
+    # ans = [ i['document']['text'] for i in response['results']]
+    # print(ans)
 
     # start_time = time.time()
     # for i in range(10):
@@ -84,6 +84,9 @@ if __name__ == "__main__":
     # for i in range(10):
     #     rerank_passages = Reranker.generate_response(query, passages, keep_top_k)
     #     print(rerank_passages)
+
+    rerank_passages = Reranker.generate_response(query, passages, 4)
+    print(rerank_passages)
 
     # stage2 = time.time() - start_time - stage1
     # print(stage2)

@@ -176,16 +176,16 @@ def setup_logging() -> None:
             cache_logger_on_first_use=True,
         )
 
-
-# Initialize logging
-setup_logging()
-
-# Create logger instance
-logger = structlog.get_logger()
-logger.info(
-    "logging_initialized",
-    environment=settings.ENVIRONMENT.value,
-    log_level=settings.LOG_LEVEL,
-    log_format=settings.LOG_FORMAT,
-)
+#
+# # Initialize logging
+# setup_logging()
+#
+# # Create logger instance
+# logger = structlog.get_logger()
+# logger.info(
+#     "logging_initialized",
+#     environment=settings.ENVIRONMENT.value,
+#     log_level=settings.LOG_LEVEL,
+#     log_format=settings.LOG_FORMAT,
+# )
 
