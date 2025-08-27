@@ -17,10 +17,11 @@ def load_system_prompt(prompt_path: str, agent_name: str, **kwargs):
             current_date_and_time=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
         )
 
-
+# Main Agent
 SYSTEM_PROMPT = load_system_prompt(prompt_path="system.md",
                                    agent_name="chief agent"
                                    )
+
 COORDINATOR_PROMPT = load_system_prompt(prompt_path="coordinator.md",
                                         agent_name="Task Coordinator Agent"
                                         )
