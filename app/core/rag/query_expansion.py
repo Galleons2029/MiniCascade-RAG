@@ -14,7 +14,7 @@ class QueryExpansion:
     @staticmethod
     #@opik.track(name="QueryExpansion.generate_response")
     def generate_response(query: str, to_expand_to_n: int, stream: bool | None = False) -> list[str]:
-        logger.debug(f"生成查询中。。。。")
+        logger.debug("生成查询中。。。。")
 
         query_expansion_template = QueryExpansionTemplate()
         prompt = query_expansion_template.create_template(to_expand_to_n)

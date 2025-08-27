@@ -8,17 +8,13 @@
 """
 
 
-import gradio as gr
-import os
 import uuid
 
 from app.core.mq import publish_to_rabbitmq
 from app.core.config import settings
 from app.core import logger_utils
 from app.pipeline.feature_pipeline.models.raw import DocumentRawModel
-from app.pipeline.inference_pipeline.reasoning import ReasoningPipeline
 from qdrant_client import QdrantClient,models
-from markitdown import MarkItDown
 
 logger = logger_utils.get_logger(__name__)
 

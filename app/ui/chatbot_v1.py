@@ -17,7 +17,6 @@ from app.core.rag.prompt_templates import QueryExpansionTemplate
 from langchain_openai import ChatOpenAI
 from app.core.config import settings
 from langchain.prompts import PromptTemplate
-from app.pipeline.inference_pipeline.utils import compute_num_tokens, truncate_text_to_max_tokens
 
 from app.core import logger_utils
 logger = logger_utils.get_logger(__name__)

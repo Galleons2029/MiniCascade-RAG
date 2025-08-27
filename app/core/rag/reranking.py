@@ -56,7 +56,7 @@ if __name__ == "__main__":
     #
     # # Setting use_fp16 to True speeds up computation with a slight performance degradation (if using gpu)
     # reranker = FlagReranker(
-    #     '/root/.cache/huggingface/hub/models--BAAI--bge-reranker-v2-m3/snapshots/12e974610ba9083ed95f3edf08d7e899581f4de4'
+    #     '/root/.cache/huggingface/hub/models--BAAI--bge-reranker-v2-m3/snapshots/12e974'
     #     , devices=["cuda:2"], use_fp16=True)
     #client = Client("http://localhost:9997")
 

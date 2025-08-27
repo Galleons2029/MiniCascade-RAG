@@ -76,7 +76,7 @@ class VectorRetriever:
             self.query, to_expand_to_n=to_expand_to_n_queries
         )
         else:
-            logger.debug(f"进入生成查询中。。。。")
+            logger.debug("进入生成查询中。。。。")
 
             generated_queries = self._query_expander.generate_response(
                 self.query, to_expand_to_n=to_expand_to_n_queries, stream=stream

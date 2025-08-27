@@ -8,8 +8,6 @@
 import os
 from datetime import datetime
 
-from app.core.config import settings
-
 
 def load_system_prompt(prompt_path: str, agent_name: str, **kwargs):
     """Load the system prompt from the file."""
