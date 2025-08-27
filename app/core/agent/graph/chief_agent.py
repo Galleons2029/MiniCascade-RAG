@@ -36,8 +36,8 @@ from psycopg_pool import AsyncConnectionPool
 from app.configs import (
     Environment,
     llm_config,
-    agent_config as settings,
 )
+from app.configs.agent_config import settings
 from app.core.agent.tools import tools
 from app.core.agent.graph.intent_agent import build_intent_graph
 from app.core.agent.graph.entity_agent import build_entity_graph
@@ -53,7 +53,6 @@ from app.models import (
 )
 from app.utils import (
     dump_messages,
-    prepare_messages,
 )
 
 
@@ -112,8 +111,14 @@ class LangGraphAgent:
                 # Configure pool size based on environment
                 max_size = settings.POSTGRES_POOL_SIZE
 
+                # Psycopg AsyncConnectionPool expects a libpq/psycopg DSN (e.g. postgresql:// or key=value),
+                # not SQLAlchemy-style "postgresql+psycopg://". Convert if needed, or allow override via env.
+                import os
+                raw_url = os.getenv("POSTGRES_PG_DSN") or settings.POSTGRES_URL
+                conn_dsn = raw_url.replace("+psycopg", "", 1) if "+psycopg" in raw_url else raw_url
+
                 self._connection_pool = AsyncConnectionPool(
-                    settings.POSTGRES_URL,
+                    conn_dsn,
                     open=False,
                     max_size=max_size,
                     kwargs={
@@ -142,7 +147,15 @@ class LangGraphAgent:
         Returns:
             dict: Updated state with new messages.
         """
-        messages = prepare_messages(state.messages, self.llm, SYSTEM_PROMPT)
+        # Simplified message preparation without token counting (Qwen models not supported)
+        messages = [{"role": "system", "content": SYSTEM_PROMPT}]
+        for msg in state.messages:
+            if hasattr(msg, 'model_dump'):
+                messages.append(msg.model_dump())
+            elif isinstance(msg, dict):
+                messages.append(msg)
+            else:
+                messages.append({"role": "user", "content": str(msg)})
 
         llm_calls_num = 0
 
@@ -315,16 +328,24 @@ class LangGraphAgent:
                 graph_builder.set_entry_point("detect_intent")
                 graph_builder.set_finish_point("chat")
 
+                # FORCE DISABLE: Skip PostgreSQL for testing
+                checkpointer = None
+                logger.warning("graph_creation", message="🔧 FORCED: PostgreSQL checkpointer disabled for testing")
+                
+                # TODO: Re-enable when PostgreSQL connection is fixed
                 # Get connection pool (maybe None in production if DB unavailable)
-                connection_pool = await self._get_connection_pool()
-                if connection_pool:
-                    checkpointer = AsyncPostgresSaver(connection_pool)
-                    await checkpointer.setup()
-                else:
-                    # In production, proceed without checkpointer if needed
-                    checkpointer = None
-                    if settings.ENVIRONMENT != Environment.PRODUCTION:
-                        raise Exception("Connection pool initialization failed")
+                # try:
+                #     connection_pool = await self._get_connection_pool()
+                #     if connection_pool:
+                #         checkpointer = AsyncPostgresSaver(connection_pool)
+                #         await checkpointer.setup()
+                #     else:
+                #         checkpointer = None
+                #         if settings.ENVIRONMENT != Environment.PRODUCTION:
+                #             raise Exception("Connection pool initialization failed")
+                # except Exception as e:
+                #     logger.error("postgres_connection_failed", error=str(e))
+                #     checkpointer = None
 
                 self._graph = graph_builder.compile(
                     checkpointer=checkpointer, name=f"{settings.PROJECT_NAME} Agent ({settings.ENVIRONMENT.value})"

@@ -10,7 +10,7 @@ This file contains the graph utilities for the application.
 from langchain_core.language_models.chat_models import BaseChatModel
 from langchain_core.messages import trim_messages as _trim_messages
 
-from app.core.config import settings
+from app.configs.agent_config import settings
 from app.models import Message
 
 
@@ -37,10 +37,10 @@ def prepare_messages(messages: list[Message], llm: BaseChatModel, system_prompt:
     Returns:
         list[Message]: The prepared messages.
     """
+    # Remove token_counter for Qwen models that aren't supported by LangChain
     trimmed_messages = _trim_messages(
         dump_messages(messages),
         strategy="last",
-        token_counter=llm,
         max_tokens=settings.MAX_TOKENS,
         start_on="human",
         include_system=False,

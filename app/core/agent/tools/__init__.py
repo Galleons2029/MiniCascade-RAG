@@ -12,7 +12,11 @@ and other external integrations.
 
 from langchain_core.tools.base import BaseTool
 
-from .duckduckgo_search import duckduckgo_search_tool
-
-tools: list[BaseTool] = [duckduckgo_search_tool]
+# Temporarily disable DuckDuckGo tool due to missing dependency
+try:
+    from .duckduckgo_search import duckduckgo_search_tool
+    tools: list[BaseTool] = [duckduckgo_search_tool]
+except ImportError:
+    tools: list[BaseTool] = []
+    print("⚠️ DuckDuckGo search tool disabled due to missing dependency")
 

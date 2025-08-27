@@ -261,3 +261,7 @@ class AgentConfig:
             if env_var_name not in os.environ:
                 setattr(self, key, value)
 
+
+# Create module-level instance for easy import
+settings = AgentConfig()
+
