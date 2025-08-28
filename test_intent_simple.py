@@ -36,7 +36,7 @@ async def test_your_real_agent():
     # 加载环境变量
     load_env()
     
-    print(f"🤖 测试真实LangGraph Agent")
+    print("🤖 测试真实LangGraph Agent")
     print("=" * 60)
     
     try:
@@ -125,9 +125,9 @@ async def test_your_real_agent():
                                        for keyword in ['search', '搜索', 'found', '找到', 'result'])
                 
                 if has_search_content:
-                    print(f"       ✅ 可能使用了搜索工具")
+                    print("       ✅ 可能使用了搜索工具")
                 else:
-                    print(f"       ⚠️ 未明显使用搜索工具")
+                    print("       ⚠️ 未明显使用搜索工具")
                     
                 print(f"       响应: {content[:100]}...")
             else:
@@ -184,7 +184,7 @@ async def test_your_real_agent():
     except Exception as e:
         print(f"\n   ❌ 流式输出测试失败: {e}")
     
-    print(f"\n📊 测试完成！")
+    print("\n📊 测试完成！")
     print("=" * 60)
 
 async def quick_structure_test():

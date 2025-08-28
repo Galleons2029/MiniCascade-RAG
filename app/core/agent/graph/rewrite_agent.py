@@ -6,7 +6,7 @@ Query rewrite sub-graph.
 Rewrite user intent + entities + context_frame into a precise, retriever-friendly query.
 """
 
-from typing import Optional
+
 
 from langgraph.graph import StateGraph
 from langgraph.graph.state import CompiledStateGraph

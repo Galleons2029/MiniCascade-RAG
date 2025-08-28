@@ -8,7 +8,7 @@ top passages into GraphState.context_docs, and optionally inject a system
 message for grounding.
 """
 
-from typing import Optional
+
 
 from langgraph.graph import StateGraph
 from langgraph.graph.state import CompiledStateGraph

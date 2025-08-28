@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import asyncio
 import pytest
 
 from app.core.agent.graph.intent_agent import build_intent_graph

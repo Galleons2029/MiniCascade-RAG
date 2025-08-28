@@ -47,7 +47,9 @@ class DummyRetriever:
     def multi_query(self, to_expand_to_n_queries: int = 3, stream: bool | None = False):
         return [self.query]
 
-    def retrieve_top_k(self, k: int, collections: list[str], filter_setting: dict | None = None, generated_queries=list[str]):
+    def retrieve_top_k(
+        self, k: int, collections: list[str], filter_setting: dict | None = None, generated_queries=list[str]
+    ):
         class Hit:
             def __init__(self, content):
                 self.payload = {"content": content}

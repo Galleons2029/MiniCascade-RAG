@@ -13,7 +13,7 @@ from typing import Optional
 from langgraph.graph import StateGraph
 from langgraph.graph.state import CompiledStateGraph
 
-from app.core.logger_utils import logger
+
 from app.models import GraphState
 
 
