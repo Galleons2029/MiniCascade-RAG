@@ -10,7 +10,7 @@ RAG 知识库平台 API 终端
 from typing import Annotated
 import logging
 
-from fastapi import FastAPI, Request, APIRouter, Header, HTTPException
+from fastapi import FastAPI, Header, HTTPException
 from pydantic import BaseModel
 from app.api.v1 import inference_v1, chat_v1
 from contextlib import asynccontextmanager
