@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-意图识别测试脚本
+意图识别测试脚本 可忽略，到时候我会sha chu
 
 测试 MiniCascade-RAG 项目中的意图识别功能
 包括各种类型的用户输入和边界情况
