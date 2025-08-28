@@ -12,7 +12,7 @@
   - 入口：`detect_intent`
   - 路由：根据 `state.intent` 进入不同子图
   - RAG 路径：`entity_extraction -> context_resolution -> query_rewrite -> rag_retrieval -> chat -> tool_call -> chat`
-- 子图（一个图一个文件）：
+- 子图：
   - 意图识别：`app/core/agent/graph/intent_agent.py`
   - 实体抽取：`app/core/agent/graph/entity_agent.py`
   - 上下文/指代消解：`app/core/agent/graph/context_agent.py`

@@ -1,2 +1,144 @@
+# IDE相关
 .idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Python相关
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# 虚拟环境
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+.python-version
+
+# 测试相关
+test_unified_agent.py
+test_intent_simple.py
+test_intent_detection.py
+*_test_temp.py
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.nox/
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+
+# 日志文件
+*.log
+logs/
+log/
+
+# 数据库相关
+*.db
+*.sqlite3
+*.sqlite
+.db
+
+# RAG/AI相关
+*.pkl
+*.pickle
+embeddings/
+vector_store/
+qdrant_storage/
+models/
+checkpoints/
+weights/
+
+# 生成的可视化文件
+agent_graph.png
+agent_graph_static.mermaid
+*.tmp.png
+*.tmp.jpg
+*.tmp.mermaid
+temp_diagrams/
+# 保留重要的图表文件，只忽略临时生成的
+
+# 备份和临时文件
+backup/
+tmp/
+temp/
+*.tmp
+*.bak
+*.backup
+*~
+.DS_Store
+Thumbs.db
+
+# 项目特定的临时文件
+AGENT_MERGE_SUMMARY.md
+agent_analysis_report.md
+*_temp.md
+*_draft.md
+temp_*
+
+# 配置文件 (保留.example文件)
+.env
+config.yaml
+config.yml
+secrets.json
+credentials.json
+
+# 消息队列相关
 .rabbitmq/
+rabbitmq/
+
+# 缓存相关
+.cache/
+cache/
+*.cache
+
+# Jupyter Notebook
+.ipynb_checkpoints/
+# *.ipynb  # 保留重要的notebook文件
+
+# 文档生成
+site/
+docs/_build/
+
+# 依赖锁文件 (保留uv.lock)
+# poetry.lock
+# Pipfile.lock
+
+# macOS相关
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows相关
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Linux相关
+*~
