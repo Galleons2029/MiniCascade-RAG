@@ -11,10 +11,8 @@ from typing import Annotated
 import logging
 
 from fastapi import FastAPI, Request, APIRouter, Header, HTTPException
-from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
-from pydantic import BaseModel, ValidationError
-from app.api.v1 import inference_v1, doc_parse, chat_v1
+from pydantic import BaseModel
+from app.api.v1 import inference_v1, chat_v1
 from contextlib import asynccontextmanager
 from app.core.db.postgre import engine
 

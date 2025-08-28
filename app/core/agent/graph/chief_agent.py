@@ -23,7 +23,7 @@ from langchain_core.messages import (
 )
 from langchain_openai import ChatOpenAI
 from langfuse.langchain import CallbackHandler
-from langgraph.checkpoint.postgres.aio import AsyncPostgresSaver
+
 from langgraph.graph import (
     END,
     StateGraph,
@@ -136,7 +136,10 @@ class LangGraphAgent:
             # Apply the patch
             base_module.ChatOpenAI.get_num_tokens_from_messages = dummy_get_num_tokens_from_messages
             
-            logger.info("token_counting_monkey_patch_applied", message="Successfully disabled token counting for Qwen models")
+            logger.info(
+                "token_counting_monkey_patch_applied",
+                message="Successfully disabled token counting for Qwen models"
+            )
             
         except Exception as e:
             logger.warning("token_counting_monkey_patch_failed", error=str(e))
