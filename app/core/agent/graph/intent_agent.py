@@ -92,16 +92,18 @@ def build_unified_agent_graph(llm) -> CompiledStateGraph:
 # CONTEXT
 ## 意图类别定义 (Intent Categories):
 - **qa**: 问答类 - 用户寻求信息、解释、答案或知识
-  * 特征：疑问词（什么、如何、为什么）、询问语气、求知欲望
-  * 示例：什么是RAG？、如何实现AI？、为什么会这样？
+  * 特征：疑问词（什么、如何、为什么、怎么样、显示了什么）、询问语气、求知欲望
+  * 关键区别：用户期望得到**直接回答**，而不是搜索过程
+  * 示例：什么是RAG？、如何实现AI？、销售数据显示了什么趋势？、上个月的情况如何？
 
 - **write**: 写作类 - 用户要求创作、编写、总结或生成内容
   * 特征：创作动词（写、编写、总结、生成）、内容产出需求
   * 示例：写一份报告、总结这篇文章、生成代码
 
 - **search**: 搜索类 - 用户要求主动搜索、查找、检索信息
-  * 特征：搜索动词（搜索、查找、检索）、明确的搜索意图
-  * 示例：搜索最新论文、查找相关资料、检索数据
+  * 特征：搜索动词（搜索、查找、检索、找一下）、明确的搜索行为指令
+  * 关键区别：用户期望执行**搜索动作**，而不是直接获得答案
+  * 示例：搜索最新论文、查找相关资料、检索数据、帮我找一下相关信息
 
 - **exec**: 执行类 - 用户要求执行具体任务、操作或命令
   * 特征：执行动词（执行、运行、操作）、具体任务指令
@@ -131,15 +133,44 @@ def build_unified_agent_graph(llm) -> CompiledStateGraph:
 **2. [分类]**
 基于理解结果进行精确分类：
 - 主要意图：最符合哪个类别的特征
+- **qa vs search 区分**：
+  * 如果用户想要**直接答案**（如"什么是..."、"如何..."、"显示了什么"） → qa
+  * 如果用户想要**执行搜索**（如"搜索..."、"查找..."、"检索..."） → search
 - 置信度评估：基于特征匹配度和语义清晰度
 - 边界情况：如果模糊，选择最可能的类别
 
 **3. [输出]**
 严格按照JSON格式输出结果。"""
+        # 构建用户提示词，包含对话历史
+        context_info = ""
+        if len(state.messages) > 1:
+            # 有对话历史，构建上下文
+            context_lines = []
+            for msg in state.messages[:-1]:  # 排除最后一条消息
+                # 处理 LangChain 消息对象
+                if hasattr(msg, 'type'):
+                    msg_type = msg.type
+                    content = getattr(msg, 'content', '')
+                else:
+                    # 处理字典格式的消息
+                    msg_type = msg.get("role", "unknown")
+                    content = msg.get("content", "")
+
+                if msg_type in ["human", "user"]:
+                    context_lines.append(f"用户: {content}")
+                elif msg_type in ["ai", "assistant"]:
+                    context_lines.append(f"助手: {content}")
+
+            if context_lines:
+                context_info = f"""
+**对话历史**:
+{chr(10).join(context_lines)}
+
+"""
+
         user = f"""# GOAL
 分析以下用户消息的真实意图：
-
-**用户消息**: "{latest_user}"
+{context_info}**当前用户消息**: "{latest_user}"
 
 请按照执行流程进行分析，最终输出JSON格式：
 {{"intent": "分类结果", "confidence": 置信度}}"""

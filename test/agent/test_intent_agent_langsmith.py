@@ -36,6 +36,9 @@ class LangSmithTestRunner:
             # 设置 LangSmith 环境变量
             os.environ["LANGCHAIN_TRACING_V2"] = "true"
             os.environ["LANGCHAIN_PROJECT"] = "MiniCascade-RAG-Intent-Testing"
+
+            # 获取项目信息用于生成正确的 URL
+            self.project_name = "MiniCascade-RAG-Intent-Testing"
             
             self.client = Client()
             print("✅ LangSmith 客户端初始化成功")
@@ -103,8 +106,8 @@ class LangSmithTestRunner:
             {
                 "name": "Multi_Turn_Context",
                 "messages": [
-                    {"role": "user", "content": "上周的账单情况如何？"},
-                    {"role": "assistant", "content": "上周账单总额为5000元"},
+                    {"role": "user", "content": "这个月的销售额是多少？"},
+                    {"role": "assistant", "content": "这个月的销售额是100万元"},
                     {"role": "user", "content": "上个月的呢？"}
                 ],
                 "expected_intent": "qa"
@@ -185,7 +188,14 @@ class LangSmithTestRunner:
                 print(f"❌ {result['test_name']}: {error_msg}")
         
         if self.client:
-            print("\n🔗 查看详细追踪: https://smith.langchain.com/projects/MiniCascade-RAG-Intent-Testing")
+            try:
+                # 获取正确的项目 URL
+                project_url = f"https://smith.langchain.com/o/default/projects/p/{self.project_name.replace('-', '_').lower()}"
+                print(f"\n🔗 查看详细追踪: {project_url}")
+                print("💡 如果链接无法访问，请直接访问 https://smith.langchain.com/ 并查找项目")
+            except Exception:
+                print("\n🔗 查看详细追踪: https://smith.langchain.com/")
+                print("💡 请在 LangSmith Dashboard 中查找项目: MiniCascade-RAG-Intent-Testing")
 
 
 @pytest.mark.asyncio
