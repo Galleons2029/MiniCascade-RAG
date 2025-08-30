@@ -14,17 +14,31 @@ jobs:
       - name: Install uv
         uses: astral-sh/setup-uv@v5
 
+      - name: Cache uv dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/uv
+          key: ${{ runner.os }}-uv-${{ hashFiles('**/uv.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-uv-
+
       - name: Set up Python
         # This is the version of the action for setting up Python, not the Python version.
         uses: actions/setup-python@v5
         with:
-          python-version-file: "pyproject.toml"
+          python-version-file: ".python-version"
           
       - name: Display Python version
         run: python -c "import sys; print(sys.version)"
 
+      - name: Show uv version and check lock file
+        run: |
+          uv --version
+          ls -la uv.lock
+          head -20 uv.lock
+
       - name: Install the project
-        run: uv sync --locked --all-extras --dev
+        run: uv sync --locked --group dev
 
       - name: Run tests
         run: uv run pytest test
