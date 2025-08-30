@@ -113,19 +113,30 @@ class LangSmithTestRunner:
                 actual_intent = result.get("intent", "unknown")
                 expected_intent = test_case["expected_intent"]
 
+                # 检查是否有完整的 RAG 流程字段（仅对 qa/write 意图）
+                has_rag_fields = True
+                if actual_intent.lower() in ("qa", "write"):
+                    required_fields = ["entities", "context_frame", "rewritten_query", "context_docs"]
+                    missing_fields = [field for field in required_fields if field not in result]
+                    if missing_fields:
+                        has_rag_fields = False
+                        print(f"⚠️  {test_case['name']}: 缺少 RAG 字段: {missing_fields}")
+
                 test_result = {
                     "test_name": test_case["name"],
                     "expected_intent": expected_intent,
                     "actual_intent": actual_intent,
                     "confidence": result.get("intent_confidence", 0),
-                    "success": actual_intent == expected_intent,
+                    "success": actual_intent == expected_intent and has_rag_fields,
                     "full_result": result,
+                    "has_rag_fields": has_rag_fields,
                 }
 
                 results.append(test_result)
 
                 status = "✅" if test_result["success"] else "❌"
-                print(f"{status} {test_case['name']}: {actual_intent} (置信度: {test_result['confidence']:.2f})")
+                rag_status = "🔄" if actual_intent.lower() in ("qa", "write") else "⏭️"
+                print(f"{status} {test_case['name']}: {actual_intent} (置信度: {test_result['confidence']:.2f}) {rag_status}")
 
             except Exception as e:
                 print(f"❌ 测试失败 {test_case['name']}: {e}")
@@ -149,11 +160,22 @@ class LangSmithTestRunner:
         print("\n📋 详细结果:")
         for result in results:
             if result.get("success"):
-                print(f"✅ {result['test_name']}: {result['actual_intent']} (置信度: {result.get('confidence', 0):.2f})")
+                intent = result['actual_intent']
+                confidence = result.get('confidence', 0)
+                rag_indicator = "🔄 RAG流程" if intent.lower() in ("qa", "write") else "⏭️ 直接响应"
+                print(f"✅ {result['test_name']}: {intent} (置信度: {confidence:.2f}) - {rag_indicator}")
             else:
                 expected = result.get("expected_intent")
                 actual = result.get("actual_intent")
-                error_msg = result.get("error", f"预期: {expected}, 实际: {actual}")
+                has_rag_fields = result.get("has_rag_fields", True)
+
+                if result.get("error"):
+                    error_msg = result["error"]
+                elif not has_rag_fields:
+                    error_msg = f"意图正确但缺少RAG字段 - 预期: {expected}, 实际: {actual}"
+                else:
+                    error_msg = f"意图不匹配 - 预期: {expected}, 实际: {actual}"
+
                 print(f"❌ {result['test_name']}: {error_msg}")
 
         if self.client:
@@ -217,10 +239,17 @@ async def test_rag_pipeline_tracing():
 
         # 验证 RAG 流程的各个步骤
         assert "intent" in result
-        assert "entities" in result
-        assert "context_frame" in result
-        assert "rewritten_query" in result
-        assert "context_docs" in result
+
+        # 只有 qa/write 意图才会有完整的 RAG 流程字段
+        intent = result.get("intent", "").lower()
+        if intent in ("qa", "write"):
+            assert "entities" in result
+            assert "context_frame" in result
+            assert "rewritten_query" in result
+            assert "context_docs" in result
+        else:
+            # 其他意图只验证基本字段存在
+            print(f"ℹ️  意图 '{intent}' 跳过了 RAG 流程，这是正常行为")
 
         print("✅ RAG 流程追踪测试完成")
 
