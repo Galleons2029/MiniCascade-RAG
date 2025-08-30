@@ -136,7 +136,13 @@ def build_unified_agent_graph(llm) -> CompiledStateGraph:
 
 **3. [输出]**
 严格按照JSON格式输出结果。"""
-        user = f"用户消息: {latest_user}"
+        user = f"""# GOAL
+分析以下用户消息的真实意图：
+
+**用户消息**: "{latest_user}"
+
+请按照执行流程进行分析，最终输出JSON格式：
+{{"intent": "分类结果", "confidence": 置信度}}"""
 
         try:
             resp = await llm.ainvoke([
@@ -150,18 +156,40 @@ def build_unified_agent_graph(llm) -> CompiledStateGraph:
             logger.info("llm_raw_response", content=content, user_message=latest_user)
 
             try:
-                data = json.loads(content) if isinstance(content, str) else {}
+                # 处理可能包含 markdown 代码块的 JSON
+                json_content = content
+                if isinstance(content, str):
+                    # 移除 markdown 代码块标记
+                    json_content = content.strip()
+                    if json_content.startswith("```json"):
+                        json_content = json_content[7:]  # 移除 ```json
+                    if json_content.startswith("```"):
+                        json_content = json_content[3:]   # 移除 ```
+                    if json_content.endswith("```"):
+                        json_content = json_content[:-3]  # 移除结尾的 ```
+                    json_content = json_content.strip()
+
+                data = json.loads(json_content) if json_content else {}
                 detected_intent = str(data.get("intent", detected_intent))
                 confidence = float(data.get("confidence", confidence))
-                logger.info("json_parse_success", data=data)
+                logger.info("json_parse_success", data=data, original_content=content)
             except Exception as e:
                 logger.warning("json_parse_failed", content=content, error=str(e))
+                # 备用解析：从文本中提取意图
                 lc = content.lower() if isinstance(content, str) else ""
                 for k in ["qa", "write", "search", "exec", "smalltalk"]:
                     if k in lc:
                         detected_intent = k
                         break
-                logger.info("fallback_parse_result", detected_intent=detected_intent)
+                # 尝试提取置信度
+                import re
+                confidence_match = re.search(r'"confidence":\s*([0-9.]+)', content)
+                if confidence_match:
+                    try:
+                        confidence = float(confidence_match.group(1))
+                    except:
+                        pass
+                logger.info("fallback_parse_result", detected_intent=detected_intent, confidence=confidence)
 
             logger.info("intent_detected", intent=detected_intent, confidence=confidence)
         except Exception as e:
