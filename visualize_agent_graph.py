@@ -8,7 +8,6 @@
 
 import asyncio
 import sys
-import os
 from pathlib import Path
 
 # 添加项目路径到 sys.path
@@ -17,7 +16,6 @@ sys.path.insert(0, str(project_root))
 
 try:
     from app.core.agent.graph.chief_agent import LangGraphAgent
-    from app.models import GraphState
     print("✅ 成功导入依赖")
 except ImportError as e:
     print(f"❌ 导入失败: {e}")
@@ -81,17 +79,17 @@ async def visualize_agent_graph():
             print("💡 提示: 安装 `playwright` 和 `kaleido` 可支持PNG生成")
         
         # 显示图的基本信息
-        print(f"\n📈 图结构信息:")
+        print("\n📈 图结构信息:")
         graph_info = graph.get_graph()
         print(f"  - 节点数量: {len(graph_info.nodes)}")
         print(f"  - 边数量: {len(graph_info.edges)}")
         print(f"  - 入口点: {graph_info.first_node}")
         
-        print(f"\n🔍 节点列表:")
+        print("\n🔍 节点列表:")
         for node_id in graph_info.nodes:
             print(f"  - {node_id}")
             
-        print(f"\n🔗 边连接:")
+        print("\n🔗 边连接:")
         for edge in graph_info.edges:
             print(f"  - {edge.source} → {edge.target}")
         

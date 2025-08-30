@@ -195,7 +195,7 @@ def main():
     
     # 生成分析报告
     print("\n📝 生成分析报告...")
-    report = f"""# MiniCascade-RAG Agent架构分析报告
+    report = """# MiniCascade-RAG Agent架构分析报告
 
 ## 概述
 MiniCascade-RAG采用LangGraph框架构建的多智能体RAG系统，具有清晰的意图路由和处理流程。
@@ -249,17 +249,17 @@ MiniCascade-RAG采用LangGraph框架构建的多智能体RAG系统，具有清�
     
     print("✅ 分析报告已保存到: agent_analysis_report.md")
     
-    print(f"\n💾 生成的文件:")
-    print(f"  - agent_graph_static.mermaid (Mermaid图定义)")
-    print(f"  - agent_analysis_report.md (架构分析报告)")
+    print("\n💾 生成的文件:")
+    print("  - agent_graph_static.mermaid (Mermaid图定义)")
+    print("  - agent_analysis_report.md (架构分析报告)")
     
-    print(f"\n💡 使用提示:")
-    print(f"  1. 复制Mermaid代码到 https://mermaid.live 查看交互图")
-    print(f"  2. 查看分析报告了解详细架构说明")
-    print(f"  3. 基于静态分析理解agent工作流程")
+    print("\n💡 使用提示:")
+    print("  1. 复制Mermaid代码到 https://mermaid.live 查看交互图")
+    print("  2. 查看分析报告了解详细架构说明")
+    print("  3. 基于静态分析理解agent工作流程")
     
-    print(f"\n" + "=" * 60)
-    print(f"🎉 静态分析完成!")
+    print("\n" + "=" * 60)
+    print("🎉 静态分析完成!")
 
 if __name__ == "__main__":
     try:

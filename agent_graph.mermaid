@@ -1,0 +1,19 @@
+---
+config:
+  flowchart:
+    curve: linear
+---
+graph TD;
+	__start__([<p>__start__</p>]):::first
+	unified_agent(unified_agent)
+	chat(chat)
+	tool_call(tool_call)
+	__end__([<p>__end__</p>]):::last
+	__start__ --> unified_agent;
+	chat -. &nbsp;end&nbsp; .-> __end__;
+	chat -. &nbsp;continue&nbsp; .-> tool_call;
+	tool_call --> chat;
+	unified_agent --> chat;
+	classDef default fill:#f2f0ff,line-height:1.2
+	classDef first fill-opacity:0
+	classDef last fill:#bfb6fc

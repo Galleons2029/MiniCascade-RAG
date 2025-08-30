@@ -49,9 +49,19 @@ def _get_latest_user_message(messages) -> Optional[str]:
     """Extract the latest user message from the conversation."""
     for m in reversed(messages):
         try:
-            role = m.get("role") if isinstance(m, dict) else getattr(m, "role", None)
-            if role == "user":
-                return m.get("content") if isinstance(m, dict) else getattr(m, "content", "")
+            # Handle both dict format and LangChain message objects
+            if isinstance(m, dict):
+                if m.get("role") == "user":
+                    return m.get("content", "")
+            else:
+                # Handle LangChain message objects (HumanMessage, AIMessage, etc.)
+                from langchain_core.messages import HumanMessage
+                if isinstance(m, HumanMessage):
+                    return getattr(m, "content", "")
+                # Also check for role attribute
+                role = getattr(m, "role", None)
+                if role == "user":
+                    return getattr(m, "content", "")
         except Exception:
             continue
     return None
@@ -72,17 +82,63 @@ def build_unified_agent_graph(llm) -> CompiledStateGraph:
         detected_intent: str = "other"
         confidence: float = 0.5
 
-        try:
-            latest_user = _get_latest_user_message(state.messages)
-            if not latest_user:
-                return {"intent": detected_intent, "intent_confidence": confidence}
+        latest_user = _get_latest_user_message(state.messages)
+        if not latest_user:
+            return {"intent": detected_intent, "intent_confidence": confidence}
 
-            system = (
-                "You are an intent classifier. Classify the user's latest message into one of: "
-                "qa, write, search, exec, smalltalk, other. "
-                "Return a JSON object with keys: intent, confidence (0-1)."
-            )
-            user = f"Message: {latest_user}\nRespond with JSON only."
+        system = """# ROLE
+你是一个顶级的用户意图分析师（Intent Classifier）。你的职责是精确分析用户的真实意图，并将其分类到最合适的类别中。你需要进行深度理解和批判性思考，确保分类的准确性和一致性。
+
+# CONTEXT
+## 意图类别定义 (Intent Categories):
+- **qa**: 问答类 - 用户寻求信息、解释、答案或知识
+  * 特征：疑问词（什么、如何、为什么）、询问语气、求知欲望
+  * 示例：什么是RAG？、如何实现AI？、为什么会这样？
+
+- **write**: 写作类 - 用户要求创作、编写、总结或生成内容
+  * 特征：创作动词（写、编写、总结、生成）、内容产出需求
+  * 示例：写一份报告、总结这篇文章、生成代码
+
+- **search**: 搜索类 - 用户要求主动搜索、查找、检索信息
+  * 特征：搜索动词（搜索、查找、检索）、明确的搜索意图
+  * 示例：搜索最新论文、查找相关资料、检索数据
+
+- **exec**: 执行类 - 用户要求执行具体任务、操作或命令
+  * 特征：执行动词（执行、运行、操作）、具体任务指令
+  * 示例：执行备份、运行脚本、操作数据库
+
+- **smalltalk**: 闲聊类 - 日常对话、问候、情感交流
+  * 特征：社交性语言、情感表达、非任务导向
+  * 示例：你好、今天天气不错、谢谢你
+
+- **other**: 其他类 - 不属于以上任何明确类别的内容
+  * 特征：模糊意图、复合需求、无法明确分类
+
+## 分析约束 (Constraints):
+- 必须严格按照下面的"分析流程"进行思考
+- 输出格式必须是严格的JSON格式
+- 置信度必须基于客观分析，范围0.1-1.0
+
+# EXECUTION FLOW
+请严格遵循以下流程：
+
+**1. [理解]**
+深度理解用户消息的核心意图：
+- 关键词分析：识别动词、疑问词、指示词
+- 语境分析：理解完整语义和隐含意图
+- 目标识别：用户真正想要达成什么
+
+**2. [分类]**
+基于理解结果进行精确分类：
+- 主要意图：最符合哪个类别的特征
+- 置信度评估：基于特征匹配度和语义清晰度
+- 边界情况：如果模糊，选择最可能的类别
+
+**3. [输出]**
+严格按照JSON格式输出结果。"""
+        user = f"用户消息: {latest_user}"
+
+        try:
             resp = await llm.ainvoke([
                 {"role": "system", "content": system},
                 {"role": "user", "content": user},
@@ -91,20 +147,25 @@ def build_unified_agent_graph(llm) -> CompiledStateGraph:
             # Parse model output
             import json
             content = getattr(resp, "content", "") or ""
+            logger.info("llm_raw_response", content=content, user_message=latest_user)
+
             try:
                 data = json.loads(content) if isinstance(content, str) else {}
                 detected_intent = str(data.get("intent", detected_intent))
                 confidence = float(data.get("confidence", confidence))
-            except Exception:
+                logger.info("json_parse_success", data=data)
+            except Exception as e:
+                logger.warning("json_parse_failed", content=content, error=str(e))
                 lc = content.lower() if isinstance(content, str) else ""
                 for k in ["qa", "write", "search", "exec", "smalltalk"]:
                     if k in lc:
                         detected_intent = k
                         break
+                logger.info("fallback_parse_result", detected_intent=detected_intent)
 
             logger.info("intent_detected", intent=detected_intent, confidence=confidence)
         except Exception as e:
-            logger.warning("intent_detection_failed", error=str(e))
+            logger.error("llm_call_failed", error=str(e), user_message=latest_user)
 
         return {"intent": detected_intent, "intent_confidence": confidence}
 
@@ -175,10 +236,10 @@ def build_unified_agent_graph(llm) -> CompiledStateGraph:
 
         user_latest = _get_latest_user_message(state.messages)
         prompt = (
-            f"请基于意图与上下文，将用户问题改写为用于检索的精确查询。\n"
+            "请基于意图与上下文，将用户问题改写为用于检索的精确查询。\n"
             f"主题: {subject}{time_part}{filter_part}\n"
             f"用户原话: {user_latest}\n"
-            f"只返回改写后的查询。"
+            "只返回改写后的查询。"
         )
 
         try:
