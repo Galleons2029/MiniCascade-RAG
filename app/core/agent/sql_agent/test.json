@@ -1,0 +1,2758 @@
+[
+    {
+        "query": "SELECT date FROM weather WHERE max_temperature_f  >  85",
+        "question": "Give me the dates when the max temperature was higher than 85."
+    },
+    {
+        "query": "SELECT date FROM weather WHERE max_temperature_f  >  85",
+        "question": "What are the dates with a maximum temperature higher than 85?"
+    },
+    {
+        "query": "SELECT name FROM station WHERE lat  <  37.5",
+        "question": "What are the names of stations that have latitude lower than 37.5?"
+    },
+    {
+        "query": "SELECT name FROM station WHERE lat  <  37.5",
+        "question": "What are the names of all stations with a latitude smaller than 37.5?"
+    },
+    {
+        "query": "SELECT city ,  max(lat) FROM station GROUP BY city",
+        "question": "For each city, return the highest latitude among its stations."
+    },
+    {
+        "query": "SELECT city ,  max(lat) FROM station GROUP BY city",
+        "question": "For each city, what is the highest latitude for its stations?"
+    },
+    {
+        "query": "SELECT start_station_name ,  end_station_name FROM trip ORDER BY id LIMIT 3",
+        "question": "Give me the start station and end station for the trips with the three oldest id."
+    },
+    {
+        "query": "SELECT start_station_name ,  end_station_name FROM trip ORDER BY id LIMIT 3",
+        "question": "What is the station station and end station for the trips with the three smallest ids?"
+    },
+    {
+        "query": "SELECT avg(lat) ,  avg(long) FROM station WHERE city  =  \"San Jose\"",
+        "question": "What is the average latitude and longitude of stations located in San Jose city?"
+    },
+    {
+        "query": "SELECT avg(lat) ,  avg(long) FROM station WHERE city  =  \"San Jose\"",
+        "question": "What is the average latitude and longitude in San Jose?"
+    },
+    {
+        "query": "SELECT id FROM trip ORDER BY duration LIMIT 1",
+        "question": "What is the id of the trip that has the shortest duration?"
+    },
+    {
+        "query": "SELECT id FROM trip ORDER BY duration LIMIT 1",
+        "question": "What is the id of the shortest trip?"
+    },
+    {
+        "query": "SELECT sum(duration) ,  max(duration) FROM trip WHERE bike_id  =  636",
+        "question": "What is the total and maximum duration of trips with bike id 636?"
+    },
+    {
+        "query": "SELECT sum(duration) ,  max(duration) FROM trip WHERE bike_id  =  636",
+        "question": "What is the total and maximum duration for all trips with the bike id 636?"
+    },
+    {
+        "query": "SELECT zip_code  ,  avg(mean_temperature_f) FROM weather WHERE date LIKE \"8/%\" GROUP BY zip_code",
+        "question": "For each zip code, return the average mean temperature of August there."
+    },
+    {
+        "query": "SELECT zip_code  ,  avg(mean_temperature_f) FROM weather WHERE date LIKE \"8/%\" GROUP BY zip_code",
+        "question": "For each zip code, what is the average mean temperature for all dates that start with '8'?"
+    },
+    {
+        "query": "SELECT count(DISTINCT bike_id) FROM trip",
+        "question": "From the trip record, find the number of unique bikes."
+    },
+    {
+        "query": "SELECT count(DISTINCT bike_id) FROM trip",
+        "question": "How many different bike ids are there?"
+    },
+    {
+        "query": "SELECT count(DISTINCT city) FROM station",
+        "question": "What is the number of distinct cities the stations are located at?"
+    },
+    {
+        "query": "SELECT count(DISTINCT city) FROM station",
+        "question": "How many different cities have these stations?"
+    },
+    {
+        "query": "SELECT COUNT(*) FROM station WHERE city  =  \"Mountain View\"",
+        "question": "How many stations does Mountain View city has?"
+    },
+    {
+        "query": "SELECT COUNT(*) FROM station WHERE city  =  \"Mountain View\"",
+        "question": "How many stations are in Mountain View?"
+    },
+    {
+        "query": "SELECT DISTINCT T1.name FROM station AS T1 JOIN status AS T2 ON T1.id  =  T2.station_id WHERE T2.bikes_available  =  7",
+        "question": "Return the unique name for stations that have ever had 7 bikes available."
+    },
+    {
+        "query": "SELECT DISTINCT T1.name FROM station AS T1 JOIN status AS T2 ON T1.id  =  T2.station_id WHERE T2.bikes_available  =  7",
+        "question": "What are the different names for each station that has ever had 7 bikes available?"
+    },
+    {
+        "query": "SELECT start_station_name ,  start_station_id FROM trip WHERE start_date LIKE \"8/%\" GROUP BY start_station_name ORDER BY COUNT(*) DESC LIMIT 1",
+        "question": "Which start station had the most trips starting from August? Give me the name and id of the station."
+    },
+    {
+        "query": "SELECT start_station_name ,  start_station_id FROM trip WHERE start_date LIKE \"8/%\" GROUP BY start_station_name ORDER BY COUNT(*) DESC LIMIT 1",
+        "question": "What are the start station's name and id for the one that had the most start trips in August?"
+    },
+    {
+        "query": "SELECT bike_id FROM trip WHERE zip_code  =  94002 GROUP BY bike_id ORDER BY COUNT(*) DESC LIMIT 1",
+        "question": "Which bike traveled the most often in zip code 94002?"
+    },
+    {
+        "query": "SELECT bike_id FROM trip WHERE zip_code  =  94002 GROUP BY bike_id ORDER BY COUNT(*) DESC LIMIT 1",
+        "question": "What is the id of the bike that traveled the most in 94002?"
+    },
+    {
+        "query": "SELECT COUNT(*) FROM weather WHERE mean_humidity  >  50 AND mean_visibility_miles  >  8",
+        "question": "How many days had both mean humidity above 50 and mean visibility above 8?"
+    },
+    {
+        "query": "SELECT COUNT(*) FROM weather WHERE mean_humidity  >  50 AND mean_visibility_miles  >  8",
+        "question": "What is the number of days that had an average humity above 50 and an average visibility above 8?"
+    },
+    {
+        "query": "SELECT T1.lat ,  T1.long ,  T1.city FROM station AS T1 JOIN trip AS T2 ON T1.id  =  T2.start_station_id ORDER BY T2.duration LIMIT 1",
+        "question": "What is the latitude, longitude, city of the station from which the shortest trip started?"
+    },
+    {
+        "query": "SELECT T1.lat ,  T1.long ,  T1.city FROM station AS T1 JOIN trip AS T2 ON T1.id  =  T2.start_station_id ORDER BY T2.duration LIMIT 1",
+        "question": "What is the latitude, longitude, and city of the station from which the trip with smallest duration started?"
+    },
+    {
+        "query": "SELECT id FROM station WHERE city  =  \"San Francisco\" INTERSECT SELECT station_id FROM status GROUP BY station_id HAVING avg(bikes_available)  >  10",
+        "question": "What are the ids of stations that are located in San Francisco and have average bike availability above 10."
+    },
+    {
+        "query": "SELECT id FROM station WHERE city  =  \"San Francisco\" INTERSECT SELECT station_id FROM status GROUP BY station_id HAVING avg(bikes_available)  >  10",
+        "question": "What are the ids of the stations in San Francisco that normally have more than 10 bikes available?"
+    },
+    {
+        "query": "SELECT T1.name ,  T1.id FROM station AS T1 JOIN status AS T2 ON T1.id  =  T2.station_id GROUP BY T2.station_id HAVING avg(T2.bikes_available)  >  14 UNION SELECT name ,  id FROM station WHERE installation_date LIKE \"12/%\"",
+        "question": "What are the names and ids of stations that had more than 14 bikes available on average or were installed in December?"
+    },
+    {
+        "query": "SELECT T1.name ,  T1.id FROM station AS T1 JOIN status AS T2 ON T1.id  =  T2.station_id GROUP BY T2.station_id HAVING avg(T2.bikes_available)  >  14 UNION SELECT name ,  id FROM station WHERE installation_date LIKE \"12/%\"",
+        "question": "What are the names and ids of all stations that have more than 14 bikes available on average or had bikes installed in December?"
+    },
+    {
+        "query": "SELECT cloud_cover FROM weather WHERE zip_code  =  94107 GROUP BY cloud_cover ORDER BY COUNT (*) DESC LIMIT 3",
+        "question": "What is the 3 most common cloud cover rates in the region of zip code 94107?"
+    },
+    {
+        "query": "SELECT cloud_cover FROM weather WHERE zip_code  =  94107 GROUP BY cloud_cover ORDER BY COUNT (*) DESC LIMIT 3",
+        "question": "What are the 3 most common cloud covers in the zip code of 94107?"
+    },
+    {
+        "query": "SELECT zip_code FROM weather GROUP BY zip_code ORDER BY avg(mean_sea_level_pressure_inches) LIMIT 1",
+        "question": "What is the zip code in which the average mean sea level pressure is the lowest?"
+    },
+    {
+        "query": "SELECT zip_code FROM weather GROUP BY zip_code ORDER BY avg(mean_sea_level_pressure_inches) LIMIT 1",
+        "question": "What is the zip code that has the lowest average mean sea level pressure?"
+    },
+    {
+        "query": "SELECT avg(bikes_available) FROM status WHERE station_id NOT IN (SELECT id FROM station WHERE city  =  \"Palo Alto\")",
+        "question": "What is the average bike availability in stations that are not located in Palo Alto?"
+    },
+    {
+        "query": "SELECT avg(bikes_available) FROM status WHERE station_id NOT IN (SELECT id FROM station WHERE city  =  \"Palo Alto\")",
+        "question": "What is the average bike availablility for stations not in Palo Alto?"
+    },
+    {
+        "query": "SELECT avg(long) FROM station WHERE id NOT IN (SELECT station_id FROM status GROUP BY station_id HAVING max(bikes_available)  >  10)",
+        "question": "What is the average longitude of stations that never had bike availability more than 10?"
+    },
+    {
+        "query": "SELECT avg(long) FROM station WHERE id NOT IN (SELECT station_id FROM status GROUP BY station_id HAVING max(bikes_available)  >  10)",
+        "question": "What is the mean longitude for all stations that have never had more than 10 bikes available?"
+    },
+    {
+        "query": "SELECT date ,  zip_code FROM weather WHERE max_temperature_f  >=  80",
+        "question": "When and in what zip code did max temperature reach 80?"
+    },
+    {
+        "query": "SELECT date ,  zip_code FROM weather WHERE max_temperature_f  >=  80",
+        "question": "What zip codes have a station with a max temperature greater than or equal to 80 and when did it reach that temperature?"
+    },
+    {
+        "query": "SELECT T1.id FROM trip AS T1 JOIN weather AS T2 ON T1.zip_code  =  T2.zip_code GROUP BY T2.zip_code HAVING avg(T2.mean_temperature_f)  >  60",
+        "question": "Give me ids for all the trip that took place in a zip code area with average mean temperature above 60."
+    },
+    {
+        "query": "SELECT T1.id FROM trip AS T1 JOIN weather AS T2 ON T1.zip_code  =  T2.zip_code GROUP BY T2.zip_code HAVING avg(T2.mean_temperature_f)  >  60",
+        "question": "For each zip code, find the ids of all trips that have a higher average mean temperature above 60?"
+    },
+    {
+        "query": "SELECT zip_code , count(*) FROM weather WHERE max_wind_Speed_mph  >=  25 GROUP BY zip_code",
+        "question": "For each zip code, return how many times max wind speed reached 25?"
+    },
+    {
+        "query": "SELECT zip_code , count(*) FROM weather WHERE max_wind_Speed_mph  >=  25 GROUP BY zip_code",
+        "question": "For each zip code, how many times has the maximum wind speed reached 25 mph?"
+    },
+    {
+        "query": "SELECT date ,  zip_code FROM weather WHERE min_dew_point_f  <  (SELECT min(min_dew_point_f) FROM weather WHERE zip_code  =  94107)",
+        "question": "On which day and in which zip code was the min dew point lower than any day in zip code 94107?"
+    },
+    {
+        "query": "SELECT date ,  zip_code FROM weather WHERE min_dew_point_f  <  (SELECT min(min_dew_point_f) FROM weather WHERE zip_code  =  94107)",
+        "question": "Which days had a minimum dew point smaller than any day in zip code 94107, and in which zip codes were those measurements taken?"
+    },
+    {
+        "query": "SELECT T1.id ,  T2.installation_date FROM trip AS T1 JOIN station AS T2 ON T1.end_station_id  =  T2.id",
+        "question": "For each trip, return its ending station's installation date."
+    },
+    {
+        "query": "SELECT T1.id ,  T2.installation_date FROM trip AS T1 JOIN station AS T2 ON T1.end_station_id  =  T2.id",
+        "question": "What is the installation date for each ending station on all the trips?"
+    },
+    {
+        "query": "SELECT T1.id FROM trip AS T1 JOIN station AS T2 ON T1.start_station_id  =  T2.id ORDER BY T2.dock_count DESC LIMIT 1",
+        "question": "Which trip started from the station with the largest dock count? Give me the trip id."
+    },
+    {
+        "query": "SELECT T1.id FROM trip AS T1 JOIN station AS T2 ON T1.start_station_id  =  T2.id ORDER BY T2.dock_count DESC LIMIT 1",
+        "question": "What is the id of the trip that started from the station with the highest dock count?"
+    },
+    {
+        "query": "SELECT count(*) FROM trip AS T1 JOIN station AS T2 ON T1.end_station_id  =  T2.id WHERE T2.city !=  \"San Francisco\"",
+        "question": "Count the number of trips that did not end in San Francisco city."
+    },
+    {
+        "query": "SELECT count(*) FROM trip AS T1 JOIN station AS T2 ON T1.end_station_id  =  T2.id WHERE T2.city != \"San Francisco\"",
+        "question": "How many trips did not end in San Francisco?"
+    },
+    {
+        "query": "SELECT date FROM weather WHERE zip_code  =  94107 AND EVENTS != \"Fog\" AND EVENTS != \"Rain\"",
+        "question": "In zip code 94107, on which day neither Fog nor Rain was not observed?"
+    },
+    {
+        "query": "SELECT date FROM weather WHERE zip_code  =  94107 AND EVENTS != \"Fog\" AND EVENTS != \"Rain\"",
+        "question": "On which day has it neither been foggy nor rained in the zip code of 94107?"
+    },
+    {
+        "query": "SELECT id FROM station WHERE lat  >  37.4 EXCEPT SELECT station_id FROM status GROUP BY station_id HAVING min(bikes_available)  <  7",
+        "question": "What are the ids of stations that have latitude above 37.4 and never had bike availability below 7?"
+    },
+    {
+        "query": "SELECT id FROM station WHERE lat  >  37.4 EXCEPT SELECT station_id FROM status GROUP BY station_id HAVING min(bikes_available)  <  7",
+        "question": "What are the ids of all stations that have a latitude above 37.4 and have never had less than 7 bikes available?"
+    },
+    {
+        "query": "SELECT T1.name FROM station AS T1 JOIN status AS T2 ON T1.id  =  T2.station_id GROUP BY T2.station_id HAVING avg(bikes_available)  >  10 EXCEPT SELECT name FROM station WHERE city  =  \"San Jose\"",
+        "question": "What are names of stations that have average bike availability above 10 and are not located in San Jose city?"
+    },
+    {
+        "query": "SELECT T1.name FROM station AS T1 JOIN status AS T2 ON T1.id  =  T2.station_id GROUP BY T2.station_id HAVING avg(bikes_available)  >  10 EXCEPT SELECT name FROM station WHERE city  =  \"San Jose\"",
+        "question": "What are the names of all stations that have more than 10 bikes available and are not located in San Jose?"
+    },
+    {
+        "query": "SELECT name ,  lat ,  city FROM station ORDER BY lat LIMIT 1",
+        "question": "What are the name, latitude, and city of the station with the lowest latitude?"
+    },
+    {
+        "query": "SELECT name ,  lat ,  city FROM station ORDER BY lat LIMIT 1",
+        "question": "What is the name, latitude, and city of the station that is located the furthest South?"
+    },
+    {
+        "query": "SELECT date ,  mean_temperature_f ,  mean_humidity FROM weather ORDER BY max_gust_speed_mph DESC LIMIT 3",
+        "question": "What are the date, mean temperature and mean humidity for the top 3 days with the largest max gust speeds?"
+    },
+    {
+        "query": "SELECT date ,  mean_temperature_f ,  mean_humidity FROM weather ORDER BY max_gust_speed_mph DESC LIMIT 3",
+        "question": "What is the date, average temperature and mean humidity for the days with the 3 largest maximum gust speeds?"
+    },
+    {
+        "query": "SELECT city ,  COUNT(*) FROM station GROUP BY city HAVING COUNT(*)  >=  15",
+        "question": "List the name and the number of stations for all the cities that have at least 15 stations."
+    },
+    {
+        "query": "SELECT city ,  COUNT(*) FROM station GROUP BY city HAVING COUNT(*)  >=  15",
+        "question": "What is the name of every city that has at least 15 stations and how many stations does it have?"
+    },
+    {
+        "query": "SELECT start_station_id ,  start_station_name FROM trip GROUP BY start_station_name HAVING COUNT(*)  >=  200",
+        "question": "Find the ids and names of stations from which at least 200 trips started."
+    },
+    {
+        "query": "SELECT start_station_id ,  start_station_name FROM trip GROUP BY start_station_name HAVING COUNT(*)  >=  200",
+        "question": "What are the ids and names of all start stations that were the beginning of at least 200 trips?"
+    },
+    {
+        "query": "SELECT zip_code FROM weather GROUP BY zip_code HAVING avg(mean_visibility_miles)  <  10",
+        "question": "Find the zip code in which the average mean visibility is lower than 10."
+    },
+    {
+        "query": "SELECT zip_code FROM weather GROUP BY zip_code HAVING avg(mean_visibility_miles)  <  10",
+        "question": "For each zip code, select all those that have an average mean visiblity below 10."
+    },
+    {
+        "query": "SELECT city FROM station GROUP BY city ORDER BY max(lat) DESC",
+        "question": "List all the cities in a decreasing order of each city's stations' highest latitude."
+    },
+    {
+        "query": "SELECT city FROM station GROUP BY city ORDER BY max(lat) DESC",
+        "question": "For each city, list their names in decreasing order by their highest station latitude."
+    },
+    {
+        "query": "SELECT date ,  cloud_cover FROM weather ORDER BY cloud_cover DESC LIMIT 5",
+        "question": "What are the dates that had the top 5 cloud cover rates? Also tell me the cloud cover rate."
+    },
+    {
+        "query": "SELECT date ,  cloud_cover FROM weather ORDER BY cloud_cover DESC LIMIT 5",
+        "question": "What are the dates that have the 5 highest cloud cover rates and what are the rates?"
+    },
+    {
+        "query": "SELECT id ,  duration FROM trip ORDER BY duration DESC LIMIT 3",
+        "question": "What are the ids and durations of the trips with the top 3 durations?"
+    },
+    {
+        "query": "SELECT id ,  duration FROM trip ORDER BY duration DESC LIMIT 3",
+        "question": "What are the ids of the trips that lasted the longest and how long did they last?"
+    },
+    {
+        "query": "SELECT T1.name ,  T1.long ,  avg(T2.duration) FROM station AS T1 JOIN trip AS T2 ON T1.id  =  T2.start_station_id GROUP BY T2.start_station_id",
+        "question": "For each station, return its longitude and the average duration of trips that started from the station."
+    },
+    {
+        "query": "SELECT T1.name ,  T1.long ,  avg(T2.duration) FROM station AS T1 JOIN trip AS T2 ON T1.id  =  T2.start_station_id GROUP BY T2.start_station_id",
+        "question": "For each start station id, what is its name, longitude and average duration of trips started there?"
+    },
+    {
+        "query": "SELECT T1.name ,  T1.lat ,  min(T2.duration) FROM station AS T1 JOIN trip AS T2 ON T1.id  =  T2.end_station_id GROUP BY T2.end_station_id",
+        "question": "For each station, find its latitude and the minimum duration of trips that ended at the station."
+    },
+    {
+        "query": "SELECT T1.name ,  T1.lat ,  min(T2.duration) FROM station AS T1 JOIN trip AS T2 ON T1.id  =  T2.end_station_id GROUP BY T2.end_station_id",
+        "question": "For each end station id, what is its name, latitude, and minimum duration for trips ended there?"
+    },
+    {
+        "query": "SELECT DISTINCT start_station_name FROM trip WHERE duration  <  100",
+        "question": "List all the distinct stations from which a trip of duration below 100 started."
+    },
+    {
+        "query": "SELECT DISTINCT start_station_name FROM trip WHERE duration  <  100",
+        "question": "What are all the different start station names for a trip that lasted less than 100?"
+    },
+    {
+        "query": "SELECT DISTINCT zip_code FROM weather EXCEPT SELECT DISTINCT zip_code FROM weather WHERE max_dew_point_f  >=  70",
+        "question": "Find all the zip codes in which the max dew point have never reached 70."
+    },
+    {
+        "query": "SELECT DISTINCT zip_code FROM weather EXCEPT SELECT DISTINCT zip_code FROM weather WHERE max_dew_point_f  >=  70",
+        "question": "What are all the different zip codes that have a maximum dew point that was always below 70?"
+    },
+    {
+        "query": "SELECT id FROM trip WHERE duration  >=  (SELECT avg(duration) FROM trip WHERE zip_code  =  94103)",
+        "question": "Find the id for the trips that lasted at least as long as the average duration of trips in zip code 94103."
+    },
+    {
+        "query": "SELECT id FROM trip WHERE duration  >=  (SELECT avg(duration) FROM trip WHERE zip_code  =  94103)",
+        "question": "What are the ids of all trips that had a duration as long as the average trip duration in the zip code 94103?"
+    },
+    {
+        "query": "SELECT date FROM weather WHERE mean_sea_level_pressure_inches BETWEEN 30.3 AND 31",
+        "question": "What are the dates in which the mean sea level pressure was between 30.3 and 31?"
+    },
+    {
+        "query": "SELECT date FROM weather WHERE mean_sea_level_pressure_inches BETWEEN 30.3 AND 31",
+        "question": "What are the dates that have an average sea level pressure between 30.3 and 31?"
+    },
+    {
+        "query": "SELECT date ,  max_temperature_f - min_temperature_f FROM weather ORDER BY max_temperature_f - min_temperature_f LIMIT 1",
+        "question": "Find the day in which the difference between the max temperature and min temperature was the smallest. Also report the difference."
+    },
+    {
+        "query": "SELECT date ,  max_temperature_f - min_temperature_f FROM weather ORDER BY max_temperature_f - min_temperature_f LIMIT 1",
+        "question": "What are the days that had the smallest temperature range, and what was that range?"
+    },
+    {
+        "query": "SELECT DISTINCT T1.id ,  T1.name FROM station AS T1 JOIN status AS T2 ON T1.id  =  T2.station_id WHERE T2.bikes_available  >  12",
+        "question": "What are the id and name of the stations that have ever had more than 12 bikes available?"
+    },
+    {
+        "query": "SELECT DISTINCT T1.id ,  T1.name FROM station AS T1 JOIN status AS T2 ON T1.id  =  T2.station_id WHERE T2.bikes_available  >  12",
+        "question": "What are the different ids and names of the stations that have had more than 12 bikes available?"
+    },
+    {
+        "query": "SELECT zip_code FROM weather GROUP BY zip_code HAVING avg(mean_humidity)  <  70 INTERSECT SELECT zip_code FROM trip GROUP BY zip_code HAVING count(*)  >=  100",
+        "question": "Give me the zip code where the average mean humidity is below 70 and at least 100 trips took place."
+    },
+    {
+        "query": "SELECT zip_code FROM weather GROUP BY zip_code HAVING avg(mean_humidity)  <  70 INTERSECT SELECT zip_code FROM trip GROUP BY zip_code HAVING count(*)  >=  100",
+        "question": "What are the zip codes that have an average mean humidity below 70 and had at least 100 trips come through there?"
+    },
+    {
+        "query": "SELECT name FROM station WHERE city  =  \"Palo Alto\" EXCEPT SELECT end_station_name FROM trip GROUP BY end_station_name HAVING count(*)  >  100",
+        "question": "What are the names of stations that are located in Palo Alto city but have never been the ending point of trips more than 100 times?"
+    },
+    {
+        "query": "SELECT name FROM station WHERE city  =  \"Palo Alto\" EXCEPT SELECT end_station_name FROM trip GROUP BY end_station_name HAVING count(*)  >  100",
+        "question": "What are the names of the stations that are located in Palo Alto but have never been the ending point of the trips"
+    },
+    {
+        "query": "SELECT count(*) FROM station AS T1 JOIN trip AS T2 JOIN station AS T3 JOIN trip AS T4 ON T1.id  =  T2.start_station_id AND T2.id  =  T4.id AND T3.id  =  T4.end_station_id WHERE T1.city  =  \"Mountain View\" AND T3.city  =  \"Palo Alto\"",
+        "question": "How many trips started from Mountain View city and ended at Palo Alto city?"
+    },
+    {
+        "query": "SELECT count(*) FROM station AS T1 JOIN trip AS T2 JOIN station AS T3 JOIN trip AS T4 ON T1.id  =  T2.start_station_id AND T2.id  =  T4.id AND T3.id  =  T4.end_station_id WHERE T1.city  =  \"Mountain View\" AND T3.city  =  \"Palo Alto\"",
+        "question": "How many trips stated from  a station in Mountain View and ended at one in Palo Alto?"
+    },
+    {
+        "query": "SELECT avg(T1.lat) ,  avg(T1.long) FROM station AS T1 JOIN trip AS T2 ON T1.id  =  T2.start_station_id",
+        "question": "What is the average latitude and longitude of the starting points of all trips?"
+    },
+    {
+        "query": "SELECT avg(T1.lat) ,  avg(T1.long) FROM station AS T1 JOIN trip AS T2 ON T1.id  =  T2.start_station_id",
+        "question": "What is the average latitude and longitude of all starting stations for the trips?"
+    },
+    {
+        "query": "SELECT count(*) FROM book",
+        "question": "How many books are there?"
+    },
+    {
+        "query": "SELECT Writer FROM book ORDER BY Writer ASC",
+        "question": "List the writers of the books in ascending alphabetical order."
+    },
+    {
+        "query": "SELECT Title FROM book ORDER BY Issues ASC",
+        "question": "List the titles of the books in ascending order of issues."
+    },
+    {
+        "query": "SELECT Title FROM book WHERE Writer != \"Elaine Lee\"",
+        "question": "What are the titles of the books whose writer is not \"Elaine Lee\"?"
+    },
+    {
+        "query": "SELECT Title ,  Issues FROM book",
+        "question": "What are the title and issues of the books?"
+    },
+    {
+        "query": "SELECT Publication_Date FROM publication ORDER BY Price DESC",
+        "question": "What are the dates of publications in descending order of price?"
+    },
+    {
+        "query": "SELECT DISTINCT Publisher FROM publication WHERE Price  >  5000000",
+        "question": "What are the distinct publishers of publications with price higher than 5000000?"
+    },
+    {
+        "query": "SELECT Publisher FROM publication ORDER BY Price DESC LIMIT 1",
+        "question": "List the publisher of the publication with the highest price."
+    },
+    {
+        "query": "SELECT Publication_Date FROM publication ORDER BY Price ASC LIMIT 3",
+        "question": "List the publication dates of publications with 3 lowest prices."
+    },
+    {
+        "query": "SELECT T1.Title ,  T2.Publication_Date FROM book AS T1 JOIN publication AS T2 ON T1.Book_ID  =  T2.Book_ID",
+        "question": "Show the title and publication dates of books."
+    },
+    {
+        "query": "SELECT T1.Writer FROM book AS T1 JOIN publication AS T2 ON T1.Book_ID  =  T2.Book_ID WHERE T2.Price  >  4000000",
+        "question": "Show writers who have published a book with price more than 4000000."
+    },
+    {
+        "query": "SELECT T1.Title FROM book AS T1 JOIN publication AS T2 ON T1.Book_ID  =  T2.Book_ID ORDER BY T2.Price DESC",
+        "question": "Show the titles of books in descending order of publication price."
+    },
+    {
+        "query": "SELECT Publisher FROM publication GROUP BY Publisher HAVING COUNT(*)  >  1",
+        "question": "Show publishers that have more than one publication."
+    },
+    {
+        "query": "SELECT Publisher ,  COUNT(*) FROM publication GROUP BY Publisher",
+        "question": "Show different publishers together with the number of publications they have."
+    },
+    {
+        "query": "SELECT Publication_Date FROM publication GROUP BY Publication_Date ORDER BY COUNT(*) DESC LIMIT 1",
+        "question": "Please show the most common publication date."
+    },
+    {
+        "query": "SELECT Writer FROM book GROUP BY Writer HAVING COUNT(*)  >  1",
+        "question": "List the writers who have written more than one book."
+    },
+    {
+        "query": "SELECT Title FROM book WHERE Book_ID NOT IN (SELECT Book_ID FROM publication)",
+        "question": "List the titles of books that are not published."
+    },
+    {
+        "query": "SELECT Publisher FROM publication WHERE Price  >  10000000 INTERSECT SELECT Publisher FROM publication WHERE Price  <  5000000",
+        "question": "Show the publishers that have publications with price higher than 10000000 and publications with price lower than 5000000."
+    },
+    {
+        "query": "SELECT COUNT (DISTINCT Publication_Date) FROM publication",
+        "question": "What is the number of distinct publication dates?"
+    },
+    {
+        "query": "SELECT COUNT (DISTINCT Publication_Date) FROM publication",
+        "question": "How many distinct publication dates are there in our record?"
+    },
+    {
+        "query": "SELECT Price FROM publication WHERE Publisher  =  \"Person\" OR Publisher  =  \"Wiley\"",
+        "question": "Show the prices of publications whose publisher is either \"Person\" or \"Wiley\""
+    },
+    {
+        "query": "SELECT count(DISTINCT allergy) FROM Allergy_type",
+        "question": "How many allergies are there?"
+    },
+    {
+        "query": "SELECT count(DISTINCT allergy) FROM Allergy_type",
+        "question": "How many allergy entries are there?"
+    },
+    {
+        "query": "SELECT count(DISTINCT allergytype) FROM Allergy_type",
+        "question": "How many different allergy types exist?"
+    },
+    {
+        "query": "SELECT count(DISTINCT allergytype) FROM Allergy_type",
+        "question": "How many distinct allergies are there?"
+    },
+    {
+        "query": "SELECT DISTINCT allergytype FROM Allergy_type",
+        "question": "Show all allergy types."
+    },
+    {
+        "query": "SELECT DISTINCT allergytype FROM Allergy_type",
+        "question": "What are the different allergy types?"
+    },
+    {
+        "query": "SELECT allergy ,  allergytype FROM Allergy_type",
+        "question": "Show all allergies and their types."
+    },
+    {
+        "query": "SELECT allergy ,  allergytype FROM Allergy_type",
+        "question": "What are the allergies and their types?"
+    },
+    {
+        "query": "SELECT DISTINCT allergy FROM Allergy_type WHERE allergytype  =  \"food\"",
+        "question": "Show all allergies with type food."
+    },
+    {
+        "query": "SELECT DISTINCT allergy FROM Allergy_type WHERE allergytype  =  \"food\"",
+        "question": "What are all the different food allergies?"
+    },
+    {
+        "query": "SELECT allergytype FROM Allergy_type WHERE allergy  =  \"Cat\"",
+        "question": "What is the type of allergy Cat?"
+    },
+    {
+        "query": "SELECT allergytype FROM Allergy_type WHERE allergy  =  \"Cat\"",
+        "question": "What is allergy type of a cat allergy?"
+    },
+    {
+        "query": "SELECT count(*) FROM Allergy_type WHERE allergytype  =  \"animal\"",
+        "question": "How many allergies have type animal?"
+    },
+    {
+        "query": "SELECT count(*) FROM Allergy_type WHERE allergytype  =  \"animal\"",
+        "question": "How many animal type allergies exist?"
+    },
+    {
+        "query": "SELECT allergytype ,  count(*) FROM Allergy_type GROUP BY allergytype",
+        "question": "Show all allergy types and the number of allergies in each type."
+    },
+    {
+        "query": "SELECT allergytype ,  count(*) FROM Allergy_type GROUP BY allergytype",
+        "question": "What are the allergy types and how many allergies correspond to each one?"
+    },
+    {
+        "query": "SELECT allergytype FROM Allergy_type GROUP BY allergytype ORDER BY count(*) DESC LIMIT 1",
+        "question": "Which allergy type has most number of allergies?"
+    },
+    {
+        "query": "SELECT allergytype FROM Allergy_type GROUP BY allergytype ORDER BY count(*) DESC LIMIT 1",
+        "question": "Which allergy type is most common?"
+    },
+    {
+        "query": "SELECT allergytype FROM Allergy_type GROUP BY allergytype ORDER BY count(*) ASC LIMIT 1",
+        "question": "Which allergy type has least number of allergies?"
+    },
+    {
+        "query": "SELECT allergytype FROM Allergy_type GROUP BY allergytype ORDER BY count(*) ASC LIMIT 1",
+        "question": "Which allergy type is the least common?"
+    },
+    {
+        "query": "SELECT count(*) FROM Student",
+        "question": "How many students are there?"
+    },
+    {
+        "query": "SELECT count(*) FROM Student",
+        "question": "What is the total number of students?"
+    },
+    {
+        "query": "SELECT Fname ,  Lname FROM Student",
+        "question": "Show first name and last name for all students."
+    },
+    {
+        "query": "SELECT Fname ,  Lname FROM Student",
+        "question": "What are the full names of all students"
+    },
+    {
+        "query": "SELECT count(DISTINCT advisor) FROM Student",
+        "question": "How many different advisors are listed?"
+    },
+    {
+        "query": "SELECT count(DISTINCT advisor) FROM Student",
+        "question": "How many advisors are there?"
+    },
+    {
+        "query": "SELECT DISTINCT Major FROM Student",
+        "question": "Show all majors."
+    },
+    {
+        "query": "SELECT DISTINCT Major FROM Student",
+        "question": "What are the different majors?"
+    },
+    {
+        "query": "SELECT DISTINCT city_code FROM Student",
+        "question": "Show all cities where students live."
+    },
+    {
+        "query": "SELECT DISTINCT city_code FROM Student",
+        "question": "What cities do students live in?"
+    },
+    {
+        "query": "SELECT Fname ,  Lname ,  Age FROM Student WHERE Sex  =  'F'",
+        "question": "Show first name, last name, age for all female students. Their sex is F."
+    },
+    {
+        "query": "SELECT Fname ,  Lname ,  Age FROM Student WHERE Sex  =  'F'",
+        "question": "What are the full names and ages for all female students whose sex is F?"
+    },
+    {
+        "query": "SELECT StuID FROM Student WHERE Sex  =  'M'",
+        "question": "Show student ids for all male students."
+    },
+    {
+        "query": "SELECT StuID FROM Student WHERE Sex  =  'M'",
+        "question": "What are the student ids for all male students?"
+    },
+    {
+        "query": "SELECT count(*) FROM Student WHERE age  =  18",
+        "question": "How many students are age 18?"
+    },
+    {
+        "query": "SELECT count(*) FROM Student WHERE age  =  18",
+        "question": "How many students are 18 years old?"
+    },
+    {
+        "query": "SELECT StuID FROM Student WHERE age  >  20",
+        "question": "Show all student ids who are older than 20."
+    },
+    {
+        "query": "SELECT StuID FROM Student WHERE age  >  20",
+        "question": "What are the student ids for students over 20 years old?"
+    },
+    {
+        "query": "SELECT city_code FROM Student WHERE LName  =  \"Kim\"",
+        "question": "Which city does the student whose last name is \"Kim\" live in?"
+    },
+    {
+        "query": "SELECT city_code FROM Student WHERE LName  =  \"Kim\"",
+        "question": "Give the city that the student whose family name is Kim lives in."
+    },
+    {
+        "query": "SELECT Advisor FROM Student WHERE StuID  =  1004",
+        "question": "Who is the advisor of student with ID 1004?"
+    },
+    {
+        "query": "SELECT Advisor FROM Student WHERE StuID  =  1004",
+        "question": "Who advises student 1004?"
+    },
+    {
+        "query": "SELECT count(*) FROM Student WHERE city_code  =  \"HKG\" OR city_code  =  \"CHI\"",
+        "question": "How many students live in HKG or CHI?"
+    },
+    {
+        "query": "SELECT count(*) FROM Student WHERE city_code  =  \"HKG\" OR city_code  =  \"CHI\"",
+        "question": "Give the number of students living in either HKG or CHI."
+    },
+    {
+        "query": "SELECT min(age) ,  avg(age) ,  max(age) FROM Student",
+        "question": "Show the minimum, average, and maximum age of all students."
+    },
+    {
+        "query": "SELECT min(age) ,  avg(age) ,  max(age) FROM Student",
+        "question": "What is the minimum, mean, and maximum age across all students?"
+    },
+    {
+        "query": "SELECT LName FROM Student WHERE age  =  (SELECT min(age) FROM Student)",
+        "question": "What is the last name of the youngest student?"
+    },
+    {
+        "query": "SELECT LName FROM Student WHERE age  =  (SELECT min(age) FROM Student)",
+        "question": "Provide the last name of the youngest student."
+    },
+    {
+        "query": "SELECT StuID FROM Student WHERE age  =  (SELECT max(age) FROM Student)",
+        "question": "Show the student id of the oldest student."
+    },
+    {
+        "query": "SELECT StuID FROM Student WHERE age  =  (SELECT max(age) FROM Student)",
+        "question": "What student id corresponds to the oldest student?"
+    },
+    {
+        "query": "SELECT major ,  count(*) FROM Student GROUP BY major",
+        "question": "Show all majors and corresponding number of students."
+    },
+    {
+        "query": "SELECT major ,  count(*) FROM Student GROUP BY major",
+        "question": "How many students are there for each major?"
+    },
+    {
+        "query": "SELECT major FROM Student GROUP BY major ORDER BY count(*) DESC LIMIT 1",
+        "question": "Which major has most number of students?"
+    },
+    {
+        "query": "SELECT major FROM Student GROUP BY major ORDER BY count(*) DESC LIMIT 1",
+        "question": "What is the largest major?"
+    },
+    {
+        "query": "SELECT age ,  count(*) FROM Student GROUP BY age",
+        "question": "Show all ages and corresponding number of students."
+    },
+    {
+        "query": "SELECT age ,  count(*) FROM Student GROUP BY age",
+        "question": "How old is each student and how many students are each age?"
+    },
+    {
+        "query": "SELECT avg(age) ,  sex FROM Student GROUP BY sex",
+        "question": "Show the average age for male and female students."
+    },
+    {
+        "query": "SELECT avg(age) ,  sex FROM Student GROUP BY sex",
+        "question": "What are the average ages for male and female students?"
+    },
+    {
+        "query": "SELECT city_code ,  count(*) FROM Student GROUP BY city_code",
+        "question": "Show all cities and corresponding number of students."
+    },
+    {
+        "query": "SELECT city_code ,  count(*) FROM Student GROUP BY city_code",
+        "question": "How many students live in each city?"
+    },
+    {
+        "query": "SELECT advisor ,  count(*) FROM Student GROUP BY advisor",
+        "question": "Show all advisors and corresponding number of students."
+    },
+    {
+        "query": "SELECT advisor ,  count(*) FROM Student GROUP BY advisor",
+        "question": "How many students does each advisor have?"
+    },
+    {
+        "query": "SELECT advisor FROM Student GROUP BY advisor ORDER BY count(*) DESC LIMIT 1",
+        "question": "Which advisor has most number of students?"
+    },
+    {
+        "query": "SELECT advisor FROM Student GROUP BY advisor ORDER BY count(*) DESC LIMIT 1",
+        "question": "Give the advisor with the most students."
+    },
+    {
+        "query": "SELECT count(*) FROM Has_allergy WHERE Allergy  =  \"Cat\"",
+        "question": "How many students have cat allergies?"
+    },
+    {
+        "query": "SELECT count(*) FROM Has_allergy WHERE Allergy  =  \"Cat\"",
+        "question": "How many students are affected by cat allergies?"
+    },
+    {
+        "query": "SELECT StuID FROM Has_allergy GROUP BY StuID HAVING count(*)  >=  2",
+        "question": "Show all student IDs who have at least two allergies."
+    },
+    {
+        "query": "SELECT StuID FROM Has_allergy GROUP BY StuID HAVING count(*)  >=  2",
+        "question": "What are the students ids of students who have more than one allergy?"
+    },
+    {
+        "query": "SELECT StuID FROM Student EXCEPT SELECT StuID FROM Has_allergy",
+        "question": "What are the student ids of students who don't have any allergies?"
+    },
+    {
+        "query": "SELECT StuID FROM Student EXCEPT SELECT StuID FROM Has_allergy",
+        "question": "Which students are unaffected by allergies?"
+    },
+    {
+        "query": "SELECT count(*) FROM has_allergy AS T1 JOIN Student AS T2 ON T1.StuID  =  T2.StuID WHERE T2.sex  =  \"F\" AND T1.allergy  =  \"Milk\" OR T1.allergy  =  \"Eggs\"",
+        "question": "How many female students have milk or egg allergies?"
+    },
+    {
+        "query": "SELECT count(*) FROM has_allergy AS T1 JOIN Student AS T2 ON T1.StuID  =  T2.StuID WHERE T2.sex  =  \"F\" AND T1.allergy  =  \"Milk\" OR T1.allergy  =  \"Eggs\"",
+        "question": "How many students who are female are allergic to milk or eggs?"
+    },
+    {
+        "query": "SELECT count(*) FROM Has_allergy AS T1 JOIN Allergy_type AS T2 ON T1.allergy  =  T2.allergy WHERE T2.allergytype  =  \"food\"",
+        "question": "How many students have a food allergy?"
+    },
+    {
+        "query": "SELECT count(*) FROM Has_allergy AS T1 JOIN Allergy_type AS T2 ON T1.allergy  =  T2.allergy WHERE T2.allergytype  =  \"food\"",
+        "question": "How many students are affected by food related allergies?"
+    },
+    {
+        "query": "SELECT Allergy FROM Has_allergy GROUP BY Allergy ORDER BY count(*) DESC LIMIT 1",
+        "question": "Which allergy has most number of students affected?"
+    },
+    {
+        "query": "SELECT Allergy FROM Has_allergy GROUP BY Allergy ORDER BY count(*) DESC LIMIT 1",
+        "question": "Which allergy is the most common?"
+    },
+    {
+        "query": "SELECT Allergy ,  count(*) FROM Has_allergy GROUP BY Allergy",
+        "question": "Show all allergies with number of students affected."
+    },
+    {
+        "query": "SELECT Allergy ,  count(*) FROM Has_allergy GROUP BY Allergy",
+        "question": "How many students have each different allergy?"
+    },
+    {
+        "query": "SELECT T2.allergytype ,  count(*) FROM Has_allergy AS T1 JOIN Allergy_type AS T2 ON T1.allergy  =  T2.allergy GROUP BY T2.allergytype",
+        "question": "Show all allergy type with number of students affected."
+    },
+    {
+        "query": "SELECT T2.allergytype ,  count(*) FROM Has_allergy AS T1 JOIN Allergy_type AS T2 ON T1.allergy  =  T2.allergy GROUP BY T2.allergytype",
+        "question": "How many students are affected by each allergy type?"
+    },
+    {
+        "query": "SELECT lname ,  age FROM Student WHERE StuID IN (SELECT StuID FROM Has_allergy WHERE Allergy  =  \"Milk\" INTERSECT SELECT StuID FROM Has_allergy WHERE Allergy  =  \"Cat\")",
+        "question": "Find the last name and age of the student who has allergy to both milk and cat."
+    },
+    {
+        "query": "SELECT lname ,  age FROM Student WHERE StuID IN (SELECT StuID FROM Has_allergy WHERE Allergy  =  \"Milk\" INTERSECT SELECT StuID FROM Has_allergy WHERE Allergy  =  \"Cat\")",
+        "question": "What are the last names and ages of the students who are allergic to milk and cat?"
+    },
+    {
+        "query": "SELECT T1.Allergy ,  T1.AllergyType FROM Allergy_type AS T1 JOIN Has_allergy AS T2 ON T1.Allergy  =  T2.Allergy JOIN Student AS T3 ON T3.StuID  =  T2.StuID WHERE T3.Fname  =  \"Lisa\" ORDER BY T1.Allergy",
+        "question": "What are the allergies and their types that the student with first name Lisa has? And order the result by name of allergies."
+    },
+    {
+        "query": "SELECT T1.Allergy ,  T1.AllergyType FROM Allergy_type AS T1 JOIN Has_allergy AS T2 ON T1.Allergy  =  T2.Allergy JOIN Student AS T3 ON T3.StuID  =  T2.StuID WHERE T3.Fname  =  \"Lisa\" ORDER BY T1.Allergy",
+        "question": "What are the allergies the girl named Lisa has? And what are the types of them? Order the result by allergy names."
+    },
+    {
+        "query": "SELECT fname ,  sex FROM Student WHERE StuID IN (SELECT StuID FROM Has_allergy WHERE Allergy  =  \"Milk\" EXCEPT SELECT StuID FROM Has_allergy WHERE Allergy  =  \"Cat\")",
+        "question": "Find the first name and gender of the student who has allergy to milk but not cat."
+    },
+    {
+        "query": "SELECT fname ,  sex FROM Student WHERE StuID IN (SELECT StuID FROM Has_allergy WHERE Allergy  =  \"Milk\" EXCEPT SELECT StuID FROM Has_allergy WHERE Allergy  =  \"Cat\")",
+        "question": "What are the first name and gender of the students who have allergy to milk but can put up with cats?"
+    },
+    {
+        "query": "SELECT avg(age) FROM Student WHERE StuID IN ( SELECT T1.StuID FROM Has_allergy AS T1 JOIN Allergy_Type AS T2 ON T1.Allergy  =  T2.Allergy WHERE T2.allergytype  =  \"food\" INTERSECT SELECT T1.StuID FROM Has_allergy AS T1 JOIN Allergy_Type AS T2 ON T1.Allergy  =  T2.Allergy WHERE T2.allergytype  =  \"animal\")",
+        "question": "Find the average age of the students who have allergies with food and animal types."
+    },
+    {
+        "query": "SELECT avg(age) FROM Student WHERE StuID IN ( SELECT T1.StuID FROM Has_allergy AS T1 JOIN Allergy_Type AS T2 ON T1.Allergy  =  T2.Allergy WHERE T2.allergytype  =  \"food\" INTERSECT SELECT T1.StuID FROM Has_allergy AS T1 JOIN Allergy_Type AS T2 ON T1.Allergy  =  T2.Allergy WHERE T2.allergytype  =  \"animal\")",
+        "question": "How old are the students with allergies to food and animal types on average?"
+    },
+    {
+        "query": "SELECT fname ,  lname FROM Student WHERE StuID NOT IN (SELECT T1.StuID FROM Has_allergy AS T1 JOIN Allergy_Type AS T2 ON T1.Allergy  =  T2.Allergy WHERE T2.allergytype  =  \"food\")",
+        "question": "List the first and last name of the students who do not have any food type allergy."
+    },
+    {
+        "query": "SELECT fname ,  lname FROM Student WHERE StuID NOT IN (SELECT T1.StuID FROM Has_allergy AS T1 JOIN Allergy_Type AS T2 ON T1.Allergy  =  T2.Allergy WHERE T2.allergytype  =  \"food\")",
+        "question": "What is the full name of each student who is not allergic to any type of food."
+    },
+    {
+        "query": "SELECT count(*) FROM Student WHERE sex  =  \"M\" AND StuID IN (SELECT StuID FROM Has_allergy AS T1 JOIN Allergy_Type AS T2 ON T1.Allergy  =  T2.Allergy WHERE T2.allergytype  =  \"food\")",
+        "question": "Find the number of male (sex is 'M') students who have some food type allery."
+    },
+    {
+        "query": "SELECT count(*) FROM Student WHERE sex  =  \"M\" AND StuID IN (SELECT StuID FROM Has_allergy AS T1 JOIN Allergy_Type AS T2 ON T1.Allergy  =  T2.Allergy WHERE T2.allergytype  =  \"food\")",
+        "question": "How many male students (sex is 'M') are allergic to any type of food?"
+    },
+    {
+        "query": "SELECT DISTINCT T1.fname ,  T1.city_code FROM Student AS T1 JOIN Has_Allergy AS T2 ON T1.stuid  =  T2.stuid WHERE T2.Allergy  =  \"Milk\" OR T2.Allergy  =  \"Cat\"",
+        "question": "Find the different first names and cities of the students who have allergy to milk or cat."
+    },
+    {
+        "query": "SELECT DISTINCT T1.fname ,  T1.city_code FROM Student AS T1 JOIN Has_Allergy AS T2 ON T1.stuid  =  T2.stuid WHERE T2.Allergy  =  \"Milk\" OR T2.Allergy  =  \"Cat\"",
+        "question": "What are the distinct first names and cities of the students who have allergy either to milk or to cat?"
+    },
+    {
+        "query": "SELECT count(*) FROM Student WHERE age  >  18 AND StuID NOT IN ( SELECT StuID FROM Has_allergy AS T1 JOIN Allergy_Type AS T2 ON T1.Allergy  =  T2.Allergy WHERE T2.allergytype  =  \"food\" OR T2.allergytype  =  \"animal\")",
+        "question": "Find the number of students who are older than 18 and do not have allergy to either food or animal."
+    },
+    {
+        "query": "SELECT count(*) FROM Student WHERE age  >  18 AND StuID NOT IN ( SELECT StuID FROM Has_allergy AS T1 JOIN Allergy_Type AS T2 ON T1.Allergy  =  T2.Allergy WHERE T2.allergytype  =  \"food\" OR T2.allergytype  =  \"animal\")",
+        "question": "How many students are over 18 and do not have allergy to food type or animal type?"
+    },
+    {
+        "query": "SELECT fname ,  major FROM Student WHERE StuID NOT IN (SELECT StuID FROM Has_allergy WHERE Allergy  =  \"Soy\")",
+        "question": "Find the first name and major of the students who are not allegry to soy."
+    },
+    {
+        "query": "SELECT fname ,  major FROM Student WHERE StuID NOT IN (SELECT StuID FROM Has_allergy WHERE Allergy  =  \"Soy\")",
+        "question": "What are the first name and major of the students who are able to consume soy?"
+    },
+    {
+        "query": "SELECT count(*) FROM body_builder",
+        "question": "How many body builders are there?"
+    },
+    {
+        "query": "SELECT Total FROM body_builder ORDER BY Total ASC",
+        "question": "List the total scores of body builders in ascending order."
+    },
+    {
+        "query": "SELECT Snatch ,  Clean_Jerk FROM body_builder ORDER BY Snatch ASC",
+        "question": "List the snatch score and clean jerk score of body builders in ascending order of snatch score."
+    },
+    {
+        "query": "SELECT avg(Snatch) FROM body_builder",
+        "question": "What is the average snatch score of body builders?"
+    },
+    {
+        "query": "SELECT Clean_Jerk FROM body_builder ORDER BY Total DESC LIMIT 1",
+        "question": "What are the clean and jerk score of the body builder with the highest total score?"
+    },
+    {
+        "query": "SELECT Birth_Date FROM People ORDER BY Height ASC",
+        "question": "What are the birthdays of people in ascending order of height?"
+    },
+    {
+        "query": "SELECT T2.Name FROM body_builder AS T1 JOIN people AS T2 ON T1.People_ID  =  T2.People_ID",
+        "question": "What are the names of body builders?"
+    },
+    {
+        "query": "SELECT T2.Name FROM body_builder AS T1 JOIN people AS T2 ON T1.People_ID  =  T2.People_ID WHERE T1.Total  >  300",
+        "question": "What are the names of body builders whose total score is higher than 300?"
+    },
+    {
+        "query": "SELECT T2.Name FROM body_builder AS T1 JOIN people AS T2 ON T1.People_ID  =  T2.People_ID ORDER BY T2.Weight DESC LIMIT 1",
+        "question": "What is the name of the body builder with the greatest body weight?"
+    },
+    {
+        "query": "SELECT T2.Birth_Date ,  T2.Birth_Place FROM body_builder AS T1 JOIN people AS T2 ON T1.People_ID  =  T2.People_ID ORDER BY T1.Total DESC LIMIT 1",
+        "question": "What are the birth date and birth place of the body builder with the highest total points?"
+    },
+    {
+        "query": "SELECT T2.Height FROM body_builder AS T1 JOIN people AS T2 ON T1.People_ID  =  T2.People_ID WHERE T1.Total  <  315",
+        "question": "What are the heights of body builders with total score smaller than 315?"
+    },
+    {
+        "query": "SELECT avg(T1.Total) FROM body_builder AS T1 JOIN people AS T2 ON T1.People_ID  =  T2.People_ID WHERE T2.Height  >  200",
+        "question": "What is the average total score of body builders with height bigger than 200?"
+    },
+    {
+        "query": "SELECT T2.Name FROM body_builder AS T1 JOIN people AS T2 ON T1.People_ID  =  T2.People_ID ORDER BY T1.Total DESC",
+        "question": "What are the names of body builders in descending order of total scores?"
+    },
+    {
+        "query": "SELECT Birth_Place ,  COUNT(*) FROM people GROUP BY Birth_Place",
+        "question": "List each birth place along with the number of people from there."
+    },
+    {
+        "query": "SELECT Birth_Place FROM people GROUP BY Birth_Place ORDER BY COUNT(*) DESC LIMIT 1",
+        "question": "What is the most common birth place of people?"
+    },
+    {
+        "query": "SELECT Birth_Place FROM people GROUP BY Birth_Place HAVING COUNT(*)  >=  2",
+        "question": "What are the birth places that are shared by at least two people?"
+    },
+    {
+        "query": "SELECT Height ,  Weight FROM people ORDER BY Height DESC",
+        "question": "List the height and weight of people in descending order of height."
+    },
+    {
+        "query": "SELECT * FROM body_builder",
+        "question": "Show all information about each body builder."
+    },
+    {
+        "query": "SELECT Name ,  birth_place FROM people EXCEPT SELECT T1.Name ,  T1.birth_place FROM people AS T1 JOIN body_builder AS T2 ON T1.people_id  =  T2.people_id",
+        "question": "List the names and origins of people who are not body builders."
+    },
+    {
+        "query": "SELECT count(DISTINCT Birth_Place) FROM people",
+        "question": "How many distinct birth places are there?"
+    },
+    {
+        "query": "SELECT count(*) FROM people WHERE people_id NOT IN (SELECT People_ID FROM body_builder)",
+        "question": "How many persons are not body builders?"
+    },
+    {
+        "query": "SELECT T2.weight FROM body_builder AS T1 JOIN people AS T2 ON T1.people_id  =  T2.people_id WHERE T1.snatch  >  140 OR T2.height  >  200;",
+        "question": "List the weight of the body builders who have snatch score higher than 140 or have the height greater than 200."
+    },
+    {
+        "query": "SELECT T1.total FROM body_builder AS T1 JOIN people AS T2 ON T1.people_id  =  T2.people_id WHERE T2.Birth_Date LIKE \"%January%\";",
+        "question": "What are the total scores of the body builders whose birthday contains the string \"January\" ?"
+    },
+    {
+        "query": "SELECT min(snatch) FROM body_builder",
+        "question": "What is the minimum snatch score?"
+    },
+    {
+        "query": "SELECT count(*) FROM Apartment_Bookings",
+        "question": "How many apartment bookings are there in total?"
+    },
+    {
+        "query": "SELECT count(*) FROM Apartment_Bookings",
+        "question": "Count the total number of apartment bookings."
+    },
+    {
+        "query": "SELECT booking_start_date ,  booking_end_date FROM Apartment_Bookings",
+        "question": "Show the start dates and end dates of all the apartment bookings."
+    },
+    {
+        "query": "SELECT booking_start_date ,  booking_end_date FROM Apartment_Bookings",
+        "question": "What are the start date and end date of each apartment booking?"
+    },
+    {
+        "query": "SELECT DISTINCT building_description FROM Apartment_Buildings",
+        "question": "Show all distinct building descriptions."
+    },
+    {
+        "query": "SELECT DISTINCT building_description FROM Apartment_Buildings",
+        "question": "Give me a list of all the distinct building descriptions."
+    },
+    {
+        "query": "SELECT building_short_name FROM Apartment_Buildings WHERE building_manager\t =  \"Emma\"",
+        "question": "Show the short names of the buildings managed by \"Emma\"."
+    },
+    {
+        "query": "SELECT building_short_name FROM Apartment_Buildings WHERE building_manager\t =  \"Emma\"",
+        "question": "Which buildings does \"Emma\" manage? Give me the short names of the buildings."
+    },
+    {
+        "query": "SELECT building_address ,  building_phone FROM Apartment_Buildings WHERE building_manager\t =  \"Brenden\"",
+        "question": "Show the addresses and phones of all the buildings managed by \"Brenden\"."
+    },
+    {
+        "query": "SELECT building_address ,  building_phone FROM Apartment_Buildings WHERE building_manager\t =  \"Brenden\"",
+        "question": "What are the address and phone number of the buildings managed by \"Brenden\"?"
+    },
+    {
+        "query": "SELECT building_full_name FROM Apartment_Buildings WHERE building_full_name LIKE \"%court%\"",
+        "question": "What are the building full names that contain the word \"court\"?"
+    },
+    {
+        "query": "SELECT building_full_name FROM Apartment_Buildings WHERE building_full_name LIKE \"%court%\"",
+        "question": "Find all the building full names containing the word \"court\"."
+    },
+    {
+        "query": "SELECT min(bathroom_count) ,  max(bathroom_count) FROM Apartments",
+        "question": "What is the minimum and maximum number of bathrooms of all the apartments?"
+    },
+    {
+        "query": "SELECT min(bathroom_count) ,  max(bathroom_count) FROM Apartments",
+        "question": "Give me the minimum and maximum bathroom count among all the apartments."
+    },
+    {
+        "query": "SELECT avg(bedroom_count) FROM Apartments",
+        "question": "What is the average number of bedrooms of all apartments?"
+    },
+    {
+        "query": "SELECT avg(bedroom_count) FROM Apartments",
+        "question": "Find the average number of bedrooms of all the apartments."
+    },
+    {
+        "query": "SELECT apt_number ,  room_count FROM Apartments",
+        "question": "Return the apartment number and the number of rooms for each apartment."
+    },
+    {
+        "query": "SELECT apt_number ,  room_count FROM Apartments",
+        "question": "What are the apartment number and the room count of each apartment?"
+    },
+    {
+        "query": "SELECT avg(room_count) FROM Apartments WHERE apt_type_code  =  \"Studio\"",
+        "question": "What is the average number of rooms of apartments with type code \"Studio\"?"
+    },
+    {
+        "query": "SELECT avg(room_count) FROM Apartments WHERE apt_type_code  =  \"Studio\"",
+        "question": "Find the average room count of the apartments that have the \"Studio\" type code."
+    },
+    {
+        "query": "SELECT apt_number FROM Apartments WHERE apt_type_code  =  \"Flat\"",
+        "question": "Return the apartment numbers of the apartments with type code \"Flat\"."
+    },
+    {
+        "query": "SELECT apt_number FROM Apartments WHERE apt_type_code  =  \"Flat\"",
+        "question": "Which apartments have type code \"Flat\"? Give me their apartment numbers."
+    },
+    {
+        "query": "SELECT guest_first_name ,  guest_last_name FROM Guests",
+        "question": "Return the first names and last names of all guests"
+    },
+    {
+        "query": "SELECT guest_first_name ,  guest_last_name FROM Guests",
+        "question": "What are the first names and last names of all the guests?"
+    },
+    {
+        "query": "SELECT date_of_birth FROM Guests WHERE gender_code  =  \"Male\"",
+        "question": "Return the date of birth for all the guests with gender code \"Male\"."
+    },
+    {
+        "query": "SELECT date_of_birth FROM Guests WHERE gender_code  =  \"Male\"",
+        "question": "What are dates of birth of all the guests whose gender is \"Male\"?"
+    },
+    {
+        "query": "SELECT T2.apt_number ,  T1.booking_start_date ,  T1.booking_start_date FROM Apartment_Bookings AS T1 JOIN Apartments AS T2 ON T1.apt_id  =  T2.apt_id",
+        "question": "Show the apartment numbers, start dates, and end dates of all the apartment bookings."
+    },
+    {
+        "query": "SELECT T2.apt_number ,  T1.booking_start_date ,  T1.booking_start_date FROM Apartment_Bookings AS T1 JOIN Apartments AS T2 ON T1.apt_id  =  T2.apt_id",
+        "question": "What are the apartment number, start date, and end date of each apartment booking?"
+    },
+    {
+        "query": "SELECT T1.booking_start_date ,  T1.booking_start_date FROM Apartment_Bookings AS T1 JOIN Apartments AS T2 ON T1.apt_id  =  T2.apt_id WHERE T2.apt_type_code  =  \"Duplex\"",
+        "question": "What are the booking start and end dates of the apartments with type code \"Duplex\"?"
+    },
+    {
+        "query": "SELECT T1.booking_start_date ,  T1.booking_start_date FROM Apartment_Bookings AS T1 JOIN Apartments AS T2 ON T1.apt_id  =  T2.apt_id WHERE T2.apt_type_code  =  \"Duplex\"",
+        "question": "Return the booking start date and end date for the apartments that have type code \"Duplex\"."
+    },
+    {
+        "query": "SELECT T1.booking_start_date ,  T1.booking_start_date FROM Apartment_Bookings AS T1 JOIN Apartments AS T2 ON T1.apt_id  =  T2.apt_id WHERE T2.bedroom_count  >  2",
+        "question": "What are the booking start and end dates of the apartments with more than 2 bedrooms?"
+    },
+    {
+        "query": "SELECT T1.booking_start_date ,  T1.booking_start_date FROM Apartment_Bookings AS T1 JOIN Apartments AS T2 ON T1.apt_id  =  T2.apt_id WHERE T2.bedroom_count  >  2",
+        "question": "Find the booking start date and end date for the apartments that have more than two bedrooms."
+    },
+    {
+        "query": "SELECT T1.booking_status_code FROM Apartment_Bookings AS T1 JOIN Apartments AS T2 ON T1.apt_id  =  T2.apt_id WHERE T2.apt_number  =  \"Suite 634\"",
+        "question": "What is the booking status code of the apartment with apartment number \"Suite 634\"?"
+    },
+    {
+        "query": "SELECT T1.booking_status_code FROM Apartment_Bookings AS T1 JOIN Apartments AS T2 ON T1.apt_id  =  T2.apt_id WHERE T2.apt_number  =  \"Suite 634\"",
+        "question": "Tell me the booking status code for the apartment with number \"Suite 634\"."
+    },
+    {
+        "query": "SELECT DISTINCT T2.apt_number FROM Apartment_Bookings AS T1 JOIN Apartments AS T2 ON T1.apt_id  =  T2.apt_id WHERE T1.booking_status_code  =  \"Confirmed\"",
+        "question": "Show the distinct apartment numbers of the apartments that have bookings with status code \"Confirmed\"."
+    },
+    {
+        "query": "SELECT DISTINCT T2.apt_number FROM Apartment_Bookings AS T1 JOIN Apartments AS T2 ON T1.apt_id  =  T2.apt_id WHERE T1.booking_status_code  =  \"Confirmed\"",
+        "question": "Which apartments have bookings with status code \"Confirmed\"? Return their apartment numbers."
+    },
+    {
+        "query": "SELECT avg(room_count) FROM Apartment_Bookings AS T1 JOIN Apartments AS T2 ON T1.apt_id  =  T2.apt_id WHERE T1.booking_status_code  =  \"Provisional\"",
+        "question": "Show the average room count of the apartments that have booking status code \"Provisional\"."
+    },
+    {
+        "query": "SELECT avg(room_count) FROM Apartment_Bookings AS T1 JOIN Apartments AS T2 ON T1.apt_id  =  T2.apt_id WHERE T1.booking_status_code  =  \"Provisional\"",
+        "question": "What is the average room count of the apartments whose booking status code is \"Provisional\"?"
+    },
+    {
+        "query": "SELECT T2.guest_first_name ,  T1.booking_start_date ,  T1.booking_start_date FROM Apartment_Bookings AS T1 JOIN Guests AS T2 ON T1.guest_id  =  T2.guest_id",
+        "question": "Show the guest first names, start dates, and end dates of all the apartment bookings."
+    },
+    {
+        "query": "SELECT T2.guest_first_name ,  T1.booking_start_date ,  T1.booking_start_date FROM Apartment_Bookings AS T1 JOIN Guests AS T2 ON T1.guest_id  =  T2.guest_id",
+        "question": "What are the guest first name, start date, and end date of each apartment booking?"
+    },
+    {
+        "query": "SELECT T1.booking_start_date ,  T1.booking_start_date FROM Apartment_Bookings AS T1 JOIN Guests AS T2 ON T1.guest_id  =  T2.guest_id WHERE T2.gender_code  =  \"Female\"",
+        "question": "Show the start dates and end dates of all the apartment bookings made by guests with gender code \"Female\"."
+    },
+    {
+        "query": "SELECT T1.booking_start_date ,  T1.booking_start_date FROM Apartment_Bookings AS T1 JOIN Guests AS T2 ON T1.guest_id  =  T2.guest_id WHERE T2.gender_code  =  \"Female\"",
+        "question": "What are the start date and end date of the apartment bookings made by female guests (gender code \"Female\")?"
+    },
+    {
+        "query": "SELECT T2.guest_first_name ,  T2.guest_last_name FROM Apartment_Bookings AS T1 JOIN Guests AS T2 ON T1.guest_id  =  T2.guest_id WHERE T1.booking_status_code  =  \"Confirmed\"",
+        "question": "Show the first names and last names of all the guests that have apartment bookings with status code \"Confirmed\"."
+    },
+    {
+        "query": "SELECT T2.guest_first_name ,  T2.guest_last_name FROM Apartment_Bookings AS T1 JOIN Guests AS T2 ON T1.guest_id  =  T2.guest_id WHERE T1.booking_status_code  =  \"Confirmed\"",
+        "question": "Which guests have apartment bookings with status code \"Confirmed\"? Return their first names and last names."
+    },
+    {
+        "query": "SELECT T1.facility_code FROM Apartment_Facilities AS T1 JOIN Apartments AS T2 ON T1.apt_id  =  T2.apt_id WHERE T2.bedroom_count  >  4",
+        "question": "Show the facility codes of apartments with more than 4 bedrooms."
+    },
+    {
+        "query": "SELECT T1.facility_code FROM Apartment_Facilities AS T1 JOIN Apartments AS T2 ON T1.apt_id  =  T2.apt_id WHERE T2.bedroom_count  >  4",
+        "question": "What are the facility codes of the apartments with more than four bedrooms?"
+    },
+    {
+        "query": "SELECT sum(T2.room_count) FROM Apartment_Facilities AS T1 JOIN Apartments AS T2 ON T1.apt_id  =  T2.apt_id WHERE T1.facility_code  =  \"Gym\"",
+        "question": "Show the total number of rooms of all apartments with facility code \"Gym\"."
+    },
+    {
+        "query": "SELECT sum(T2.room_count) FROM Apartment_Facilities AS T1 JOIN Apartments AS T2 ON T1.apt_id  =  T2.apt_id WHERE T1.facility_code  =  \"Gym\"",
+        "question": "Find the total number of rooms in the apartments that have facility code \"Gym\"."
+    },
+    {
+        "query": "SELECT sum(T2.room_count) FROM Apartment_Buildings AS T1 JOIN Apartments AS T2 ON T1.building_id  =  T2.building_id WHERE T1.building_short_name  =  \"Columbus Square\"",
+        "question": "Show the total number of rooms of the apartments in the building with short name \"Columbus Square\"."
+    },
+    {
+        "query": "SELECT sum(T2.room_count) FROM Apartment_Buildings AS T1 JOIN Apartments AS T2 ON T1.building_id  =  T2.building_id WHERE T1.building_short_name  =  \"Columbus Square\"",
+        "question": "How many rooms in total are there in the apartments in the building with short name \"Columbus Square\"?"
+    },
+    {
+        "query": "SELECT T1.building_address FROM Apartment_Buildings AS T1 JOIN Apartments AS T2 ON T1.building_id  =  T2.building_id WHERE T2.bathroom_count  >  2",
+        "question": "Show the addresses of the buildings that have apartments with more than 2 bathrooms."
+    },
+    {
+        "query": "SELECT T1.building_address FROM Apartment_Buildings AS T1 JOIN Apartments AS T2 ON T1.building_id  =  T2.building_id WHERE T2.bathroom_count  >  2",
+        "question": "Which buildings have apartments that have more than two bathrooms? Give me the addresses of the buildings."
+    },
+    {
+        "query": "SELECT T2.apt_type_code ,  T2.apt_number FROM Apartment_Buildings AS T1 JOIN Apartments AS T2 ON T1.building_id  =  T2.building_id WHERE T1.building_manager  =  \"Kyle\"",
+        "question": "Show the apartment type codes and apartment numbers in the buildings managed by \"Kyle\"."
+    },
+    {
+        "query": "SELECT T2.apt_type_code ,  T2.apt_number FROM Apartment_Buildings AS T1 JOIN Apartments AS T2 ON T1.building_id  =  T2.building_id WHERE T1.building_manager  =  \"Kyle\"",
+        "question": "What apartment type codes and apartment numbers do the buildings managed by \"Kyle\" have?"
+    },
+    {
+        "query": "SELECT \tbooking_status_code ,  COUNT(*) FROM Apartment_Bookings GROUP BY booking_status_code",
+        "question": "Show the booking status code and the corresponding number of bookings."
+    },
+    {
+        "query": "SELECT \tbooking_status_code ,  COUNT(*) FROM Apartment_Bookings GROUP BY booking_status_code",
+        "question": "How many bookings does each booking status have? List the booking status code and the number of corresponding bookings."
+    },
+    {
+        "query": "SELECT apt_number FROM Apartments ORDER BY room_count ASC",
+        "question": "Return all the apartment numbers sorted by the room count in ascending order."
+    },
+    {
+        "query": "SELECT apt_number FROM Apartments ORDER BY room_count ASC",
+        "question": "Sort the apartment numbers in ascending order of room count."
+    },
+    {
+        "query": "SELECT apt_number FROM Apartments ORDER BY bedroom_count DESC LIMIT 1",
+        "question": "Return the apartment number with the largest number of bedrooms."
+    },
+    {
+        "query": "SELECT apt_number FROM Apartments ORDER BY bedroom_count DESC LIMIT 1",
+        "question": "What is the apartment number of the apartment with the most beds?"
+    },
+    {
+        "query": "SELECT apt_type_code ,  COUNT(*) FROM Apartments GROUP BY apt_type_code ORDER BY COUNT(*) ASC",
+        "question": "Show the apartment type codes and the corresponding number of apartments sorted by the number of apartments in ascending order."
+    },
+    {
+        "query": "SELECT apt_type_code ,  COUNT(*) FROM Apartments GROUP BY apt_type_code ORDER BY COUNT(*) ASC",
+        "question": "Return each apartment type code with the number of apartments having that apartment type, in ascending order of the number of apartments."
+    },
+    {
+        "query": "SELECT apt_type_code FROM Apartments GROUP BY apt_type_code ORDER BY avg(room_count) DESC LIMIT 3",
+        "question": "Show the top 3 apartment type codes sorted by the average number of rooms in descending order."
+    },
+    {
+        "query": "SELECT apt_type_code FROM Apartments GROUP BY apt_type_code ORDER BY avg(room_count) DESC LIMIT 3",
+        "question": "What are the top three apartment types in terms of the average room count? Give me the"
+    },
+    {
+        "query": "SELECT apt_type_code ,  bathroom_count ,  bedroom_count FROM Apartments GROUP BY apt_type_code ORDER BY sum(room_count) DESC LIMIT 1",
+        "question": "Show the apartment type code that has the largest number of total rooms, together with the number of bathrooms and number of bedrooms."
+    },
+    {
+        "query": "SELECT apt_type_code ,  bathroom_count ,  bedroom_count FROM Apartments GROUP BY apt_type_code ORDER BY sum(room_count) DESC LIMIT 1",
+        "question": "Which apartment type has the largest number of total rooms? Return the apartment type code, its number of bathrooms and number of bedrooms."
+    },
+    {
+        "query": "SELECT apt_type_code FROM Apartments GROUP BY apt_type_code ORDER BY count(*) DESC LIMIT 1",
+        "question": "Show the most common apartment type code."
+    },
+    {
+        "query": "SELECT apt_type_code FROM Apartments GROUP BY apt_type_code ORDER BY count(*) DESC LIMIT 1",
+        "question": "Which apartment type code appears the most often?"
+    },
+    {
+        "query": "SELECT apt_type_code FROM Apartments WHERE bathroom_count  >  1 GROUP BY apt_type_code ORDER BY count(*) DESC LIMIT 1",
+        "question": "Show the most common apartment type code among apartments with more than 1 bathroom."
+    },
+    {
+        "query": "SELECT apt_type_code FROM Apartments WHERE bathroom_count  >  1 GROUP BY apt_type_code ORDER BY count(*) DESC LIMIT 1",
+        "question": "Which apartment type code is the most common among apartments with more than one bathroom?"
+    },
+    {
+        "query": "SELECT apt_type_code ,  max(room_count) ,  min(room_count) FROM Apartments GROUP BY apt_type_code",
+        "question": "Show each apartment type code, and the maximum and minimum number of rooms for each type."
+    },
+    {
+        "query": "SELECT apt_type_code ,  max(room_count) ,  min(room_count) FROM Apartments GROUP BY apt_type_code",
+        "question": "Return each apartment type code along with the maximum and minimum number of rooms among each type."
+    },
+    {
+        "query": "SELECT gender_code ,  COUNT(*) FROM Guests GROUP BY gender_code ORDER BY COUNT(*) DESC",
+        "question": "Show each gender code and the corresponding count of guests sorted by the count in descending order."
+    },
+    {
+        "query": "SELECT gender_code ,  COUNT(*) FROM Guests GROUP BY gender_code ORDER BY COUNT(*) DESC",
+        "question": "Sort the gender codes in descending order of their corresponding number of guests. Return both the gender codes and counts."
+    },
+    {
+        "query": "SELECT count(*) FROM Apartments WHERE apt_id NOT IN (SELECT apt_id FROM Apartment_Facilities)",
+        "question": "How many apartments do not have any facility?"
+    },
+    {
+        "query": "SELECT count(*) FROM Apartments WHERE apt_id NOT IN (SELECT apt_id FROM Apartment_Facilities)",
+        "question": "Find the number of apartments that have no facility."
+    },
+    {
+        "query": "SELECT T2.apt_number FROM Apartment_Bookings AS T1 JOIN Apartments AS T2 ON T1.apt_id  =  T2.apt_id WHERE T1.booking_status_code  =  \"Confirmed\" INTERSECT SELECT T2.apt_number FROM Apartment_Bookings AS T1 JOIN Apartments AS T2 ON T1.apt_id  =  T2.apt_id WHERE T1.booking_status_code  =  \"Provisional\"",
+        "question": "Show the apartment numbers of apartments with bookings that have status code both \"Provisional\" and \"Confirmed\""
+    },
+    {
+        "query": "SELECT T2.apt_number FROM Apartment_Bookings AS T1 JOIN Apartments AS T2 ON T1.apt_id  =  T2.apt_id WHERE T1.booking_status_code  =  \"Confirmed\" INTERSECT SELECT T2.apt_number FROM Apartment_Bookings AS T1 JOIN Apartments AS T2 ON T1.apt_id  =  T2.apt_id WHERE T1.booking_status_code  =  \"Provisional\"",
+        "question": "Which apartments have bookings with both status codes \"Provisional\" and \"Confirmed\"? Give me the apartment numbers."
+    },
+    {
+        "query": "SELECT T1.apt_number FROM Apartments AS T1 JOIN View_Unit_Status AS T2 ON T1.apt_id  =  T2.apt_id WHERE T2.available_yn  =  0 INTERSECT SELECT T1.apt_number FROM Apartments AS T1 JOIN View_Unit_Status AS T2 ON T1.apt_id  =  T2.apt_id WHERE T2.available_yn  =  1",
+        "question": "Show the apartment numbers of apartments with unit status availability of both 0 and 1."
+    },
+    {
+        "query": "SELECT T1.apt_number FROM Apartments AS T1 JOIN View_Unit_Status AS T2 ON T1.apt_id  =  T2.apt_id WHERE T2.available_yn  =  0 INTERSECT SELECT T1.apt_number FROM Apartments AS T1 JOIN View_Unit_Status AS T2 ON T1.apt_id  =  T2.apt_id WHERE T2.available_yn  =  1",
+        "question": "Which apartments have unit status availability of both 0 and 1? Return their apartment numbers."
+    },
+    {
+        "query": "SELECT count(*) FROM browser WHERE market_share  >=  5",
+        "question": "How many main stream browsers whose market share is at least 5 exist?"
+    },
+    {
+        "query": "SELECT name FROM browser ORDER BY market_share DESC",
+        "question": "List the name of browsers in descending order by market share."
+    },
+    {
+        "query": "SELECT id ,  name ,  market_share FROM browser",
+        "question": "List the ids, names and market shares of all browsers."
+    },
+    {
+        "query": "SELECT max(market_share) ,  min(market_share) ,  avg(market_share) FROM browser",
+        "question": "What is the maximum, minimum and average market share of the listed browsers?"
+    },
+    {
+        "query": "SELECT id ,  market_share FROM browser WHERE name  =  'Safari'",
+        "question": "What is the id and market share of the browser Safari?"
+    },
+    {
+        "query": "SELECT name ,  operating_system FROM web_client_accelerator WHERE CONNECTION != 'Broadband'",
+        "question": "What are the name and os of web client accelerators that do not work with only a 'Broadband' type connection?"
+    },
+    {
+        "query": "SELECT T1.name FROM browser AS T1 JOIN accelerator_compatible_browser AS T2 ON T1.id  =  T2.browser_id JOIN web_client_accelerator AS T3 ON T2.accelerator_id  =  T3.id WHERE T3.name  =  'CProxy' AND T2.compatible_since_year  >  1998",
+        "question": "What is the name of the browser that became compatible with the accelerator 'CProxy' after year 1998 ?"
+    },
+    {
+        "query": "SELECT T1.id ,  T1.Name FROM web_client_accelerator AS T1 JOIN accelerator_compatible_browser AS T2 ON T2.accelerator_id  =  T1.id GROUP BY T1.id HAVING count(*)  >=  2",
+        "question": "What are the ids and names of the web accelerators that are compatible with two or more browsers?"
+    },
+    {
+        "query": "SELECT T1.id ,  T1.name FROM browser AS T1 JOIN accelerator_compatible_browser AS T2 ON T1.id  =  T2.browser_id GROUP BY T1.id ORDER BY count(*) DESC LIMIT 1",
+        "question": "What is the id and name of the browser that is compatible with the most web accelerators?"
+    },
+    {
+        "query": "SELECT T1.compatible_since_year FROM accelerator_compatible_browser AS T1 JOIN browser AS T2 ON T1.browser_id  =  T2.id JOIN web_client_accelerator AS T3 ON T1.accelerator_id  =  T3.id WHERE T3.name  =  'CACHEbox' AND T2.name  =  'Internet Explorer'",
+        "question": "When did the web accelerator 'CACHEbox' and browser 'Internet Explorer' become compatible?"
+    },
+    {
+        "query": "SELECT count(DISTINCT client) FROM web_client_accelerator",
+        "question": "How many different kinds of clients are supported by the web clients accelerators?"
+    },
+    {
+        "query": "SELECT count(*) FROM web_client_accelerator WHERE id NOT IN ( SELECT accelerator_id FROM accelerator_compatible_browser );",
+        "question": "How many accelerators are not compatible with the browsers listed ?"
+    },
+    {
+        "query": "SELECT DISTINCT T1.name FROM web_client_accelerator AS T1 JOIN accelerator_compatible_browser AS T2 ON T2.accelerator_id  =  T1.id JOIN browser AS T3 ON T2.browser_id  =  T3.id WHERE T3.market_share  >  15;",
+        "question": "What distinct accelerator names are compatible with the browswers that have market share higher than 15?"
+    },
+    {
+        "query": "SELECT T3.name FROM web_client_accelerator AS T1 JOIN accelerator_compatible_browser AS T2 ON T2.accelerator_id  =  T1.id JOIN browser AS T3 ON T2.browser_id  =  T3.id WHERE T1.name  =  'CACHEbox' INTERSECT SELECT T3.name FROM web_client_accelerator AS T1 JOIN accelerator_compatible_browser AS T2 ON T2.accelerator_id  =  T1.id JOIN browser AS T3 ON T2.browser_id  =  T3.id WHERE T1.name  =  'Fasterfox'",
+        "question": "List the names of the browser that are compatible with both 'CACHEbox' and 'Fasterfox'."
+    },
+    {
+        "query": "SELECT name ,  operating_system FROM web_client_accelerator EXCEPT SELECT T1.name ,  T1.operating_system FROM web_client_accelerator AS T1 JOIN accelerator_compatible_browser AS T2 ON T2.accelerator_id  =  T1.id JOIN browser AS T3 ON T2.browser_id  =  T3.id WHERE T3.name  =  'Opera'",
+        "question": "Show the accelerator names and supporting operating systems that are not compatible with the browser named 'Opera'."
+    },
+    {
+        "query": "SELECT name FROM web_client_accelerator WHERE name LIKE \"%Opera%\"",
+        "question": "Which accelerator name contains substring \"Opera\"?"
+    },
+    {
+        "query": "SELECT Operating_system ,  count(*) FROM web_client_accelerator GROUP BY Operating_system",
+        "question": "Find the number of web accelerators used for each Operating system."
+    },
+    {
+        "query": "SELECT T2.name ,  T3.name FROM accelerator_compatible_browser AS T1 JOIN browser AS T2 ON T1.browser_id  =  T2.id JOIN web_client_accelerator AS T3 ON T1.accelerator_id  =  T3.id ORDER BY T1.compatible_since_year DESC",
+        "question": "give me names of all compatible browsers and accelerators in the descending order of compatible year"
+    },
+    {
+        "query": "SELECT count(*) FROM candidate",
+        "question": "How many candidates are there?"
+    },
+    {
+        "query": "SELECT count(*) FROM candidate",
+        "question": "Count the number of candidates."
+    },
+    {
+        "query": "SELECT poll_source FROM candidate GROUP BY poll_source ORDER BY count(*) DESC LIMIT 1",
+        "question": "Which poll resource provided the most number of candidate information?"
+    },
+    {
+        "query": "SELECT poll_source FROM candidate GROUP BY poll_source ORDER BY count(*) DESC LIMIT 1",
+        "question": "Return the poll resource associated with the most candidates."
+    },
+    {
+        "query": "SELECT support_rate FROM candidate ORDER BY support_rate DESC LIMIT 3",
+        "question": "what are the top 3 highest support rates?"
+    },
+    {
+        "query": "SELECT support_rate FROM candidate ORDER BY support_rate DESC LIMIT 3",
+        "question": "Return the top 3 greatest support rates."
+    },
+    {
+        "query": "SELECT Candidate_ID FROM candidate ORDER BY oppose_rate LIMIT 1",
+        "question": "Find the id of the candidate who got the lowest oppose rate."
+    },
+    {
+        "query": "SELECT Candidate_ID FROM candidate ORDER BY oppose_rate LIMIT 1",
+        "question": "What is the id of the candidate with the lowest oppose rate?"
+    },
+    {
+        "query": "SELECT Support_rate ,  Consider_rate ,  Oppose_rate FROM candidate ORDER BY unsure_rate",
+        "question": "Please list support, consider, and oppose rates for each candidate in ascending order by unsure rate."
+    },
+    {
+        "query": "SELECT Support_rate ,  Consider_rate ,  Oppose_rate FROM candidate ORDER BY unsure_rate",
+        "question": "What are the support, consider, and oppose rates of each candidate, ordered ascending by their unsure rate?"
+    },
+    {
+        "query": "SELECT poll_source FROM candidate ORDER BY oppose_rate DESC LIMIT 1",
+        "question": "which poll source does the highest oppose rate come from?"
+    },
+    {
+        "query": "SELECT poll_source FROM candidate ORDER BY oppose_rate DESC LIMIT 1",
+        "question": "Return the poll source corresponding to the candidate who has the oppose rate."
+    },
+    {
+        "query": "SELECT name FROM people ORDER BY date_of_birth",
+        "question": "List all people names in the order of their date of birth from old to young."
+    },
+    {
+        "query": "SELECT name FROM people ORDER BY date_of_birth",
+        "question": "What are the names of all people, ordered by their date of birth?"
+    },
+    {
+        "query": "SELECT avg(height) ,  avg(weight) FROM people WHERE sex  =  'M'",
+        "question": "Find the average height and weight for all males (sex is M)."
+    },
+    {
+        "query": "SELECT avg(height) ,  avg(weight) FROM people WHERE sex  =  'M'",
+        "question": "What are the average height and weight across males (sex is M)?"
+    },
+    {
+        "query": "SELECT name FROM people WHERE height  >  200 OR height  <  190",
+        "question": "find the names of people who are taller than 200 or lower than 190."
+    },
+    {
+        "query": "SELECT name FROM people WHERE height  >  200 OR height  <  190",
+        "question": "What are the names of people who have a height greater than 200 or less than 190?"
+    },
+    {
+        "query": "SELECT avg(weight) ,  min(weight) ,  sex FROM people GROUP BY sex",
+        "question": "Find the average and minimum weight for each gender."
+    },
+    {
+        "query": "SELECT avg(weight) ,  min(weight) ,  sex FROM people GROUP BY sex",
+        "question": "What are the average and minimum weights for people of each sex?"
+    },
+    {
+        "query": "SELECT t1.name ,  t1.sex FROM people AS t1 JOIN candidate AS t2 ON t1.people_id  =  t2.people_id ORDER BY t2.support_rate DESC LIMIT 1",
+        "question": "Find the name and gender of the candidate who got the highest support rate."
+    },
+    {
+        "query": "SELECT t1.name ,  t1.sex FROM people AS t1 JOIN candidate AS t2 ON t1.people_id  =  t2.people_id ORDER BY t2.support_rate DESC LIMIT 1",
+        "question": "What is the name and sex of the candidate with the highest support rate?"
+    },
+    {
+        "query": "SELECT t1.name ,  t1.sex ,  min(oppose_rate) FROM people AS t1 JOIN candidate AS t2 ON t1.people_id  =  t2.people_id GROUP BY t1.sex",
+        "question": "Find the name of the candidates whose oppose percentage is the lowest for each sex."
+    },
+    {
+        "query": "SELECT t1.name ,  t1.sex ,  min(oppose_rate) FROM people AS t1 JOIN candidate AS t2 ON t1.people_id  =  t2.people_id GROUP BY t1.sex",
+        "question": "For each sex, what is the name and sex of the candidate with the oppose rate for their sex?"
+    },
+    {
+        "query": "SELECT t1.sex FROM people AS t1 JOIN candidate AS t2 ON t1.people_id  =  t2.people_id GROUP BY t1.sex ORDER BY avg(t2.unsure_rate) DESC LIMIT 1",
+        "question": "which gender got the highest average uncertain ratio."
+    },
+    {
+        "query": "SELECT t1.sex FROM people AS t1 JOIN candidate AS t2 ON t1.people_id  =  t2.people_id GROUP BY t1.sex ORDER BY avg(t2.unsure_rate) DESC LIMIT 1",
+        "question": "What is the sex of the candidate who had the highest unsure rate?"
+    },
+    {
+        "query": "SELECT name FROM people WHERE people_id NOT IN (SELECT people_id FROM candidate)",
+        "question": "what are the names of people who did not participate in the candidate election."
+    },
+    {
+        "query": "SELECT name FROM people WHERE people_id NOT IN (SELECT people_id FROM candidate)",
+        "question": "Give the names of people who did not participate in the candidate election."
+    },
+    {
+        "query": "SELECT t1.name FROM people AS t1 JOIN candidate AS t2 ON t1.people_id  =  t2.people_id WHERE t2.support_rate  <  t2.oppose_rate",
+        "question": "Find the names of the candidates whose support percentage is lower than their oppose rate."
+    },
+    {
+        "query": "SELECT t1.name FROM people AS t1 JOIN candidate AS t2 ON t1.people_id  =  t2.people_id WHERE t2.support_rate  <  t2.oppose_rate",
+        "question": "What are the names of candidates who have a lower support rate than oppose rate?"
+    },
+    {
+        "query": "SELECT count(*) ,  sex FROM people WHERE weight  >  85 GROUP BY sex",
+        "question": "how many people are there whose weight is higher than 85 for each gender?"
+    },
+    {
+        "query": "SELECT count(*) ,  sex FROM people WHERE weight  >  85 GROUP BY sex",
+        "question": "Count the number of people of each sex who have a weight higher than 85."
+    },
+    {
+        "query": "SELECT max(support_rate) ,  min(consider_rate) ,  min(oppose_rate) FROM candidate",
+        "question": "find the highest support percentage, lowest consider rate and oppose rate of all candidates."
+    },
+    {
+        "query": "SELECT max(support_rate) ,  min(consider_rate) ,  min(oppose_rate) FROM candidate",
+        "question": "Return the maximum support rate, minimum consider rate, and minimum oppose rate across all candidates?"
+    },
+    {
+        "query": "SELECT t1.name FROM people AS t1 JOIN candidate AS t2 ON t1.people_id  =  t2.people_id WHERE t1.sex  =  'F' ORDER BY t1.name",
+        "question": "list all female (sex is F) candidate names in the alphabetical order."
+    },
+    {
+        "query": "SELECT t1.name FROM people AS t1 JOIN candidate AS t2 ON t1.people_id  =  t2.people_id WHERE t1.sex  =  'F' ORDER BY t1.name",
+        "question": "What are the names of all female candidates in alphabetical order (sex is F)?"
+    },
+    {
+        "query": "SELECT name FROM people WHERE height  <  (SELECT avg(height) FROM people)",
+        "question": "find the name of people whose height is lower than the average."
+    },
+    {
+        "query": "SELECT name FROM people WHERE height  <  (SELECT avg(height) FROM people)",
+        "question": "What are the names of people who are shorter than average?"
+    },
+    {
+        "query": "SELECT * FROM people",
+        "question": "List all info about all people."
+    },
+    {
+        "query": "SELECT * FROM people",
+        "question": "What is all the information about all people?"
+    },
+    {
+        "query": "SELECT count(*) FROM ASSESSMENT_NOTES",
+        "question": "How many assessment notes are there in total?"
+    },
+    {
+        "query": "SELECT date_of_notes FROM Assessment_Notes",
+        "question": "What are the dates of the assessment notes?"
+    },
+    {
+        "query": "SELECT count(*) FROM ADDRESSES WHERE zip_postcode  =  \"197\"",
+        "question": "How many addresses have zip code 197?"
+    },
+    {
+        "query": "SELECT count(DISTINCT incident_type_code) FROM Behavior_Incident",
+        "question": "How many distinct incident type codes are there?"
+    },
+    {
+        "query": "SELECT DISTINCT detention_type_code FROM Detention",
+        "question": "Return all distinct detention type codes."
+    },
+    {
+        "query": "SELECT date_incident_start ,  date_incident_end FROM Behavior_Incident WHERE incident_type_code  =  \"NOISE\"",
+        "question": "What are the start and end dates for incidents with incident type code \"NOISE\"?"
+    },
+    {
+        "query": "SELECT detention_summary FROM Detention",
+        "question": "Return all detention summaries."
+    },
+    {
+        "query": "SELECT cell_mobile_number ,  email_address FROM STUDENTS",
+        "question": "Return the cell phone number and email address for all students."
+    },
+    {
+        "query": "SELECT email_address FROM Students WHERE first_name  =  \"Emma\" AND last_name  =  \"Rohan\"",
+        "question": "What is the email of the student with first name \"Emma\" and last name \"Rohan\"?"
+    },
+    {
+        "query": "SELECT count(DISTINCT student_id) FROM Students_in_Detention",
+        "question": "How many distinct students have been in detention?"
+    },
+    {
+        "query": "SELECT gender FROM TEACHERS WHERE last_name  =  \"Medhurst\"",
+        "question": "What is the gender of the teacher with last name \"Medhurst\"?"
+    },
+    {
+        "query": "SELECT incident_type_description FROM Ref_Incident_Type WHERE incident_type_code  =  \"VIOLENCE\"",
+        "question": "What is the incident type description for the incident type with code \"VIOLENCE\"?"
+    },
+    {
+        "query": "SELECT max(monthly_rental) ,  min(monthly_rental) FROM Student_Addresses",
+        "question": "Find the maximum and minimum monthly rental for all student addresses."
+    },
+    {
+        "query": "SELECT first_name FROM Teachers WHERE email_address LIKE '%man%'",
+        "question": "Find the first names of teachers whose email address contains the word \"man\"."
+    },
+    {
+        "query": "SELECT * FROM Assessment_Notes ORDER BY date_of_notes ASC",
+        "question": "List all information about the assessment notes sorted by date in ascending order."
+    },
+    {
+        "query": "SELECT city FROM Addresses ORDER BY city",
+        "question": "List all cities of addresses in alphabetical order."
+    },
+    {
+        "query": "SELECT first_name ,  last_name FROM Teachers ORDER BY last_name",
+        "question": "Find the first names and last names of teachers in alphabetical order of last name."
+    },
+    {
+        "query": "SELECT * FROM Student_Addresses ORDER BY monthly_rental DESC",
+        "question": "Find all information about student addresses, and sort by monthly rental in descending order."
+    },
+    {
+        "query": "SELECT T1.student_id ,  T2.first_name FROM Assessment_Notes AS T1 JOIN Students AS T2 ON T1.student_id  =  T2.student_id GROUP BY T1.student_id ORDER BY count(*) DESC LIMIT 1",
+        "question": "Find the id and first name of the student that has the most number of assessment notes?"
+    },
+    {
+        "query": "SELECT T1.teacher_id ,  T2.first_name FROM Assessment_Notes AS T1 JOIN Teachers AS T2 ON T1.teacher_id  =  T2.teacher_id GROUP BY T1.teacher_id ORDER BY count(*) DESC LIMIT 3",
+        "question": "Find the ids and first names of the 3 teachers that have the most number of assessment notes?"
+    },
+    {
+        "query": "SELECT T1.student_id ,  T2.last_name FROM Behavior_Incident AS T1 JOIN Students AS T2 ON T1.student_id  =  T2.student_id GROUP BY T1.student_id ORDER BY count(*) DESC LIMIT 1",
+        "question": "Find the id and last name of the student that has the most behavior incidents?"
+    },
+    {
+        "query": "SELECT T1.teacher_id ,  T2.last_name FROM Detention AS T1 JOIN Teachers AS T2 ON T1.teacher_id  =  T2.teacher_id WHERE T1.detention_type_code  =  \"AFTER\" GROUP BY T1.teacher_id ORDER BY count(*) DESC LIMIT 1",
+        "question": "Find the id and last name of the teacher that has the most detentions with detention type code \"AFTER\"?"
+    },
+    {
+        "query": "SELECT T1.student_id ,  T2.first_name FROM Student_Addresses AS T1 JOIN Students AS T2 ON T1.student_id  =  T2.student_id GROUP BY T1.student_id ORDER BY AVG(monthly_rental) DESC LIMIT 1",
+        "question": "What are the id and first name of the student whose addresses have the highest average monthly rental?"
+    },
+    {
+        "query": "SELECT T2.address_id ,  T1.city FROM Addresses AS T1 JOIN Student_Addresses AS T2 ON T1.address_id  =  T2.address_id GROUP BY T2.address_id ORDER BY AVG(monthly_rental) DESC LIMIT 1",
+        "question": "Find the id and city of the student address with the highest average monthly rental."
+    },
+    {
+        "query": "SELECT T1.incident_type_code ,  T2.incident_type_description FROM Behavior_Incident AS T1 JOIN Ref_Incident_Type AS T2 ON T1.incident_type_code  =  T2.incident_type_code GROUP BY T1.incident_type_code ORDER BY count(*) DESC LIMIT 1",
+        "question": "What are the code and description of the most frequent behavior incident type?"
+    },
+    {
+        "query": "SELECT T1.detention_type_code ,  T2.detention_type_description FROM Detention AS T1 JOIN Ref_Detention_Type AS T2 ON T1.detention_type_code  =  T2.detention_type_code GROUP BY T1.detention_type_code ORDER BY count(*) ASC LIMIT 1",
+        "question": "What are the code and description of the least frequent detention type ?"
+    },
+    {
+        "query": "SELECT T1.date_of_notes FROM Assessment_Notes AS T1 JOIN Students AS T2 ON T1.student_id  =  T2.student_id WHERE T2.first_name  =  \"Fanny\"",
+        "question": "Find the dates of assessment notes for students with first name \"Fanny\"."
+    },
+    {
+        "query": "SELECT T1.text_of_notes FROM Assessment_Notes AS T1 JOIN Teachers AS T2 ON T1.teacher_id  =  T2.teacher_id WHERE T2.last_name  =  \"Schuster\"",
+        "question": "Find the texts of assessment notes for teachers with last name \"Schuster\"."
+    },
+    {
+        "query": "SELECT T1.date_incident_start ,  date_incident_end FROM Behavior_Incident AS T1 JOIN Students AS T2 ON T1.student_id  =  T2.student_id WHERE T2.last_name  =  \"Fahey\"",
+        "question": "Find the start and end dates of behavior incidents of students with last name \"Fahey\"."
+    },
+    {
+        "query": "SELECT T1.datetime_detention_start ,  datetime_detention_end FROM Detention AS T1 JOIN Teachers AS T2 ON T1.teacher_id  =  T2.teacher_id WHERE T2.last_name  =  \"Schultz\"",
+        "question": "Find the start and end dates of detentions of teachers with last name \"Schultz\"."
+    },
+    {
+        "query": "SELECT T2.address_id ,  T1.zip_postcode FROM Addresses AS T1 JOIN Student_Addresses AS T2 ON T1.address_id  =  T2.address_id ORDER BY monthly_rental DESC LIMIT 1",
+        "question": "What are the id and zip code of the address with the highest monthly rental?"
+    },
+    {
+        "query": "SELECT T2.cell_mobile_number FROM Student_Addresses AS T1 JOIN Students AS T2 ON T1.student_id  =  T2.student_id ORDER BY T1.monthly_rental ASC LIMIT 1",
+        "question": "What is the cell phone number of the student whose address has the lowest monthly rental?"
+    },
+    {
+        "query": "SELECT T2.monthly_rental FROM Addresses AS T1 JOIN Student_Addresses AS T2 ON T1.address_id  =  T2.address_id WHERE T1.state_province_county  =  \"Texas\"",
+        "question": "What are the monthly rentals of student addresses in Texas state?"
+    },
+    {
+        "query": "SELECT T2.first_name ,  T2.last_name FROM Addresses AS T1 JOIN Students AS T2 ON T1.address_id  =  T2.address_id WHERE T1.state_province_county  =  \"Wisconsin\"",
+        "question": "What are the first names and last names of students with address in Wisconsin state?"
+    },
+    {
+        "query": "SELECT T1.line_1 ,  avg(T2.monthly_rental) FROM Addresses AS T1 JOIN Student_Addresses AS T2 ON T1.address_id  =  T2.address_id GROUP BY T2.address_id",
+        "question": "What are the line 1 and average monthly rentals of all student addresses?"
+    },
+    {
+        "query": "SELECT T1.zip_postcode FROM Addresses AS T1 JOIN Teachers AS T2 ON T1.address_id  =  T2.address_id WHERE T2.first_name  =  \"Lyla\"",
+        "question": "What is the zip code of the address where the teacher with first name \"Lyla\" lives?"
+    },
+    {
+        "query": "SELECT T2.email_address FROM Addresses AS T1 JOIN Teachers AS T2 ON T1.address_id  =  T2.address_id WHERE T1.zip_postcode  =  \"918\"",
+        "question": "What are the email addresses of teachers whose address has zip code \"918\"?"
+    },
+    {
+        "query": "SELECT count(*) FROM STUDENTS WHERE student_id NOT IN ( SELECT student_id FROM Behavior_Incident )",
+        "question": "How many students are not involved in any behavior incident?"
+    },
+    {
+        "query": "SELECT last_name FROM Teachers EXCEPT SELECT T1.last_name FROM Teachers AS T1 JOIN Detention AS T2 ON T1.teacher_id  =  T2.teacher_id",
+        "question": "Find the last names of teachers who are not involved in any detention."
+    },
+    {
+        "query": "SELECT T1.line_1 FROM Addresses AS T1 JOIN Students AS T2 ON T1.address_id  =  T2.address_id INTERSECT SELECT T1.line_1 FROM Addresses AS T1 JOIN Teachers AS T2 ON T1.address_id  =  T2.address_id",
+        "question": "What are the line 1 of addresses shared by some students and some teachers?"
+    },
+    {
+        "query": "SELECT T1.asset_id ,  T1.asset_details FROM Assets AS T1 JOIN Asset_Parts AS T2 ON T1.asset_id  =  T2.asset_id GROUP BY T1.asset_id HAVING count(*)  =  2 INTERSECT SELECT T1.asset_id ,  T1.asset_details FROM Assets AS T1 JOIN Fault_Log AS T2 ON T1.asset_id  =  T2.asset_id GROUP BY T1.asset_id HAVING count(*)  <  2",
+        "question": "Which assets have 2 parts and have less than 2 fault logs? List the asset id and detail."
+    },
+    {
+        "query": "SELECT count(*) ,  T1.maintenance_contract_id FROM Maintenance_Contracts AS T1 JOIN Assets AS T2 ON T1.maintenance_contract_id  =  T2.maintenance_contract_id GROUP BY T1.maintenance_contract_id",
+        "question": "How many assets does each maintenance contract contain? List the number and the contract id."
+    },
+    {
+        "query": "SELECT count(*) ,  T1.company_id FROM Third_Party_Companies AS T1 JOIN Assets AS T2 ON T1.company_id  =  T2.supplier_company_id GROUP BY T1.company_id",
+        "question": "How many assets does each third party company supply? List the count and the company id."
+    },
+    {
+        "query": "SELECT T1.company_id ,  T1.company_name FROM Third_Party_Companies AS T1 JOIN Maintenance_Engineers AS T2 ON T1.company_id  =  T2.company_id GROUP BY T1.company_id HAVING count(*)  >=  2 UNION SELECT T3.company_id ,  T3.company_name FROM Third_Party_Companies AS T3 JOIN Maintenance_Contracts AS T4 ON T3.company_id  =  T4.maintenance_contract_company_id GROUP BY T3.company_id HAVING count(*)  >=  2",
+        "question": "Which third party companies have at least 2 maintenance engineers or have at least 2 maintenance contracts? List the company id and name."
+    },
+    {
+        "query": "SELECT T1.staff_name ,  T1.staff_id FROM Staff AS T1 JOIN Fault_Log AS T2 ON T1.staff_id  =  T2.recorded_by_staff_id EXCEPT SELECT T3.staff_name ,  T3.staff_id FROM Staff AS T3 JOIN Engineer_Visits AS T4 ON T3.staff_id  =  T4.contact_staff_id",
+        "question": "What is the name and id of the staff who recorded the fault log but has not contacted any visiting engineers?"
+    },
+    {
+        "query": "SELECT T1.engineer_id ,  T1.first_name ,  T1.last_name FROM Maintenance_Engineers AS T1 JOIN Engineer_Visits AS T2 GROUP BY T1.engineer_id ORDER BY count(*) DESC LIMIT 1",
+        "question": "Which engineer has visited the most times? Show the engineer id, first name and last name."
+    },
+    {
+        "query": "SELECT T1.part_name ,  T1.part_id FROM Parts AS T1 JOIN Part_Faults AS T2 ON T1.part_id  =  T2.part_id GROUP BY T1.part_id HAVING count(*)  >  2",
+        "question": "Which parts have more than 2 faults? Show the part name and id."
+    },
+    {
+        "query": "SELECT T1.first_name ,  T1.last_name ,  T1.other_details ,  T3.skill_description FROM Maintenance_Engineers AS T1 JOIN Engineer_Skills AS T2 ON T1.engineer_id  =  T2.engineer_id JOIN Skills AS T3 ON T2.skill_id  =  T3.skill_id",
+        "question": "List all every engineer's first name, last name, details and coresponding skill description."
+    },
+    {
+        "query": "SELECT T1.fault_short_name ,  T3.skill_description FROM Part_Faults AS T1 JOIN Skills_Required_To_Fix AS T2 ON T1.part_fault_id  =  T2.part_fault_id JOIN Skills AS T3 ON T2.skill_id  =  T3.skill_id",
+        "question": "For all the faults of different parts, what are all the decriptions of the skills required to fix them? List the name of the faults and the skill description."
+    },
+    {
+        "query": "SELECT T1.part_name ,  count(*) FROM Parts AS T1 JOIN Asset_Parts AS T2 ON T1.part_id  =  T2.part_id GROUP BY T1.part_name",
+        "question": "How many assets can each parts be used in? List the part name and the number."
+    },
+    {
+        "query": "SELECT T1.fault_description ,  T2.fault_status FROM Fault_Log AS T1 JOIN Fault_Log_Parts AS T2 ON T1.fault_log_entry_id  =  T2.fault_log_entry_id",
+        "question": "What are all the fault descriptions and the fault status of all the faults recoreded in the logs?"
+    },
+    {
+        "query": "SELECT count(*) ,  T1.fault_log_entry_id FROM Fault_Log AS T1 JOIN Engineer_Visits AS T2 ON T1.fault_log_entry_id  =  T2.fault_log_entry_id GROUP BY T1.fault_log_entry_id ORDER BY count(*) DESC LIMIT 1",
+        "question": "How many engineer visits are required at most for a single fault log? List the number and the log entry id."
+    },
+    {
+        "query": "SELECT DISTINCT last_name FROM Maintenance_Engineers",
+        "question": "What are all the distinct last names of all the engineers?"
+    },
+    {
+        "query": "SELECT DISTINCT fault_status FROM Fault_Log_Parts",
+        "question": "How many fault status codes are recorded in the fault log parts table?"
+    },
+    {
+        "query": "SELECT first_name ,  last_name FROM Maintenance_Engineers WHERE engineer_id NOT IN (SELECT engineer_id FROM Engineer_Visits)",
+        "question": "Which engineers have never visited to maintain the assets? List the engineer first name and last name."
+    },
+    {
+        "query": "SELECT asset_id ,  asset_details ,  asset_make ,  asset_model FROM Assets",
+        "question": "List the asset id, details, make and model for every asset."
+    },
+    {
+        "query": "SELECT asset_acquired_date FROM Assets ORDER BY asset_acquired_date ASC LIMIT 1",
+        "question": "When was the first asset acquired?"
+    },
+    {
+        "query": "SELECT T1.part_id ,  T1.part_name FROM Parts AS T1 JOIN Part_Faults AS T2 ON T1.part_id  =  T2.part_id JOIN Skills_Required_To_Fix AS T3 ON T2.part_fault_id  =  T3.part_fault_id GROUP BY T1.part_id ORDER BY count(*) DESC LIMIT 1",
+        "question": "Which part fault requires the most number of skills to fix? List part id and name."
+    },
+    {
+        "query": "SELECT T1.part_name FROM Parts AS T1 JOIN Part_Faults AS T2 ON T1.part_id  =  T2.part_id GROUP BY T1.part_name ORDER BY count(*) ASC LIMIT 1",
+        "question": "Which kind of part has the least number of faults? List the part name."
+    },
+    {
+        "query": "SELECT T1.engineer_id ,  T1.first_name ,  T1.last_name FROM Maintenance_Engineers AS T1 JOIN Engineer_Visits AS T2 ON T1.engineer_id  =  T2.engineer_id GROUP BY T1.engineer_id ORDER BY count(*) ASC LIMIT 1",
+        "question": "Among those engineers who have visited, which engineer makes the least number of visits? List the engineer id, first name and last name."
+    },
+    {
+        "query": "SELECT T1.staff_name ,  T3.first_name ,  T3.last_name FROM Staff AS T1 JOIN Engineer_Visits AS T2 ON T1.staff_id  =  T2.contact_staff_id JOIN Maintenance_Engineers AS T3 ON T2.engineer_id  =  T3.engineer_id",
+        "question": "Which staff have contacted which engineers? List the staff name and the engineer first name and last name."
+    },
+    {
+        "query": "SELECT T1.fault_log_entry_id ,  T1.fault_description ,  T1.fault_log_entry_datetime FROM Fault_Log AS T1 JOIN Fault_Log_Parts AS T2 ON T1.fault_log_entry_id  =  T2.fault_log_entry_id GROUP BY T1.fault_log_entry_id ORDER BY count(*) DESC LIMIT 1",
+        "question": "Which fault log included the most number of faulty parts? List the fault log id, description and record time."
+    },
+    {
+        "query": "SELECT T1.skill_id ,  T1.skill_description FROM Skills AS T1 JOIN Skills_Required_To_Fix AS T2 ON T1.skill_id  =  T2.skill_id GROUP BY T1.skill_id ORDER BY count(*) DESC LIMIT 1",
+        "question": "Which skill is used in fixing the most number of faults? List the skill id and description."
+    },
+    {
+        "query": "SELECT DISTINCT asset_model FROM Assets",
+        "question": "What are all the distinct asset models?"
+    },
+    {
+        "query": "SELECT asset_make ,  asset_model ,  asset_details FROM Assets ORDER BY asset_disposed_date ASC",
+        "question": "List the all the assets make, model, details by the disposed date ascendingly."
+    },
+    {
+        "query": "SELECT part_id ,  chargeable_amount FROM Parts ORDER BY chargeable_amount ASC LIMIT 1",
+        "question": "Which part has the least chargeable amount? List the part id and amount."
+    },
+    {
+        "query": "SELECT T1.company_name FROM Third_Party_Companies AS T1 JOIN Maintenance_Contracts AS T2 ON T1.company_id  =  T2.maintenance_contract_company_id ORDER BY T2.contract_start_date ASC LIMIT 1",
+        "question": "Which company started the earliest the maintenance contract? Show the company name."
+    },
+    {
+        "query": "SELECT T1.company_name FROM Third_Party_Companies AS T1 JOIN Maintenance_Contracts AS T2 ON T1.company_id  =  T2.maintenance_contract_company_id JOIN Ref_Company_Types AS T3 ON T1.company_type_code  =  T3.company_type_code ORDER BY T2.contract_end_date DESC LIMIT 1",
+        "question": "What is the description of the type of the company who concluded its contracts most recently?"
+    },
+    {
+        "query": "SELECT gender FROM staff GROUP BY gender ORDER BY count(*) DESC LIMIT 1",
+        "question": "Which gender makes up the majority of the staff?"
+    },
+    {
+        "query": "SELECT T1.staff_name ,  count(*) FROM Staff AS T1 JOIN Engineer_Visits AS T2 ON T1.staff_id  =  T2.contact_staff_id GROUP BY T1.staff_name",
+        "question": "How many engineers did each staff contact? List both the contact staff name and number of engineers contacted."
+    },
+    {
+        "query": "SELECT asset_model FROM Assets WHERE asset_id NOT IN (SELECT asset_id FROM Fault_Log)",
+        "question": "Which assets did not incur any fault log? List the asset model."
+    },
+    {
+        "query": "SELECT T1.name_full ,  T1.college_id FROM college AS T1 JOIN player_college AS T2 ON T1.college_id  =  T2.college_id GROUP BY T1.college_id ORDER BY count(*) DESC LIMIT 1;",
+        "question": "what is the full name and id of the college with the largest number of baseball players?"
+    },
+    {
+        "query": "SELECT T1.name_full ,  T1.college_id FROM college AS T1 JOIN player_college AS T2 ON T1.college_id  =  T2.college_id GROUP BY T1.college_id ORDER BY count(*) DESC LIMIT 1;",
+        "question": "Find the full name and id of the college that has the most baseball players."
+    },
+    {
+        "query": "SELECT avg(T1.salary) FROM salary AS T1 JOIN team AS T2 ON T1.team_id  =  T2.team_id_br WHERE T2.name  = 'Boston Red Stockings'",
+        "question": "What is average salary of the players in the team named 'Boston Red Stockings' ?"
+    },
+    {
+        "query": "SELECT avg(T1.salary) FROM salary AS T1 JOIN team AS T2 ON T1.team_id  =  T2.team_id_br WHERE T2.name  = 'Boston Red Stockings'",
+        "question": "Compute the average salary of the players in the team called 'Boston Red Stockings'."
+    },
+    {
+        "query": "SELECT name_first ,  name_last FROM player AS T1 JOIN all_star AS T2 ON T1.player_id  =  T2.player_id WHERE YEAR  =  1998",
+        "question": "What are first and last names of players participating in all star game in 1998?"
+    },
+    {
+        "query": "SELECT name_first ,  name_last FROM player AS T1 JOIN all_star AS T2 ON T1.player_id  =  T2.player_id WHERE YEAR  =  1998",
+        "question": "List the first and last name for players who participated in all star game in 1998."
+    },
+    {
+        "query": "SELECT T1.name_first , T1.name_last ,  T1.player_id ,   count(*) FROM player AS T1 JOIN all_star AS T2 ON T1.player_id  =  T2.player_id GROUP BY T1.player_id ORDER BY count(*) DESC LIMIT 1;",
+        "question": "What are the first name, last name and id of the player with the most all star game experiences? Also list the count."
+    },
+    {
+        "query": "SELECT T1.name_first , T1.name_last ,  T1.player_id ,   count(*) FROM player AS T1 JOIN all_star AS T2 ON T1.player_id  =  T2.player_id GROUP BY T1.player_id ORDER BY count(*) DESC LIMIT 1;",
+        "question": "Which player has the most all star game experiences? Give me the first name, last name and id of the player, as well as the number of times the player participated in all star game."
+    },
+    {
+        "query": "SELECT yearid ,  count(*) FROM hall_of_fame GROUP BY yearid;",
+        "question": "How many players enter hall of fame each year?"
+    },
+    {
+        "query": "SELECT yearid ,  count(*) FROM hall_of_fame GROUP BY yearid;",
+        "question": "Count the number of players who enter hall of fame for each year."
+    },
+    {
+        "query": "SELECT YEAR ,  avg(attendance) FROM home_game GROUP BY YEAR;",
+        "question": "What is the average number of attendance at home games for each year?"
+    },
+    {
+        "query": "SELECT YEAR ,  avg(attendance) FROM home_game GROUP BY YEAR;",
+        "question": "For each year, return the year and the average number of attendance at home games."
+    },
+    {
+        "query": "SELECT T2.team_id ,  T2.rank FROM home_game AS T1 JOIN team AS T2 ON T1.team_id  =  T2.team_id WHERE T1.year  =  2014 GROUP BY T1.team_id ORDER BY avg(T1.attendance) DESC LIMIT 1;",
+        "question": "In 2014, what are the id and rank of the team that has the largest average number of attendance?"
+    },
+    {
+        "query": "SELECT T2.team_id ,  T2.rank FROM home_game AS T1 JOIN team AS T2 ON T1.team_id  =  T2.team_id WHERE T1.year  =  2014 GROUP BY T1.team_id ORDER BY avg(T1.attendance) DESC LIMIT 1;",
+        "question": "Find the id and rank of the team that has the highest average attendance rate in 2014."
+    },
+    {
+        "query": "SELECT T1.name_first ,  T1.name_last ,  T2.player_id FROM player AS T1 JOIN manager_award AS T2 ON T1.player_id  =  T2.player_id GROUP BY T2.player_id ORDER BY count(*) DESC LIMIT 1;",
+        "question": "What are the manager's first name, last name and id who won the most manager award?"
+    },
+    {
+        "query": "SELECT T1.name_first ,  T1.name_last ,  T2.player_id FROM player AS T1 JOIN manager_award AS T2 ON T1.player_id  =  T2.player_id GROUP BY T2.player_id ORDER BY count(*) DESC LIMIT 1;",
+        "question": "Which manager won the most manager award? Give me the manager's first name, last name and id."
+    },
+    {
+        "query": "SELECT count(*) FROM park WHERE state  =  'NY';",
+        "question": "How many parks are there in the state of NY?"
+    },
+    {
+        "query": "SELECT count(*) FROM park WHERE state  =  'NY';",
+        "question": "Show me the number of parks the state of NY has."
+    },
+    {
+        "query": "SELECT T1.name_first ,  T1.name_last ,  T1.player_id FROM player AS T1 JOIN player_award AS T2 ON T1.player_id  =  T2.player_id GROUP BY T1.player_id ORDER BY count(*) DESC LIMIT 3;",
+        "question": "Which 3 players won the most player awards? List their full name and id."
+    },
+    {
+        "query": "SELECT T1.name_first ,  T1.name_last ,  T1.player_id FROM player AS T1 JOIN player_award AS T2 ON T1.player_id  =  T2.player_id GROUP BY T1.player_id ORDER BY count(*) DESC LIMIT 3;",
+        "question": "Find the first name, last name and id for the top three players won the most player awards."
+    },
+    {
+        "query": "SELECT birth_country FROM player GROUP BY birth_country ORDER BY count(*) ASC LIMIT 3;",
+        "question": "List three countries which are the origins of the least players."
+    },
+    {
+        "query": "SELECT birth_country FROM player GROUP BY birth_country ORDER BY count(*) ASC LIMIT 3;",
+        "question": "What are the three countries that the least players are from?"
+    },
+    {
+        "query": "SELECT name_first ,  name_last FROM player WHERE death_year = '';",
+        "question": "Find all the players' first name and last name who have empty death record."
+    },
+    {
+        "query": "SELECT name_first ,  name_last FROM player WHERE death_year = '';",
+        "question": "What are the first name and last name of the players whose death record is empty?"
+    },
+    {
+        "query": "SELECT count(*) FROM player WHERE birth_country = 'USA' AND bats  =  'R';",
+        "question": "How many players born in USA are right-handed batters? That is, have the batter value 'R'."
+    },
+    {
+        "query": "SELECT count(*) FROM player WHERE birth_country = 'USA' AND bats  =  'R';",
+        "question": "Count the number of players who were born in USA and have bats information 'R'."
+    },
+    {
+        "query": "SELECT avg(T1.height) FROM player AS T1 JOIN player_college AS T2 ON T1.player_id  =  T2.player_id JOIN college AS T3 ON T3.college_id  =  T2.college_id WHERE T3.name_full  =  'Yale University';",
+        "question": "What is the average height of the players from the college named 'Yale University'?"
+    },
+    {
+        "query": "SELECT avg(T1.height) FROM player AS T1 JOIN player_college AS T2 ON T1.player_id  =  T2.player_id JOIN college AS T3 ON T3.college_id  =  T2.college_id WHERE T3.name_full  =  'Yale University';",
+        "question": "Find the average height of the players who belong to the college called 'Yale University'."
+    },
+    {
+        "query": "SELECT T1.name ,  T1.team_id ,  max(T2.salary) FROM team AS T1 JOIN salary AS T2 ON T1.team_id  =  T2.team_id GROUP BY T1.team_id;",
+        "question": "What is the highest salary among each team? List the team name, id and maximum salary."
+    },
+    {
+        "query": "SELECT T1.name ,  T1.team_id ,  max(T2.salary) FROM team AS T1 JOIN salary AS T2 ON T1.team_id  =  T2.team_id GROUP BY T1.team_id;",
+        "question": "For each team, return the team name, id and the maximum salary among the team."
+    },
+    {
+        "query": "SELECT T1.name ,  T1.team_id FROM team AS T1 JOIN salary AS T2 ON T1.team_id = T2.team_id GROUP BY T1.team_id ORDER BY avg(T2.salary) ASC LIMIT 1;",
+        "question": "What are the name and id of the team offering the lowest average salary?"
+    },
+    {
+        "query": "SELECT T1.name ,  T1.team_id FROM team AS T1 JOIN salary AS T2 ON T1.team_id = T2.team_id GROUP BY T1.team_id ORDER BY avg(T2.salary) ASC LIMIT 1;",
+        "question": "Which team offers the lowest average salary? Give me the name and id of the team."
+    },
+    {
+        "query": "SELECT T1.name_first , T1.name_last FROM player AS T1 JOIN player_award AS T2 WHERE T2.year  =  1960 INTERSECT SELECT T1.name_first , T1.name_last FROM player AS T1 JOIN player_award AS T2 WHERE T2.year  =  1961",
+        "question": "Find the players' first name and last name who won award both in 1960 and in 1961."
+    },
+    {
+        "query": "SELECT T1.name_first , T1.name_last FROM player AS T1 JOIN player_award AS T2 WHERE T2.year  =  1960 INTERSECT SELECT T1.name_first , T1.name_last FROM player AS T1 JOIN player_award AS T2 WHERE T2.year  =  1961",
+        "question": "Which players won awards in both 1960 and 1961? Return their first names and last names."
+    },
+    {
+        "query": "SELECT name_first ,  name_last FROM player WHERE weight  >  220 OR height  <  75",
+        "question": "List players' first name and last name who have weight greater than 220 or height shorter than 75."
+    },
+    {
+        "query": "SELECT name_first ,  name_last FROM player WHERE weight  >  220 OR height  <  75",
+        "question": "What are the first name and last name of the players who have weight above 220 or height below 75?"
+    },
+    {
+        "query": "SELECT max(T1.wins) FROM postseason AS T1 JOIN team AS T2 ON T1.team_id_winner  =  T2.team_id_br WHERE T2.name  =  'Boston Red Stockings';",
+        "question": "List the maximum scores of the team Boston Red Stockings when the team won in postseason?"
+    },
+    {
+        "query": "SELECT max(T1.wins) FROM postseason AS T1 JOIN team AS T2 ON T1.team_id_winner  =  T2.team_id_br WHERE T2.name  =  'Boston Red Stockings';",
+        "question": "What are the maximum scores the team Boston Red Stockings got when the team won in postseason?"
+    },
+    {
+        "query": "SELECT count(*) FROM postseason AS T1 JOIN team AS T2 ON T1.team_id_loser  =  T2.team_id_br WHERE T2.name  =  'Boston Red Stockings' AND T1.year = 2009;",
+        "question": "How many times did Boston Red Stockings lose in 2009 postseason?"
+    },
+    {
+        "query": "SELECT count(*) FROM postseason AS T1 JOIN team AS T2 ON T1.team_id_loser  =  T2.team_id_br WHERE T2.name  =  'Boston Red Stockings' AND T1.year = 2009;",
+        "question": "Count the number of times the team \"Boston Red Stockings\" lost in 2009 postseason."
+    },
+    {
+        "query": "SELECT T2.name ,  T1.team_id_winner FROM postseason AS T1 JOIN team AS T2 ON T1.team_id_winner  =  T2.team_id_br WHERE T1.year  =  2008 GROUP BY T1.team_id_winner ORDER BY count(*) DESC LIMIT 1;",
+        "question": "What are the name and id of the team with the most victories in 2008 postseason?"
+    },
+    {
+        "query": "SELECT T2.name ,  T1.team_id_winner FROM postseason AS T1 JOIN team AS T2 ON T1.team_id_winner  =  T2.team_id_br WHERE T1.year  =  2008 GROUP BY T1.team_id_winner ORDER BY count(*) DESC LIMIT 1;",
+        "question": "Find the name and id of the team that won the most times in 2008 postseason."
+    },
+    {
+        "query": "SELECT count(*) ,  T1.year FROM postseason AS T1 JOIN team AS T2 ON T1.team_id_winner  =  T2.team_id_br WHERE T2.name  =  'Boston Red Stockings' GROUP BY T1.year",
+        "question": "What is the number of wins the team Boston Red Stockings got in the postseasons each year in history?"
+    },
+    {
+        "query": "SELECT count(*) ,  T1.year FROM postseason AS T1 JOIN team AS T2 ON T1.team_id_winner  =  T2.team_id_br WHERE T2.name  =  'Boston Red Stockings' GROUP BY T1.year",
+        "question": "For each year, return the year and the number of times the team Boston Red Stockings won in the postseasons."
+    },
+    {
+        "query": "SELECT count(*) FROM ( SELECT * FROM postseason AS T1 JOIN team AS T2 ON T1.team_id_winner  =  T2.team_id_br WHERE T2.name  =  'Boston Red Stockings' UNION SELECT * FROM postseason AS T1 JOIN team AS T2 ON T1.team_id_loser  =  T2.team_id_br WHERE T2.name  =  'Boston Red Stockings' );",
+        "question": "What is the total number of postseason games that team Boston Red Stockings participated in?"
+    },
+    {
+        "query": "SELECT count(*) FROM ( SELECT * FROM postseason AS T1 JOIN team AS T2 ON T1.team_id_winner  =  T2.team_id_br WHERE T2.name  =  'Boston Red Stockings' UNION SELECT * FROM postseason AS T1 JOIN team AS T2 ON T1.team_id_loser  =  T2.team_id_br WHERE T2.name  =  'Boston Red Stockings' );",
+        "question": "How many times in total did the team Boston Red Stockings participate in postseason games?"
+    },
+    {
+        "query": "SELECT count(*) FROM postseason WHERE YEAR  =  1885 AND ties  =  1;",
+        "question": "How many games in 1885 postseason resulted in ties (that is, the value of \"ties\" is '1')?"
+    },
+    {
+        "query": "SELECT count(*) FROM postseason WHERE YEAR  =  1885 AND ties  =  1;",
+        "question": "Find the number of tied games (the value of \"ties\" is '1') in 1885 postseason."
+    },
+    {
+        "query": "SELECT sum(T1.salary) FROM salary AS T1 JOIN team AS T2 ON T1.team_id  =  T2.team_id_br WHERE T2.name  = 'Boston Red Stockings' AND T1.year  =  2010",
+        "question": "What is the total salary paid by team Boston Red Stockings in 2010?"
+    },
+    {
+        "query": "SELECT sum(T1.salary) FROM salary AS T1 JOIN team AS T2 ON T1.team_id  =  T2.team_id_br WHERE T2.name  = 'Boston Red Stockings' AND T1.year  =  2010",
+        "question": "What is the total salary expenses of team Boston Red Stockings in 2010?"
+    },
+    {
+        "query": "SELECT count(*) FROM salary AS T1 JOIN team AS T2 ON T1.team_id  =  T2.team_id_br WHERE T2.name  = 'Boston Red Stockings' AND T1.year  =  2000",
+        "question": "How many players were in the team Boston Red Stockings in 2000?"
+    },
+    {
+        "query": "SELECT count(*) FROM salary AS T1 JOIN team AS T2 ON T1.team_id  =  T2.team_id_br WHERE T2.name  = 'Boston Red Stockings' AND T1.year  =  2000",
+        "question": "How many players did Boston Red Stockings have in 2000?"
+    },
+    {
+        "query": "SELECT salary FROM salary WHERE YEAR  =  2001 ORDER BY salary DESC LIMIT 3;",
+        "question": "List the 3 highest salaries of the players in 2001?"
+    },
+    {
+        "query": "SELECT salary FROM salary WHERE YEAR  =  2001 ORDER BY salary DESC LIMIT 3;",
+        "question": "How much salary did the top 3 well-paid players get in 2001?"
+    },
+    {
+        "query": "SELECT salary FROM salary WHERE YEAR  =  2010 UNION SELECT salary FROM salary WHERE YEAR  =  2001",
+        "question": "What were all the salary values of players in 2010 and 2001?"
+    },
+    {
+        "query": "SELECT salary FROM salary WHERE YEAR  =  2010 UNION SELECT salary FROM salary WHERE YEAR  =  2001",
+        "question": "List all the salary values players received in 2010 and 2001."
+    },
+    {
+        "query": "SELECT yearid FROM hall_of_fame GROUP BY yearid ORDER BY count(*) ASC LIMIT 1;",
+        "question": "In which year did the least people enter hall of fame?"
+    },
+    {
+        "query": "SELECT yearid FROM hall_of_fame GROUP BY yearid ORDER BY count(*) ASC LIMIT 1;",
+        "question": "Find the year in which the least people enter hall of fame."
+    },
+    {
+        "query": "SELECT count(*) FROM park WHERE city = 'Atlanta';",
+        "question": "How many parks are there in Atlanta city?"
+    },
+    {
+        "query": "SELECT count(*) FROM park WHERE city = 'Atlanta';",
+        "question": "How many parks does Atlanta city have?"
+    },
+    {
+        "query": "SELECT count(*) FROM home_game AS T1 JOIN park AS T2 ON T1.park_id  =  T2.park_id WHERE T1.year = 1907 AND T2.park_name = 'Columbia Park';",
+        "question": "How many games were played in park \"Columbia Park\" in 1907?"
+    },
+    {
+        "query": "SELECT count(*) FROM home_game AS T1 JOIN park AS T2 ON T1.park_id  =  T2.park_id WHERE T1.year = 1907 AND T2.park_name = 'Columbia Park';",
+        "question": "Count the number of games taken place in park \"Columbia Park\" in 1907."
+    },
+    {
+        "query": "SELECT count(*) FROM home_game AS T1 JOIN park AS T2 ON T1.park_id  =  T2.park_id WHERE T1.year  =  2000 AND T2.city  =  'Atlanta';",
+        "question": "How many games were played in city Atlanta in 2000?"
+    },
+    {
+        "query": "SELECT count(*) FROM home_game AS T1 JOIN park AS T2 ON T1.park_id  =  T2.park_id WHERE T1.year  =  2000 AND T2.city  =  'Atlanta';",
+        "question": "Find the number of games taken place in city Atlanta in 2000."
+    },
+    {
+        "query": "SELECT sum(T1.attendance) FROM home_game AS T1 JOIN team AS T2 ON T1.team_id  =  T2.team_id_br WHERE T2.name  =  'Boston Red Stockings' AND T1.year BETWEEN 2000 AND 2010;",
+        "question": "What is the total home game attendance of team Boston Red Stockings from 2000 to 2010?"
+    },
+    {
+        "query": "SELECT sum(T1.attendance) FROM home_game AS T1 JOIN team AS T2 ON T1.team_id  =  T2.team_id_br WHERE T2.name  =  'Boston Red Stockings' AND T1.year BETWEEN 2000 AND 2010;",
+        "question": "How many games in total did team Boston Red Stockings attend from 2000 to 2010?"
+    },
+    {
+        "query": "SELECT sum(T1.salary) FROM salary AS T1 JOIN player AS T2 ON T1.player_id = T2.player_id WHERE T2.name_first  =  'Len' AND T2.name_last = 'Barker' AND T1.year BETWEEN 1985 AND 1990;",
+        "question": "How much did the the player with first name Len and last name Barker earn between 1985 to 1990 in total?"
+    },
+    {
+        "query": "SELECT sum(T1.salary) FROM salary AS T1 JOIN player AS T2 ON T1.player_id = T2.player_id WHERE T2.name_first  =  'Len' AND T2.name_last = 'Barker' AND T1.year BETWEEN 1985 AND 1990;",
+        "question": "Compute the total salary that the player with first name Len and last name Barker received between 1985 to 1990."
+    },
+    {
+        "query": "SELECT T2.name_first ,  T2.name_last FROM salary AS T1 JOIN player AS T2 ON T1.player_id = T2.player_id JOIN team AS T3 ON T3.team_id_br = T1.team_id WHERE T1.year = 2005 AND T3.name = 'Washington Nationals' INTERSECT SELECT T2.name_first , T2.name_last FROM salary AS T1 JOIN player AS T2 ON T1.player_id = T2.player_id JOIN team AS T3 ON T3.team_id_br = T1.team_id WHERE T1.year = 2007 AND T3.name = 'Washington Nationals'",
+        "question": "List players' first name and last name who received salary from team Washington Nationals in both 2005 and 2007."
+    },
+    {
+        "query": "SELECT T2.name_first ,  T2.name_last FROM salary AS T1 JOIN player AS T2 ON T1.player_id = T2.player_id JOIN team AS T3 ON T3.team_id_br = T1.team_id WHERE T1.year = 2005 AND T3.name = 'Washington Nationals' INTERSECT SELECT T2.name_first , T2.name_last FROM salary AS T1 JOIN player AS T2 ON T1.player_id = T2.player_id JOIN team AS T3 ON T3.team_id_br = T1.team_id WHERE T1.year = 2007 AND T3.name = 'Washington Nationals'",
+        "question": "What are the first name and last name of the players who were paid salary by team Washington Nationals in both 2005 and 2007?"
+    },
+    {
+        "query": "SELECT sum(T1.games) FROM home_game AS T1 JOIN team AS T2 ON T1.team_id = T2.team_id_br WHERE T2.name = 'Boston Red Stockings' AND T1.year BETWEEN 1990 AND 2000;",
+        "question": "How many home games did the team Boston Red Stockings play from 1990 to 2000 in total?"
+    },
+    {
+        "query": "SELECT sum(T1.games) FROM home_game AS T1 JOIN team AS T2 ON T1.team_id = T2.team_id_br WHERE T2.name = 'Boston Red Stockings' AND T1.year BETWEEN 1990 AND 2000;",
+        "question": "Count the total number of games the team Boston Red Stockings attended from 1990 to 2000."
+    },
+    {
+        "query": "SELECT T2.name FROM home_game AS T1 JOIN team AS T2 ON T1.team_id = T2.team_id_br WHERE T1.year = 1980 ORDER BY T1.attendance ASC LIMIT 1;",
+        "question": "Which team had the least number of attendances in home games in 1980?"
+    },
+    {
+        "query": "SELECT T2.name FROM home_game AS T1 JOIN team AS T2 ON T1.team_id = T2.team_id_br WHERE T1.year = 1980 ORDER BY T1.attendance ASC LIMIT 1;",
+        "question": "Find the team that attended the least number of home games in 1980."
+    },
+    {
+        "query": "SELECT state FROM park GROUP BY state HAVING count(*)  >  2;",
+        "question": "List the names of states that have more than 2 parks."
+    },
+    {
+        "query": "SELECT state FROM park GROUP BY state HAVING count(*)  >  2;",
+        "question": "Which states have more than 2 parks?"
+    },
+    {
+        "query": "SELECT count(*) FROM team_franchise WHERE active = 'Y';",
+        "question": "How many team franchises are active, with active value 'Y'?"
+    },
+    {
+        "query": "SELECT count(*) FROM team_franchise WHERE active = 'Y';",
+        "question": "Find the number of team franchises that are active (have 'Y' as \"active\" information)."
+    },
+    {
+        "query": "SELECT city FROM park GROUP BY city HAVING count(*) BETWEEN 2 AND 4;",
+        "question": "Which cities have 2 to 4 parks?"
+    },
+    {
+        "query": "SELECT city FROM park GROUP BY city HAVING count(*) BETWEEN 2 AND 4;",
+        "question": "Find all the cities that have 2 to 4 parks."
+    },
+    {
+        "query": "SELECT T2.park_name FROM home_game AS T1 JOIN park AS T2 ON T1.park_id  =  T2.park_id WHERE T1.year = 2008 ORDER BY T1.attendance DESC LIMIT 1;",
+        "question": "Which park had most attendances in 2008?"
+    },
+    {
+        "query": "SELECT T2.park_name FROM home_game AS T1 JOIN park AS T2 ON T1.park_id  =  T2.park_id WHERE T1.year = 2008 ORDER BY T1.attendance DESC LIMIT 1;",
+        "question": "Which park did the most people attend in 2008?"
+    },
+    {
+        "query": "SELECT count(*) FROM aircraft",
+        "question": "How many aircrafts are there?"
+    },
+    {
+        "query": "SELECT count(*) FROM aircraft",
+        "question": "What is the number of aircraft?"
+    },
+    {
+        "query": "SELECT Description FROM aircraft",
+        "question": "List the description of all aircrafts."
+    },
+    {
+        "query": "SELECT Description FROM aircraft",
+        "question": "What are the descriptions for the aircrafts?"
+    },
+    {
+        "query": "SELECT avg(International_Passengers) FROM airport",
+        "question": "What is the average number of international passengers of all airports?"
+    },
+    {
+        "query": "SELECT avg(International_Passengers) FROM airport",
+        "question": "What is the average number of international passengers for an airport?"
+    },
+    {
+        "query": "SELECT International_Passengers ,  Domestic_Passengers FROM airport WHERE Airport_Name  =  \"London Heathrow\"",
+        "question": "What are the number of international and domestic passengers of the airport named London \"Heathrow\"?"
+    },
+    {
+        "query": "SELECT International_Passengers ,  Domestic_Passengers FROM airport WHERE Airport_Name  =  \"London Heathrow\"",
+        "question": "How many international and domestic passengers are there in the airport London Heathrow?"
+    },
+    {
+        "query": "SELECT sum(Domestic_Passengers) FROM airport WHERE Airport_Name LIKE \"%London%\"",
+        "question": "What are the total number of Domestic Passengers of airports that contain the word \"London\"."
+    },
+    {
+        "query": "SELECT sum(Domestic_Passengers) FROM airport WHERE Airport_Name LIKE \"%London%\"",
+        "question": "What are the total number of domestic passengers at all London airports?"
+    },
+    {
+        "query": "SELECT max(Transit_Passengers) ,  min(Transit_Passengers) FROM airport",
+        "question": "What are the maximum and minimum number of transit passengers of all aiports."
+    },
+    {
+        "query": "SELECT max(Transit_Passengers) ,  min(Transit_Passengers) FROM airport",
+        "question": "What is the maximum and mininum number of transit passengers for all airports?"
+    },
+    {
+        "query": "SELECT Name FROM pilot WHERE Age  >=  25",
+        "question": "What are the name of pilots aged 25 or older?"
+    },
+    {
+        "query": "SELECT Name FROM pilot WHERE Age  >=  25",
+        "question": "what is the name of every pilot who is at least 25 years old?"
+    },
+    {
+        "query": "SELECT Name FROM pilot ORDER BY Name ASC",
+        "question": "List all pilot names in ascending alphabetical order."
+    },
+    {
+        "query": "SELECT Name FROM pilot ORDER BY Name ASC",
+        "question": "What are the names of the pilots in alphabetical order?"
+    },
+    {
+        "query": "SELECT Name FROM pilot WHERE Age  <=  30 ORDER BY Name DESC",
+        "question": "List names of all pilot aged 30 or younger in descending alphabetical order."
+    },
+    {
+        "query": "SELECT Name FROM pilot WHERE Age  <=  30 ORDER BY Name DESC",
+        "question": "What are the names of all pilots 30 years old or young in descending alphabetical order?"
+    },
+    {
+        "query": "SELECT T1.Aircraft FROM aircraft AS T1 JOIN airport_aircraft AS T2 ON T1.Aircraft_ID  =  T2.Aircraft_ID JOIN airport AS T3 ON T2.Airport_ID  =  T3.Airport_ID WHERE T3.Airport_Name  =  \"London Gatwick\"",
+        "question": "Please show the names of aircrafts associated with airport with name \"London Gatwick\"."
+    },
+    {
+        "query": "SELECT T1.Aircraft FROM aircraft AS T1 JOIN airport_aircraft AS T2 ON T1.Aircraft_ID  =  T2.Aircraft_ID JOIN airport AS T3 ON T2.Airport_ID  =  T3.Airport_ID WHERE T3.Airport_Name  =  \"London Gatwick\"",
+        "question": "What are the names of all the aircrafts associated with London Gatwick airport?"
+    },
+    {
+        "query": "SELECT T1.Aircraft ,  T1.Description FROM aircraft AS T1 JOIN airport_aircraft AS T2 ON T1.Aircraft_ID  =  T2.Aircraft_ID JOIN airport AS T3 ON T2.Airport_ID  =  T3.Airport_ID WHERE T3.Total_Passengers  >  10000000",
+        "question": "Please show the names and descriptions of aircrafts associated with airports that have a total number of passengers bigger than 10000000."
+    },
+    {
+        "query": "SELECT T1.Aircraft ,  T1.Description FROM aircraft AS T1 JOIN airport_aircraft AS T2 ON T1.Aircraft_ID  =  T2.Aircraft_ID JOIN airport AS T3 ON T2.Airport_ID  =  T3.Airport_ID WHERE T3.Total_Passengers  >  10000000",
+        "question": "What are the names and descriptions of aircrafts associated with an airport that has more total passengers than 10000000?"
+    },
+    {
+        "query": "SELECT avg(T3.Total_Passengers) FROM aircraft AS T1 JOIN airport_aircraft AS T2 ON T1.Aircraft_ID  =  T2.Aircraft_ID JOIN airport AS T3 ON T2.Airport_ID  =  T3.Airport_ID WHERE T1.Aircraft  =  \"Robinson R-22\"",
+        "question": "What is the average total number of passengers of airports that are associated with aircraft \"Robinson R-22\"?"
+    },
+    {
+        "query": "SELECT avg(T3.Total_Passengers) FROM aircraft AS T1 JOIN airport_aircraft AS T2 ON T1.Aircraft_ID  =  T2.Aircraft_ID JOIN airport AS T3 ON T2.Airport_ID  =  T3.Airport_ID WHERE T1.Aircraft  =  \"Robinson R-22\"",
+        "question": "What is the average total number of passengers for all airports that the aircraft \"Robinson R-22\" visits?"
+    },
+    {
+        "query": "SELECT T2.Location ,  T1.Aircraft FROM aircraft AS T1 JOIN MATCH AS T2 ON T1.Aircraft_ID  =  T2.Winning_Aircraft",
+        "question": "Please list the location and the winning aircraft name."
+    },
+    {
+        "query": "SELECT T2.Location ,  T1.Aircraft FROM aircraft AS T1 JOIN MATCH AS T2 ON T1.Aircraft_ID  =  T2.Winning_Aircraft",
+        "question": "What is the location and name of the winning aircraft?"
+    },
+    {
+        "query": "SELECT T1.Aircraft FROM aircraft AS T1 JOIN MATCH AS T2 ON T1.Aircraft_ID  =  T2.Winning_Aircraft GROUP BY T2.Winning_Aircraft ORDER BY COUNT(*) DESC LIMIT 1",
+        "question": "List the name of the aircraft that has been named winning aircraft the most number of times."
+    },
+    {
+        "query": "SELECT T1.Aircraft FROM aircraft AS T1 JOIN MATCH AS T2 ON T1.Aircraft_ID  =  T2.Winning_Aircraft GROUP BY T2.Winning_Aircraft ORDER BY COUNT(*) DESC LIMIT 1",
+        "question": "What is the name of the aircraft that has won an award the most?"
+    },
+    {
+        "query": "SELECT T1.Aircraft ,  COUNT(*) FROM aircraft AS T1 JOIN MATCH AS T2 ON T1.Aircraft_ID  =  T2.Winning_Aircraft GROUP BY T2.Winning_Aircraft",
+        "question": "List the names of aircrafts and the number of times it won matches."
+    },
+    {
+        "query": "SELECT T1.Aircraft ,  COUNT(*) FROM aircraft AS T1 JOIN MATCH AS T2 ON T1.Aircraft_ID  =  T2.Winning_Aircraft GROUP BY T2.Winning_Aircraft",
+        "question": "For each aircraft that has won an award, what is its name and how many time has it won?"
+    },
+    {
+        "query": "SELECT Name FROM pilot ORDER BY Age DESC",
+        "question": "List names of all pilot in descending order of age."
+    },
+    {
+        "query": "SELECT Name FROM pilot ORDER BY Age DESC",
+        "question": "What are the names of all pilots listed by descending age?"
+    },
+    {
+        "query": "SELECT T1.Aircraft FROM aircraft AS T1 JOIN MATCH AS T2 ON T1.Aircraft_ID  =  T2.Winning_Aircraft GROUP BY T2.Winning_Aircraft HAVING COUNT(*)  >=  2",
+        "question": "List the names of aircrafts and that won matches at least twice."
+    },
+    {
+        "query": "SELECT T1.Aircraft FROM aircraft AS T1 JOIN MATCH AS T2 ON T1.Aircraft_ID  =  T2.Winning_Aircraft GROUP BY T2.Winning_Aircraft HAVING COUNT(*)  >=  2",
+        "question": "What are the names of all aircrafts that have won a match at least twice?"
+    },
+    {
+        "query": "SELECT Aircraft FROM aircraft WHERE Aircraft_ID NOT IN (SELECT Winning_Aircraft FROM MATCH)",
+        "question": "List the names of aircrafts and that did not win any match."
+    },
+    {
+        "query": "SELECT Aircraft FROM aircraft WHERE Aircraft_ID NOT IN (SELECT Winning_Aircraft FROM MATCH)",
+        "question": "What are the names of all aicrafts that have never won any match?"
+    },
+    {
+        "query": "SELECT T1.Aircraft FROM aircraft AS T1 JOIN airport_aircraft AS T2 ON T1.Aircraft_ID  =  T2.Aircraft_ID JOIN airport AS T3 ON T2.Airport_ID  =  T3.Airport_ID WHERE T3.Airport_Name  =  \"London Heathrow\" INTERSECT SELECT T1.Aircraft FROM aircraft AS T1 JOIN airport_aircraft AS T2 ON T1.Aircraft_ID  =  T2.Aircraft_ID JOIN airport AS T3 ON T2.Airport_ID  =  T3.Airport_ID WHERE T3.Airport_Name  =  \"London Gatwick\"",
+        "question": "Show the names of aircrafts that are associated with both an airport named \"London Heathrow\" and an airport named \"London Gatwick\""
+    },
+    {
+        "query": "SELECT T1.Aircraft FROM aircraft AS T1 JOIN airport_aircraft AS T2 ON T1.Aircraft_ID  =  T2.Aircraft_ID JOIN airport AS T3 ON T2.Airport_ID  =  T3.Airport_ID WHERE T3.Airport_Name  =  \"London Heathrow\" INTERSECT SELECT T1.Aircraft FROM aircraft AS T1 JOIN airport_aircraft AS T2 ON T1.Aircraft_ID  =  T2.Aircraft_ID JOIN airport AS T3 ON T2.Airport_ID  =  T3.Airport_ID WHERE T3.Airport_Name  =  \"London Gatwick\"",
+        "question": "What are the names of all aircrafts that are associated with both London Heathrow and Gatwick airports?"
+    },
+    {
+        "query": "SELECT * FROM airport ORDER BY International_Passengers DESC LIMIT 1",
+        "question": "Show all information on the airport that has the largest number of international passengers."
+    },
+    {
+        "query": "SELECT * FROM airport ORDER BY International_Passengers DESC LIMIT 1",
+        "question": "What is all the information on the airport with the largest number of international passengers?"
+    },
+    {
+        "query": "SELECT t1.name ,  t1.age FROM pilot AS t1 JOIN MATCH AS t2 ON t1.pilot_id  =  t2.winning_pilot WHERE t1.age  <  30 GROUP BY t2.winning_pilot ORDER BY count(*) DESC LIMIT 1",
+        "question": "find the name and age of the pilot who has won the most number of times among the pilots who are younger than 30."
+    },
+    {
+        "query": "SELECT t1.name ,  t1.age FROM pilot AS t1 JOIN MATCH AS t2 ON t1.pilot_id  =  t2.winning_pilot WHERE t1.age  <  30 GROUP BY t2.winning_pilot ORDER BY count(*) DESC LIMIT 1",
+        "question": "What is the name and age of the pilot younger than 30 who has won the most number of times?"
+    },
+    {
+        "query": "SELECT t1.name ,  t1.age FROM pilot AS t1 JOIN MATCH AS t2 ON t1.pilot_id  =  t2.winning_pilot ORDER BY t1.age LIMIT 1",
+        "question": "what is the name and age of the youngest winning pilot?"
+    },
+    {
+        "query": "SELECT t1.name ,  t1.age FROM pilot AS t1 JOIN MATCH AS t2 ON t1.pilot_id  =  t2.winning_pilot ORDER BY t1.age LIMIT 1",
+        "question": "How old is the youngest winning pilot and what is their name?"
+    },
+    {
+        "query": "SELECT name FROM pilot WHERE pilot_id NOT IN (SELECT Winning_Pilot  FROM MATCH WHERE country  =  'Australia')",
+        "question": "find the name of pilots who did not win the matches held in the country of Australia."
+    },
+    {
+        "query": "SELECT name FROM pilot WHERE pilot_id NOT IN (SELECT Winning_Pilot  FROM MATCH WHERE country  =  'Australia')",
+        "question": "What are the names of the pilots that have not won any matches in Australia?"
+    },
+    {
+        "query": "SELECT count(*) FROM Faculty",
+        "question": "How many faculty do we have?"
+    },
+    {
+        "query": "SELECT count(*) FROM Faculty",
+        "question": "What is the total number of faculty members?"
+    },
+    {
+        "query": "SELECT DISTINCT rank FROM Faculty",
+        "question": "What ranks do we have for faculty?"
+    },
+    {
+        "query": "SELECT DISTINCT rank FROM Faculty",
+        "question": "Find the list of distinct ranks for faculty."
+    },
+    {
+        "query": "SELECT DISTINCT building FROM Faculty",
+        "question": "Show all the distinct buildings that have faculty rooms."
+    },
+    {
+        "query": "SELECT DISTINCT building FROM Faculty",
+        "question": "What buildings have faculty offices?"
+    },
+    {
+        "query": "SELECT rank ,  Fname ,  Lname FROM Faculty",
+        "question": "Show the rank, first name, and last name for all the faculty."
+    },
+    {
+        "query": "SELECT rank ,  Fname ,  Lname FROM Faculty",
+        "question": "What are the rank, first name, and last name of the faculty members?"
+    },
+    {
+        "query": "SELECT Fname ,  Lname ,  phone FROM Faculty WHERE Sex  =  'F'",
+        "question": "Show the first name, last name, and phone number for all female faculty members."
+    },
+    {
+        "query": "SELECT Fname ,  Lname ,  phone FROM Faculty WHERE Sex  =  'F'",
+        "question": "What are the first name, last name, and phone number of all the female faculty members?"
+    },
+    {
+        "query": "SELECT FacID FROM Faculty WHERE Sex  =  'M'",
+        "question": "Show ids for all the male faculty."
+    },
+    {
+        "query": "SELECT FacID FROM Faculty WHERE Sex  =  'M'",
+        "question": "What are the faculty ids of all the male faculty members?"
+    },
+    {
+        "query": "SELECT count(*) FROM Faculty WHERE Sex  =  'F' AND Rank  =  \"Professor\"",
+        "question": "How many female Professors do we have?"
+    },
+    {
+        "query": "SELECT count(*) FROM Faculty WHERE Sex  =  'F' AND Rank  =  \"Professor\"",
+        "question": "Count the number of female Professors we have."
+    },
+    {
+        "query": "SELECT phone ,  room ,  building FROM Faculty WHERE Fname  =  \"Jerry\" AND Lname  =  \"Prince\"",
+        "question": "Show the phone, room, and building for the faculty named Jerry Prince."
+    },
+    {
+        "query": "SELECT phone ,  room ,  building FROM Faculty WHERE Fname  =  \"Jerry\" AND Lname  =  \"Prince\"",
+        "question": "What are the phone, room, and building of the faculty member called Jerry Prince?"
+    },
+    {
+        "query": "SELECT count(*) FROM Faculty WHERE Rank  =  \"Professor\" AND building  =  \"NEB\"",
+        "question": "How many Professors are in building NEB?"
+    },
+    {
+        "query": "SELECT count(*) FROM Faculty WHERE Rank  =  \"Professor\" AND building  =  \"NEB\"",
+        "question": "Count the number of Professors who have office in building NEB."
+    },
+    {
+        "query": "SELECT fname ,  lname FROM Faculty WHERE Rank  =  \"Instructor\"",
+        "question": "Show the first name and last name for all the instructors."
+    },
+    {
+        "query": "SELECT fname ,  lname FROM Faculty WHERE Rank  =  \"Instructor\"",
+        "question": "What are the first name and last name of all the instructors?"
+    },
+    {
+        "query": "SELECT building ,  count(*) FROM Faculty GROUP BY building",
+        "question": "Show all the buildings along with the number of faculty members the buildings have."
+    },
+    {
+        "query": "SELECT building ,  count(*) FROM Faculty GROUP BY building",
+        "question": "How many faculty members does each building have? List the result with the name of the building."
+    },
+    {
+        "query": "SELECT building FROM Faculty GROUP BY building ORDER BY count(*) DESC LIMIT 1",
+        "question": "Which building has most faculty members?"
+    },
+    {
+        "query": "SELECT building FROM Faculty GROUP BY building ORDER BY count(*) DESC LIMIT 1",
+        "question": "Find the building that has the largest number of faculty members."
+    },
+    {
+        "query": "SELECT building FROM Faculty WHERE rank  =  \"Professor\" GROUP BY building HAVING count(*)  >=  10",
+        "question": "Show all the buildings that have at least 10 professors."
+    },
+    {
+        "query": "SELECT building FROM Faculty WHERE rank  =  \"Professor\" GROUP BY building HAVING count(*)  >=  10",
+        "question": "In which buildings are there at least ten professors?"
+    },
+    {
+        "query": "SELECT rank ,  count(*) FROM Faculty GROUP BY rank",
+        "question": "For each faculty rank, show the number of faculty members who have it."
+    },
+    {
+        "query": "SELECT rank ,  count(*) FROM Faculty GROUP BY rank",
+        "question": "How many faculty members do we have for each faculty rank?"
+    },
+    {
+        "query": "SELECT rank ,  sex ,  count(*) FROM Faculty GROUP BY rank ,  sex",
+        "question": "Show all the ranks and the number of male and female faculty for each rank."
+    },
+    {
+        "query": "SELECT rank ,  sex ,  count(*) FROM Faculty GROUP BY rank ,  sex",
+        "question": "How many faculty members do we have for each rank and gender?"
+    },
+    {
+        "query": "SELECT rank FROM Faculty GROUP BY rank ORDER BY count(*) ASC LIMIT 1",
+        "question": "Which rank has the smallest number of faculty members?"
+    },
+    {
+        "query": "SELECT rank FROM Faculty GROUP BY rank ORDER BY count(*) ASC LIMIT 1",
+        "question": "Find the faculty rank that has the least members."
+    },
+    {
+        "query": "SELECT sex ,  count(*) FROM Faculty WHERE rank  =  \"AsstProf\" GROUP BY sex",
+        "question": "Show the number of male and female assistant professors."
+    },
+    {
+        "query": "SELECT sex ,  count(*) FROM Faculty WHERE rank  =  \"AsstProf\" GROUP BY sex",
+        "question": "How many male and female assistant professors do we have?"
+    },
+    {
+        "query": "SELECT T1.fname ,  T1.lname FROM Faculty AS T1 JOIN Student AS T2 ON T1.FacID  =  T2.advisor WHERE T2.fname  =  \"Linda\" AND T2.lname  =  \"Smith\"",
+        "question": "What are the first name and last name of Linda Smith's advisor?"
+    },
+    {
+        "query": "SELECT T1.fname ,  T1.lname FROM Faculty AS T1 JOIN Student AS T2 ON T1.FacID  =  T2.advisor WHERE T2.fname  =  \"Linda\" AND T2.lname  =  \"Smith\"",
+        "question": "Who is the advisor of Linda Smith? Give me the first name and last name."
+    },
+    {
+        "query": "SELECT T2.StuID FROM Faculty AS T1 JOIN Student AS T2 ON T1.FacID  =  T2.advisor WHERE T1.rank  =  \"Professor\"",
+        "question": "Show the ids of students whose advisors are professors."
+    },
+    {
+        "query": "SELECT T2.StuID FROM Faculty AS T1 JOIN Student AS T2 ON T1.FacID  =  T2.advisor WHERE T1.rank  =  \"Professor\"",
+        "question": "Which students have professors as their advisors? Find their student ids."
+    },
+    {
+        "query": "SELECT T2.fname ,  T2.lname FROM Faculty AS T1 JOIN Student AS T2 ON T1.FacID  =  T2.advisor WHERE T1.fname  =  \"Michael\" AND T1.lname  =  \"Goodrich\"",
+        "question": "Show first name and last name for all the students advised by Michael Goodrich."
+    },
+    {
+        "query": "SELECT T2.fname ,  T2.lname FROM Faculty AS T1 JOIN Student AS T2 ON T1.FacID  =  T2.advisor WHERE T1.fname  =  \"Michael\" AND T1.lname  =  \"Goodrich\"",
+        "question": "Which students are advised by Michael Goodrich? Give me their first and last names."
+    },
+    {
+        "query": "SELECT T1.FacID ,  count(*) FROM Faculty AS T1 JOIN Student AS T2 ON T1.FacID  =  T2.advisor GROUP BY T1.FacID",
+        "question": "Show the faculty id of each faculty member, along with the number of students he or she advises."
+    },
+    {
+        "query": "SELECT T1.FacID ,  count(*) FROM Faculty AS T1 JOIN Student AS T2 ON T1.FacID  =  T2.advisor GROUP BY T1.FacID",
+        "question": "What are the faculty id and the number of students each faculty has?"
+    },
+    {
+        "query": "SELECT T1.rank ,  count(*) FROM Faculty AS T1 JOIN Student AS T2 ON T1.FacID  =  T2.advisor GROUP BY T1.rank",
+        "question": "Show all the faculty ranks and the number of students advised by each rank."
+    },
+    {
+        "query": "SELECT T1.rank ,  count(*) FROM Faculty AS T1 JOIN Student AS T2 ON T1.FacID  =  T2.advisor GROUP BY T1.rank",
+        "question": "How many students are advised by each rank of faculty? List the rank and the number of students."
+    },
+    {
+        "query": "SELECT T1.fname ,  T1.lname FROM Faculty AS T1 JOIN Student AS T2 ON T1.FacID  =  T2.advisor GROUP BY T1.FacID ORDER BY count(*) DESC LIMIT 1",
+        "question": "What are the first and last name of the faculty who has the most students?"
+    },
+    {
+        "query": "SELECT T1.fname ,  T1.lname FROM Faculty AS T1 JOIN Student AS T2 ON T1.FacID  =  T2.advisor GROUP BY T1.FacID ORDER BY count(*) DESC LIMIT 1",
+        "question": "Give me the the first and last name of the faculty who advises the most students."
+    },
+    {
+        "query": "SELECT T1.FacID FROM Faculty AS T1 JOIN Student AS T2 ON T1.FacID  =  T2.advisor GROUP BY T1.FacID HAVING count(*)  >=  2",
+        "question": "Show the ids for all the faculty members who have at least 2 students."
+    },
+    {
+        "query": "SELECT T1.FacID FROM Faculty AS T1 JOIN Student AS T2 ON T1.FacID  =  T2.advisor GROUP BY T1.FacID HAVING count(*)  >=  2",
+        "question": "Which faculty members advise two ore more students? Give me their faculty ids."
+    },
+    {
+        "query": "SELECT FacID FROM Faculty EXCEPT SELECT advisor FROM Student",
+        "question": "Show ids for the faculty members who don't advise any student."
+    },
+    {
+        "query": "SELECT FacID FROM Faculty EXCEPT SELECT advisor FROM Student",
+        "question": "What are the ids of the faculty members who do not advise any student."
+    },
+    {
+        "query": "SELECT activity_name FROM Activity",
+        "question": "What activities do we have?"
+    },
+    {
+        "query": "SELECT activity_name FROM Activity",
+        "question": "List all the activities we have."
+    },
+    {
+        "query": "SELECT count(*) FROM Activity",
+        "question": "How many activities do we have?"
+    },
+    {
+        "query": "SELECT count(*) FROM Activity",
+        "question": "Find the number of activities available."
+    },
+    {
+        "query": "SELECT count(DISTINCT FacID) FROM Faculty_participates_in",
+        "question": "How many faculty members participate in an activity?"
+    },
+    {
+        "query": "SELECT count(DISTINCT FacID) FROM Faculty_participates_in",
+        "question": "Give me the number of faculty members who participate in an activity"
+    },
+    {
+        "query": "SELECT FacID FROM Faculty EXCEPT SELECT FacID FROM Faculty_participates_in",
+        "question": "Show the ids of the faculty who don't participate in any activity."
+    },
+    {
+        "query": "SELECT FacID FROM Faculty EXCEPT SELECT FacID FROM Faculty_participates_in",
+        "question": "Which faculty do not participate in any activity? Find their faculty ids."
+    },
+    {
+        "query": "SELECT FacID FROM Faculty_participates_in INTERSECT SELECT advisor FROM Student",
+        "question": "Show the ids of all the faculty members who participate in an activity and advise a student."
+    },
+    {
+        "query": "SELECT FacID FROM Faculty_participates_in INTERSECT SELECT advisor FROM Student",
+        "question": "What are ids of the faculty members who not only participate in an activity but also advise a student."
+    },
+    {
+        "query": "SELECT count(*) FROM Faculty AS T1 JOIN Faculty_participates_in AS T2 ON T1.facID  =  T2.facID WHERE T1.fname  =  \"Mark\" AND T1.lname  =  \"Giuliano\"",
+        "question": "How many activities does Mark Giuliano participate in?"
+    },
+    {
+        "query": "SELECT count(*) FROM Faculty AS T1 JOIN Faculty_participates_in AS T2 ON T1.facID  =  T2.facID WHERE T1.fname  =  \"Mark\" AND T1.lname  =  \"Giuliano\"",
+        "question": "Find the number of activities Mark Giuliano is involved in."
+    },
+    {
+        "query": "SELECT T3.activity_name FROM Faculty AS T1 JOIN Faculty_participates_in AS T2 ON T1.facID  =  T2.facID JOIN Activity AS T3 ON T3.actid  =  T2.actid WHERE T1.fname  =  \"Mark\" AND T1.lname  =  \"Giuliano\"",
+        "question": "Show the names of all the activities Mark Giuliano participates in."
+    },
+    {
+        "query": "SELECT T3.activity_name FROM Faculty AS T1 JOIN Faculty_participates_in AS T2 ON T1.facID  =  T2.facID JOIN Activity AS T3 ON T3.actid  =  T2.actid WHERE T1.fname  =  \"Mark\" AND T1.lname  =  \"Giuliano\"",
+        "question": "What are the names of the activities Mark Giuliano is involved in"
+    },
+    {
+        "query": "SELECT  T1.fname ,  T1.lname ,  count(*) ,  T1.FacID FROM Faculty AS T1 JOIN Faculty_participates_in AS T2 ON T1.facID  =  T2.facID GROUP BY T1.FacID",
+        "question": "Show the first and last name of all the faculty members who participated in some activity, together with the number of activities they participated in."
+    },
+    {
+        "query": "SELECT  T1.fname ,  T1.lname ,  count(*) ,  T1.FacID FROM Faculty AS T1 JOIN Faculty_participates_in AS T2 ON T1.facID  =  T2.facID GROUP BY T1.FacID",
+        "question": "What is the first and last name of the faculty members who participated in at least one activity? For each of them, also show the number of activities they participated in."
+    },
+    {
+        "query": "SELECT T1.activity_name ,  count(*) FROM Activity AS T1 JOIN Faculty_participates_in AS T2 ON T1.actID  =  T2.actID GROUP BY T1.actID",
+        "question": "Show all the activity names and the number of faculty involved in each activity."
+    },
+    {
+        "query": "SELECT T1.activity_name ,  count(*) FROM Activity AS T1 JOIN Faculty_participates_in AS T2 ON T1.actID  =  T2.actID GROUP BY T1.actID",
+        "question": "How many faculty members participate in each activity? Return the activity names and the number of faculty members."
+    },
+    {
+        "query": "SELECT  T1.fname ,  T1.lname FROM Faculty AS T1 JOIN Faculty_participates_in AS T2 ON T1.facID  =  T2.facID GROUP BY T1.FacID ORDER BY count(*) DESC LIMIT 1",
+        "question": "What is the first and last name of the faculty participating in the most activities?"
+    },
+    {
+        "query": "SELECT  T1.fname ,  T1.lname FROM Faculty AS T1 JOIN Faculty_participates_in AS T2 ON T1.facID  =  T2.facID GROUP BY T1.FacID ORDER BY count(*) DESC LIMIT 1",
+        "question": "Find the first and last name of the faculty who is involved in the largest number of activities."
+    },
+    {
+        "query": "SELECT T1.activity_name FROM Activity AS T1 JOIN Faculty_participates_in AS T2 ON T1.actID  =  T2.actID GROUP BY T1.actID ORDER BY count(*) DESC LIMIT 1",
+        "question": "What is the name of the activity that has the most faculty members involved in?"
+    },
+    {
+        "query": "SELECT T1.activity_name FROM Activity AS T1 JOIN Faculty_participates_in AS T2 ON T1.actID  =  T2.actID GROUP BY T1.actID ORDER BY count(*) DESC LIMIT 1",
+        "question": "Which activity has the most faculty members participating in? Find the activity name."
+    },
+    {
+        "query": "SELECT StuID FROM Student EXCEPT SELECT StuID FROM Participates_in",
+        "question": "Show the ids of the students who don't participate in any activity."
+    },
+    {
+        "query": "SELECT StuID FROM Student EXCEPT SELECT StuID FROM Participates_in",
+        "question": "What are the ids of the students who are not involved in any activity"
+    },
+    {
+        "query": "SELECT StuID FROM Participates_in INTERSECT SELECT StuID FROM Student WHERE age  <  20",
+        "question": "Show the ids for all the students who participate in an activity and are under 20."
+    },
+    {
+        "query": "SELECT StuID FROM Participates_in INTERSECT SELECT StuID FROM Student WHERE age  <  20",
+        "question": "What are the ids of the students who are under 20 years old and are involved in at least one activity."
+    },
+    {
+        "query": "SELECT T1.fname ,  T1.lname FROM Student AS T1 JOIN Participates_in AS T2 ON T1.StuID  =  T2.StuID GROUP BY T1.StuID ORDER BY count(*) DESC LIMIT 1",
+        "question": "What is the first and last name of the student participating in the most activities?"
+    },
+    {
+        "query": "SELECT T1.fname ,  T1.lname FROM Student AS T1 JOIN Participates_in AS T2 ON T1.StuID  =  T2.StuID GROUP BY T1.StuID ORDER BY count(*) DESC LIMIT 1",
+        "question": "Tell me the first and last name of the student who has the most activities."
+    },
+    {
+        "query": "SELECT T1.activity_name FROM Activity AS T1 JOIN Participates_in AS T2 ON T1.actID  =  T2.actID GROUP BY T1.actID ORDER BY count(*) DESC LIMIT 1",
+        "question": "What is the name of the activity with the most students?"
+    },
+    {
+        "query": "SELECT T1.activity_name FROM Activity AS T1 JOIN Participates_in AS T2 ON T1.actID  =  T2.actID GROUP BY T1.actID ORDER BY count(*) DESC LIMIT 1",
+        "question": "Find the name of the activity that has the largest number of student participants."
+    },
+    {
+        "query": "SELECT DISTINCT T1.lname FROM Faculty AS T1 JOIN Faculty_participates_in AS T2 ON T1.facID  =  T2.facID JOIN activity AS T3 ON T2.actid  =  T2.actid WHERE T3.activity_name  =  'Canoeing' OR T3.activity_name  =  'Kayaking'",
+        "question": "Find the first names of the faculty members who are playing Canoeing or Kayaking."
+    },
+    {
+        "query": "SELECT DISTINCT T1.lname FROM Faculty AS T1 JOIN Faculty_participates_in AS T2 ON T1.facID  =  T2.facID JOIN activity AS T3 ON T2.actid  =  T2.actid WHERE T3.activity_name  =  'Canoeing' OR T3.activity_name  =  'Kayaking'",
+        "question": "Which faculty members are playing either Canoeing or Kayaking? Tell me their first names."
+    },
+    {
+        "query": "SELECT lname FROM faculty WHERE rank  =  'Professor' EXCEPT SELECT DISTINCT T1.lname FROM Faculty AS T1 JOIN Faculty_participates_in AS T2 ON T1.facID  =  T2.facID JOIN activity AS T3 ON T2.actid  =  T2.actid WHERE T3.activity_name  =  'Canoeing' OR T3.activity_name  =  'Kayaking'",
+        "question": "Find the first names of professors who are not playing Canoeing or Kayaking."
+    },
+    {
+        "query": "SELECT lname FROM faculty WHERE rank  =  'Professor' EXCEPT SELECT DISTINCT T1.lname FROM Faculty AS T1 JOIN Faculty_participates_in AS T2 ON T1.facID  =  T2.facID JOIN activity AS T3 ON T2.actid  =  T2.actid WHERE T3.activity_name  =  'Canoeing' OR T3.activity_name  =  'Kayaking'",
+        "question": "What are the first names of the professors who do not play Canoeing or Kayaking as activities?"
+    },
+    {
+        "query": "SELECT T1.lname FROM Faculty AS T1 JOIN Faculty_participates_in AS T2 ON T1.facID  =  T2.facID JOIN activity AS T3 ON T2.actid  =  T2.actid WHERE T3.activity_name  =  'Canoeing' INTERSECT SELECT T1.lname FROM Faculty AS T1 JOIN Faculty_participates_in AS T2 ON T1.facID  =  T2.facID JOIN activity AS T3 ON T2.actid  =  T2.actid WHERE T3.activity_name  =  'Kayaking'",
+        "question": "Find the first names of the faculty members who participate in Canoeing and Kayaking."
+    },
+    {
+        "query": "SELECT T1.lname FROM Faculty AS T1 JOIN Faculty_participates_in AS T2 ON T1.facID  =  T2.facID JOIN activity AS T3 ON T2.actid  =  T2.actid WHERE T3.activity_name  =  'Canoeing' INTERSECT SELECT T1.lname FROM Faculty AS T1 JOIN Faculty_participates_in AS T2 ON T1.facID  =  T2.facID JOIN activity AS T3 ON T2.actid  =  T2.actid WHERE T3.activity_name  =  'Kayaking'",
+        "question": "What are the first names of the faculty members playing both Canoeing and Kayaking?"
+    },
+    {
+        "query": "SELECT T1.stuid FROM participates_in AS T1 JOIN activity AS T2 ON T2.actid  =  T2.actid WHERE T2.activity_name  =  'Canoeing' INTERSECT SELECT T1.stuid FROM participates_in AS T1 JOIN activity AS T2 ON T2.actid  =  T2.actid WHERE T2.activity_name  =  'Kayaking'",
+        "question": "Find the ids of the students who participate in Canoeing and Kayaking."
+    },
+    {
+        "query": "SELECT T1.stuid FROM participates_in AS T1 JOIN activity AS T2 ON T2.actid  =  T2.actid WHERE T2.activity_name  =  'Canoeing' INTERSECT SELECT T1.stuid FROM participates_in AS T1 JOIN activity AS T2 ON T2.actid  =  T2.actid WHERE T2.activity_name  =  'Kayaking'",
+        "question": "Which students participate in both Canoeing and Kayaking as their activities? Tell me their student ids."
+    },
+    {
+        "query": "SELECT count(*) FROM architect WHERE gender  =  'female'",
+        "question": "How many architects are female?"
+    },
+    {
+        "query": "SELECT name ,  nationality ,  id FROM architect WHERE gender  =  'male' ORDER BY name",
+        "question": "List the name, nationality and id of all male architects ordered by their names lexicographically."
+    },
+    {
+        "query": "SELECT max(T1.length_meters) ,  T2.name FROM bridge AS T1 JOIN architect AS T2 ON T1.architect_id  =  T2.id",
+        "question": "What is the maximum length in meters for the bridges and what are the architects' names?"
+    },
+    {
+        "query": "SELECT avg(length_feet) FROM bridge",
+        "question": "What is the average length in feet of the bridges?"
+    },
+    {
+        "query": "SELECT name ,  built_year FROM mill WHERE TYPE  =  'Grondzeiler'",
+        "question": "What are the names and year of construction for the mills of 'Grondzeiler' type?"
+    },
+    {
+        "query": "SELECT DISTINCT T1.name ,  T1.nationality FROM architect AS T1 JOIN mill AS t2 ON T1.id  =  T2.architect_id",
+        "question": "What are the distinct names and nationalities of the architects who have ever built a mill?"
+    },
+    {
+        "query": "SELECT name FROM mill WHERE LOCATION != 'Donceel'",
+        "question": "What are the names of the mills which are not located in 'Donceel'?"
+    },
+    {
+        "query": "SELECT DISTINCT T1.type FROM mill AS T1 JOIN architect AS t2 ON T1.architect_id  =  T2.id WHERE T2.nationality  =  'American' OR T2.nationality  =  'Canadian'",
+        "question": "What are the distinct types of mills that are built by American or Canadian architects?"
+    },
+    {
+        "query": "SELECT T1.id ,  T1.name FROM architect AS T1 JOIN bridge AS T2 ON T1.id  =  T2.architect_id GROUP BY T1.id HAVING count(*)  >=  3",
+        "question": "What are the ids and names of the architects who built at least 3 bridges ?"
+    },
+    {
+        "query": "SELECT T1.id ,  T1.name ,  T1.nationality FROM architect AS T1 JOIN mill AS T2 ON T1.id  =  T2.architect_id GROUP BY T1.id ORDER BY count(*) DESC LIMIT 1",
+        "question": "What is the id, name and nationality of the architect who built most mills?"
+    },
+    {
+        "query": "SELECT T1.id ,  T1.name ,  T1.gender FROM architect AS T1 JOIN bridge AS T2 ON T1.id  =  T2.architect_id GROUP BY T1.id HAVING count(*)  =  2 UNION SELECT T1.id ,  T1.name ,  T1.gender FROM architect AS T1 JOIN mill AS T2 ON T1.id  =  T2.architect_id GROUP BY T1.id HAVING count(*)  =  1",
+        "question": "What are the ids, names and genders of the architects who built two bridges or one mill?"
+    },
+    {
+        "query": "SELECT LOCATION FROM bridge WHERE name  =  'Kolob Arch' OR name  =  'Rainbow Bridge'",
+        "question": "What is the location of the bridge named 'Kolob Arch' or 'Rainbow Bridge'?"
+    },
+    {
+        "query": "SELECT name FROM mill WHERE name LIKE '%Moulin%'",
+        "question": "Which of the mill names contains the french word 'Moulin'?"
+    },
+    {
+        "query": "SELECT DISTINCT T1.name FROM mill AS T1 JOIN architect AS t2 ON T1.architect_id  =  T2.id JOIN bridge AS T3 ON T3.architect_id  =  T2.id WHERE T3.length_meters  >  80",
+        "question": "What are the distinct name of the mills built by the architects who have also built a bridge longer than 80 meters?"
+    },
+    {
+        "query": "SELECT TYPE ,  count(*) FROM mill GROUP BY TYPE ORDER BY count(*) DESC LIMIT 1",
+        "question": "What is the most common mill type, and how many are there?"
+    },
+    {
+        "query": "SELECT count(*) FROM architect WHERE id NOT IN ( SELECT architect_id FROM mill WHERE built_year  <  1850 );",
+        "question": "How many architects haven't built a mill before year 1850?"
+    },
+    {
+        "query": "SELECT t1.name FROM bridge AS t1 JOIN architect AS t2 ON t1.architect_id  =  t2.id WHERE t2.nationality  =  'American' ORDER BY t1.length_feet",
+        "question": "show the name of all bridges that was designed by american archtect, and sort the result by the bridge feet length."
+    }
+]
