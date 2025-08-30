@@ -136,7 +136,8 @@ class LangSmithTestRunner:
 
                 status = "✅" if test_result["success"] else "❌"
                 rag_status = "🔄" if actual_intent.lower() in ("qa", "write") else "⏭️"
-                print(f"{status} {test_case['name']}: {actual_intent} (置信度: {test_result['confidence']:.2f}) {rag_status}")
+                confidence = test_result['confidence']
+                print(f"{status} {test_case['name']}: {actual_intent} (置信度: {confidence:.2f}) {rag_status}")
 
             except Exception as e:
                 print(f"❌ 测试失败 {test_case['name']}: {e}")
