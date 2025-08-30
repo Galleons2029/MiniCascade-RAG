@@ -14,16 +14,14 @@ from typing import List, Union
 from fastapi import HTTPException
 from sqlmodel import Session
 from app.models.schemas.chatsession import ChatSession, ChatHistory
-from app.models.chat_message import (
-    ChatSessionCreate, ChatHistoryCreate,
-    ChatSessionResponse, ChatHistoryResponse
-)
+from app.models.chat_message import ChatSessionCreate, ChatHistoryCreate, ChatSessionResponse, ChatHistoryResponse
 
 DF_HOST = os.getenv("DRAGONFLY_HOST", "localhost")
 DF_PORT = int(os.getenv("DRAGONFLY_PORT", "6379"))
 
 conn_pool = ConnectionPool(host=DF_HOST, port=DF_PORT, db=0)
 dragonfly_client = Dragonfly(connection_pool=conn_pool)
+
 
 def get_dragonfly():
     return dragonfly_client
@@ -37,9 +35,7 @@ class DataService:
     # Create a new chat session with the first two chat history entries.
     # The first chat history entry is a prompt (human message), and the second is a response (AI message).
     def create_chat_session(
-            self,
-            new_chat_session: ChatSessionCreate,
-            new_chat_histories: tuple[ChatHistoryCreate, ChatHistoryCreate]
+        self, new_chat_session: ChatSessionCreate, new_chat_histories: tuple[ChatHistoryCreate, ChatHistoryCreate]
     ) -> ChatSessionResponse:
         # Create a new chat session.
         chat_session = ChatSession(llm_name=new_chat_session.llm_name)
@@ -58,8 +54,7 @@ class DataService:
         ru = _DataCacheService(self.df)
         chat_histories = [chat_history_human, chat_history_ai]
         chat_history_responses = [
-            ChatHistoryResponse(id=v.id, content=v.content, is_human_message=v.is_human_message)
-            for v in chat_histories
+            ChatHistoryResponse(id=v.id, content=v.content, is_human_message=v.is_human_message) for v in chat_histories
         ]
         ru.add_chat_histories(chat_session.id, chat_history_responses)
         return ChatSessionResponse(chat_session_id=chat_session.id, chat_histories=chat_history_responses)
@@ -68,9 +63,9 @@ class DataService:
     # The first chat history entry is a prompt (human message), and the second is a response (AI message).
     # Handler much call 'self.read_chat_histories' before calling this method.
     def add_chat_histories(
-            self,
-            prev_chat_session_response: ChatSessionResponse,
-            new_chat_histories: tuple[ChatHistoryCreate, ChatHistoryCreate],
+        self,
+        prev_chat_session_response: ChatSessionResponse,
+        new_chat_histories: tuple[ChatHistoryCreate, ChatHistoryCreate],
     ) -> ChatSessionResponse:
         # Add the new chat history entries.
         chat_session_id = prev_chat_session_response.chat_session_id
@@ -83,8 +78,7 @@ class DataService:
         ru = _DataCacheService(self.df)
         chat_histories = [chat_history_human, chat_history_ai]
         chat_history_responses = [
-            ChatHistoryResponse(id=v.id, content=v.content, is_human_message=v.is_human_message)
-            for v in chat_histories
+            ChatHistoryResponse(id=v.id, content=v.content, is_human_message=v.is_human_message) for v in chat_histories
         ]
         ru.add_chat_histories(chat_session_id, chat_history_responses)
         prev_chat_session_response.chat_histories.extend(chat_history_responses)
@@ -99,23 +93,24 @@ class DataService:
             return ChatSessionResponse(chat_session_id=chat_session_id, chat_histories=chat_history_responses)
         # If the chat history entries are not cached in Dragonfly, read from the database.
         # Then cache them in Dragonfly.
-        chat_histories = self.db.query(ChatHistory) \
-            .filter(ChatHistory.chat_session_id == chat_session_id) \
-            .order_by(ChatHistory.id) \
+        chat_histories = (
+            self.db.query(ChatHistory)
+            .filter(ChatHistory.chat_session_id == chat_session_id)
+            .order_by(ChatHistory.id)
             .all()
+        )
         if chat_histories is None or len(chat_histories) == 0:
             return None
         chat_history_responses = [
-            ChatHistoryResponse(id=v.id, content=v.content, is_human_message=v.is_human_message)
-            for v in chat_histories
+            ChatHistoryResponse(id=v.id, content=v.content, is_human_message=v.is_human_message) for v in chat_histories
         ]
         ru.add_chat_histories(chat_session_id, chat_history_responses)
         return ChatSessionResponse(chat_session_id=chat_session_id, chat_histories=chat_history_responses)
 
     @staticmethod
     def __chat_history_schema_to_model(
-            chat_session_id: int,
-            chat_history: ChatHistoryCreate,
+        chat_session_id: int,
+        chat_history: ChatHistoryCreate,
     ) -> ChatHistory:
         return ChatHistory(
             chat_session_id=chat_session_id,
@@ -143,7 +138,7 @@ class _DataCacheService:
     @staticmethod
     def chat_history_tuple_to_response(chat_history: tuple[str, float]) -> ChatHistoryResponse:
         # Note that the sorted-set value is the content, and the score is the ID.
-        prefixed_content = chat_history[0].decode('utf-8', errors='replace')
+        prefixed_content = chat_history[0].decode("utf-8", errors="replace")
         if len(prefixed_content) < 2:
             raise HTTPException(status_code=500, detail="failed to parse chat history")
         prefix, content = prefixed_content[:2], prefixed_content[2:]

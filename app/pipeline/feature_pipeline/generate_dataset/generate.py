@@ -5,7 +5,7 @@ from app.configs import app_config as settings
 import json
 import logging
 
-#from comet_ml import Artifact, start
+# from comet_ml import Artifact, start
 from app.core.db.qdrant import QdrantDatabaseConnector
 from sklearn.model_selection import train_test_split
 
@@ -25,7 +25,7 @@ logger = get_logger(__name__)
 settings.patch_localhost()
 logger.warning(
     "Patched settings to work with 'localhost' URLs. \
-    Remove the 'settings.patch_localhost()' call from above when deploying or running inside Docker." # noqa: E501
+    Remove the 'settings.patch_localhost()' call from above when deploying or running inside Docker."  # noqa: E501
 )
 
 
@@ -47,7 +47,7 @@ class DataFormatter:
         text = ""
         for index, data_point in enumerate(data_points):
             if not is_example:
-                text += f"Content number {start_index + index }\n"
+                text += f"Content number {start_index + index}\n"
             text += str(data_point) + "\n"
 
         return text
@@ -60,17 +60,13 @@ class DataFormatter:
         return delimiter_msg
 
     @classmethod
-    def format_prompt(
-        cls, inference_posts: list, data_type: str, start_index: int
-    ) -> str:
+    def format_prompt(cls, inference_posts: list, data_type: str, start_index: int) -> str:
         initial_prompt = cls.get_system_prompt(data_type)
         initial_prompt += (
             f"You must generate exactly a list of {len(inference_posts)} "
             "json objects, using the contents provided under CONTENTS FOR GENERATION\n"
         )
-        initial_prompt += cls.format_batch(
-            "\nCONTENTS FOR GENERATION: \n", inference_posts, start_index
-        )
+        initial_prompt += cls.format_batch("\nCONTENTS FOR GENERATION: \n", inference_posts, start_index)
 
         return initial_prompt
 
@@ -86,21 +82,11 @@ class DatasetGenerator:
         self.api_communicator = api_communicator
         self.data_formatter = data_formatter
 
-    def generate_training_data(
-        self, collection_name: str, data_type: str, batch_size: int = 3
-    ) -> None:
-        assert (
-            settings.COMET_API_KEY
-        ), "COMET_API_KEY must be set in settings, fill it in your .env file."
-        assert (
-            settings.COMET_WORKSPACE
-        ), "COMET_PROJECT must be set in settings, fill it in your .env file."
-        assert (
-            settings.COMET_WORKSPACE
-        ), "COMET_PROJECT must be set in settings, fill it in your .env file."
-        assert (
-            settings.OPENAI_API_KEY
-        ), "OPENAI_API_KEY must be set in settings, fill it in your .env file."
+    def generate_training_data(self, collection_name: str, data_type: str, batch_size: int = 3) -> None:
+        assert settings.COMET_API_KEY, "COMET_API_KEY must be set in settings, fill it in your .env file."
+        assert settings.COMET_WORKSPACE, "COMET_PROJECT must be set in settings, fill it in your .env file."
+        assert settings.COMET_WORKSPACE, "COMET_PROJECT must be set in settings, fill it in your .env file."
+        assert settings.OPENAI_API_KEY, "OPENAI_API_KEY must be set in settings, fill it in your .env file."
 
         cleaned_documents = self.fetch_all_cleaned_content(collection_name)
         cleaned_documents = chunk_documents(cleaned_documents)
@@ -142,9 +128,7 @@ class DatasetGenerator:
         if len(generated_instruct_dataset) == 0:
             return [], []
 
-        train_data, test_data = train_test_split(
-            generated_instruct_dataset, test_size=test_size, random_state=42
-        )
+        train_data, test_data = train_test_split(generated_instruct_dataset, test_size=test_size, random_state=42)
 
         return train_data, test_data
 
@@ -222,6 +206,4 @@ if __name__ == "__main__":
             data_type=data_type,
         )
 
-        dataset_generator.generate_training_data(
-            collection_name=collection_name, data_type=data_type
-        )
+        dataset_generator.generate_training_data(collection_name=collection_name, data_type=data_type)

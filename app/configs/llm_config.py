@@ -11,11 +11,11 @@ from pathlib import Path
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
-ROOT_DIR = Path(__file__).resolve().parents[2] / '.env'
+ROOT_DIR = Path(__file__).resolve().parents[2] / ".env"
 
 
 class LLMConfig(BaseSettings):
-    model_config = SettingsConfigDict(env_file=ROOT_DIR, env_file_encoding="utf-8", extra='ignore')
+    model_config = SettingsConfigDict(env_file=ROOT_DIR, env_file_encoding="utf-8", extra="ignore")
 
     LLM_MODEL: str | None = None
 
@@ -32,10 +32,11 @@ class LLMConfig(BaseSettings):
 
     ALI_KEY: str | None = None
 
+
 settings = LLMConfig()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     config = LLMConfig()
     print(config.ALI_KEY)
     print(ROOT_DIR)

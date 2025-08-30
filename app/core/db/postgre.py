@@ -25,7 +25,7 @@ engine: AsyncEngine = create_async_engine(
     max_overflow=postgres_config.MAX_OVERFLOW,
     pool_timeout=postgres_config.COMMAND_TIMEOUT,
     pool_recycle=postgres_config.POOL_RECYCLE,
-    pool_pre_ping=True,   # 断线自动探活
+    pool_pre_ping=True,  # 断线自动探活
 )
 
 
@@ -33,6 +33,7 @@ async_session = async_sessionmaker(
     engine,
     expire_on_commit=False,  # 提升序列化体验
 )
+
 
 @asynccontextmanager
 async def session_scope():
@@ -44,6 +45,7 @@ async def session_scope():
             await session.rollback()
             raise
 
+
 async def get_session():
     async with session_scope() as session:
         yield session
@@ -51,6 +53,7 @@ async def get_session():
 
 class PostgreSQLConnector:
     """用于连接PostgreSQL数据库的单例类。"""
+
     _engine: Optional[Any] | None = None
 
     def __init__(self) -> None:
@@ -67,7 +70,7 @@ class PostgreSQLConnector:
                     dsn = f"postgresql+psycopg://{user}:{password}@{host}:{port}/{database}"
                 else:
                     logger.error(
-                        "PostgreSQL 配置缺失，无法初始化连接。请提供 POSTGRES_DATABASE_URL 或完整的主机/端口/用户名/密码/数据库名。" # noqa: E501
+                        "PostgreSQL 配置缺失，无法初始化连接。请提供 POSTGRES_DATABASE_URL 或完整的主机/端口/用户名/密码/数据库名。"  # noqa: E501
                     )
                     raise RuntimeError("PostgreSQL configuration is incomplete")
 

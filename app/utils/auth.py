@@ -90,4 +90,3 @@ def verify_token(token: str) -> Optional[str]:
     except JWTError as e:
         logger.error("token_verification_failed", error=str(e))
         return None
-

@@ -19,13 +19,13 @@ duckduckgo_search_tool = DuckDuckGoSearchResults(
 )
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     # 创建一个详细搜索实例
     search = DuckDuckGoSearchResults()
 
     # 执行搜索
     detailed_result = search.invoke("Obama")
     print(detailed_result)
-    #from duckduckgo_search import search
-    #from duckduckgo_search import duckduckgo_search
+    # from duckduckgo_search import search
+    # from duckduckgo_search import duckduckgo_search
     # result = search("What is Machine Learning?")

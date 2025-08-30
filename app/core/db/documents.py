@@ -32,9 +32,7 @@ class BaseDocument(BaseModel):
         exclude_unset = kwargs.pop("exclude_unset", False)
         by_alias = kwargs.pop("by_alias", True)
 
-        parsed = self.model_dump(
-            exclude_unset=exclude_unset, by_alias=by_alias, **kwargs
-        )
+        parsed = self.model_dump(exclude_unset=exclude_unset, by_alias=by_alias, **kwargs)
 
         if "_id" not in parsed and "id" in parsed:
             parsed["_id"] = str(parsed.pop("id"))
@@ -85,9 +83,7 @@ class BaseDocument(BaseModel):
     def bulk_insert(cls, documents: List, **kwargs) -> Optional[List[str]]:
         collection = _database[cls._get_collection_name()]
         try:
-            result = collection.insert_many(
-                [doc.to_mongo(**kwargs) for doc in documents]
-            )
+            result = collection.insert_many([doc.to_mongo(**kwargs) for doc in documents])
             return result.inserted_ids
         except errors.WriteError:
             logger.exception("插入文档失败。")
@@ -97,9 +93,7 @@ class BaseDocument(BaseModel):
     @classmethod
     def _get_collection_name(cls):
         if not hasattr(cls, "Settings") or not hasattr(cls.Settings, "name"):
-            raise ImproperlyConfigured(
-                "文档应该定义一个包含集合名称的Settings配置类。"
-            )
+            raise ImproperlyConfigured("文档应该定义一个包含集合名称的Settings配置类。")
 
         return cls.Settings.name
 

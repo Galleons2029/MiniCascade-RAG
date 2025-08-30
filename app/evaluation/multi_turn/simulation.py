@@ -7,7 +7,6 @@
 多轮对话模拟脚本
 """
 
-
 from openevals.simulators import run_multiturn_simulation, create_llm_simulated_user
 from openevals.llm import create_llm_as_judge
 from openevals.types import ChatCompletionMessage
@@ -24,13 +23,15 @@ load_dotenv()
 # 读取变量
 api_key = os.getenv("API_KEY")
 
-client = OpenAI(api_key=api_key,
-                base_url="https://api.siliconflow.cn/v1")
+client = OpenAI(api_key=api_key, base_url="https://api.siliconflow.cn/v1")
 langchain_client = ChatOpenAI(
-            model="Qwen/Qwen3-8B", api_key=api_key, base_url=settings.Silicon_base_url,
-        )
+    model="Qwen/Qwen3-8B",
+    api_key=api_key,
+    base_url=settings.Silicon_base_url,
+)
 
 history = {}
+
 
 # Your application logic
 def app(inputs: ChatCompletionMessage, *, thread_id: str, **kwargs):
@@ -46,7 +47,8 @@ def app(inputs: ChatCompletionMessage, *, thread_id: str, **kwargs):
                 "role": "system",
                 "content": "You are a patient and understanding customer service agent",
             },
-        ] + history[thread_id],
+        ]
+        + history[thread_id],
     )
 
     response_message = res.choices[0].message
@@ -54,14 +56,15 @@ def app(inputs: ChatCompletionMessage, *, thread_id: str, **kwargs):
 
     return response_message
 
+
 user = create_llm_simulated_user(
     system="You are an aggressive and hostile customer who wants a refund for their car.",
-    #model="Qwen/Qwen3-8B",
+    # model="Qwen/Qwen3-8B",
     client=langchain_client,
 )
 
 trajectory_evaluator = create_llm_as_judge(
-    #model="Qwen/Qwen3-8B",
+    # model="Qwen/Qwen3-8B",
     judge=langchain_client,
     prompt="Based on the below conversation, was the user satisfied?\n{outputs}",
     feedback_key="satisfaction",
@@ -76,4 +79,3 @@ simulator_result = run_multiturn_simulation(
 )
 
 print(simulator_result)
-

@@ -3,14 +3,21 @@ from abc import ABC, abstractmethod
 
 from app.pipeline.feature_pipeline.models.base import DataModel
 from app.pipeline.feature_pipeline.models.chunk import (
-    ArticleChunkModel, DocumentChunkModel, PostChunkModel, RepositoryChunkModel
+    ArticleChunkModel,
+    DocumentChunkModel,
+    PostChunkModel,
+    RepositoryChunkModel,
 )
 from app.pipeline.feature_pipeline.models.clean import (
-    ArticleCleanedModel, DocumentCleanedModel, PostCleanedModel, RepositoryCleanedModel
+    ArticleCleanedModel,
+    DocumentCleanedModel,
+    PostCleanedModel,
+    RepositoryCleanedModel,
 )
 from app.pipeline.feature_pipeline.utils.chunking import chunk_text
 
 from app.core import get_logger
+
 logger = get_logger(__name__)
 
 
@@ -89,6 +96,7 @@ class RepositoryChunkingHandler(ChunkingDataHandler):
             data_models_list.append(model)
 
         return data_models_list
+
 
 class DocumentChunkingHandler(ChunkingDataHandler):
     def chunk(self, data_model: DocumentCleanedModel) -> list[DocumentChunkModel]:

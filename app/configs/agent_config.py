@@ -264,4 +264,3 @@ class AgentConfig:
 
 # Create module-level instance for easy import
 settings = AgentConfig()
-

@@ -2,7 +2,8 @@ import concurrent.futures
 
 import opik
 from qdrant_client import models
-#from app.pipeline.feature_pipeline.utils.embeddings import embed_model
+
+# from app.pipeline.feature_pipeline.utils.embeddings import embed_model
 from app.pipeline.feature_pipeline.utils.embeddings import embedd_text_tolist
 import app.core.logger_utils as logger_utils
 from app.core import lib
@@ -22,18 +23,17 @@ class VectorRetriever:
     def __init__(self, query: str) -> None:
         self._client = QdrantDatabaseConnector()
         self.query = query
-        #self._embedder = embed_model
+        # self._embedder = embed_model
         self._query_expander = QueryExpansion()
         self._metadata_extractor = SelfQuery()
         self._reranker = Reranker()
 
-    def _search_single_query(self, generated_query: str,
-                             collections: list[str],
-                             metadata_filter_value: dict = None,
-                             k: int = 5):
-        #assert k > 3, "查询集合限制，k应该小于3"
+    def _search_single_query(
+        self, generated_query: str, collections: list[str], metadata_filter_value: dict = None, k: int = 5
+    ):
+        # assert k > 3, "查询集合限制，k应该小于3"
         # 生成查询向量
-        #query_vector = self._embedder.create_embedding(generated_query)['data'][0]['embedding']
+        # query_vector = self._embedder.create_embedding(generated_query)['data'][0]['embedding']
         query_vector = embedd_text_tolist(generated_query)
 
         # 初始化存储各集合查询结果的列表
@@ -44,9 +44,9 @@ class VectorRetriever:
             filter_condition = models.Filter(
                 must=[
                     models.FieldCondition(
-                        key=metadata_filter_value['key'],
+                        key=metadata_filter_value["key"],
                         match=models.MatchValue(
-                            value=metadata_filter_value['value'],
+                            value=metadata_filter_value["value"],
                         ),
                     )
                 ]
@@ -71,30 +71,22 @@ class VectorRetriever:
     def multi_query(self, to_expand_to_n_queries: int = 3, stream: bool | None = False):
         # TODO: 完善流式管道
         if stream:
-            return self._query_expander.generate_response(
-            self.query, to_expand_to_n=to_expand_to_n_queries
-        )
+            return self._query_expander.generate_response(self.query, to_expand_to_n=to_expand_to_n_queries)
         else:
-            generated_queries = self._query_expander.generate_response(
-                self.query, to_expand_to_n=to_expand_to_n_queries
-            )
+            generated_queries = self._query_expander.generate_response(self.query, to_expand_to_n=to_expand_to_n_queries)
             return generated_queries
 
-    #@opik.track(name="retriever.retrieve_top_k")
-    def retrieve_top_k(self,
-                       k: int,
-                       collections: list[str],
-                       filter_setting: dict | None = None,
-                       generated_queries = list[str]
-                       ) -> list:
-
+    # @opik.track(name="retriever.retrieve_top_k")
+    def retrieve_top_k(
+        self, k: int, collections: list[str], filter_setting: dict | None = None, generated_queries=list[str]
+    ) -> list:
         logger.info(
             "成功进行多查询检索",
             num_queries=len(generated_queries),
         )
 
-        #author_id = self._metadata_extractor.generate_response(self.query)
-        #author_id = None
+        # author_id = self._metadata_extractor.generate_response(self.query)
+        # author_id = None
         # if author_id:
         #     logger.info(
         #         "Successfully extracted the author_id from the query.",
@@ -109,9 +101,7 @@ class VectorRetriever:
                 for query in generated_queries
             ]
 
-            hits = [
-                task.result() for task in concurrent.futures.as_completed(search_tasks)
-            ]
+            hits = [task.result() for task in concurrent.futures.as_completed(search_tasks)]
             hits = lib.flatten(hits)
 
         logger.info("All documents retrieved successfully.", num_documents=len(hits))
@@ -123,10 +113,8 @@ class VectorRetriever:
         content_list = [hit.payload["content"] for hit in hits]
 
         if not content_list:
-            content_list = ['知识库为空！！！']
-        rerank_hits = self._reranker.generate_response(
-            query=self.query, passages=content_list, keep_top_k=keep_top_k
-        )
+            content_list = ["知识库为空！！！"]
+        rerank_hits = self._reranker.generate_response(query=self.query, passages=content_list, keep_top_k=keep_top_k)
 
         logger.info("成功重新排序文档。", num_documents=len(rerank_hits))
 

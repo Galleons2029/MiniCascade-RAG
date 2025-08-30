@@ -11,8 +11,6 @@ ROOT_DIR = str(Path(__file__).parent)
 sys.path.append(ROOT_DIR)
 
 
-
-
 logger = get_logger(__name__)
 
 settings.patch_localhost()

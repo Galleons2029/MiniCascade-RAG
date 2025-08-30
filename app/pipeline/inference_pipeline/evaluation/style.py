@@ -6,6 +6,7 @@ from opik.evaluation.metrics import base_metric, score_result
 from pydantic import BaseModel
 from langfuse import openai
 
+
 class LLMJudgeStyleOutputResult(BaseModel):
     score: int
     reason: str
@@ -17,11 +18,9 @@ class Style(base_metric.BaseMetric):
 
     This metric uses another LLM to judge if the output is factual or contains hallucinations.
     It returns a score of 1.0 if the style is appropriate, 0.5 if it is somewhere in the middle and 0.0 otherwise.
-    """ # noqa: E501
+    """  # noqa: E501
 
-    def __init__(
-        self, name: str = "style_metric", model_name: str = settings.OPENAI_MODEL_ID
-    ) -> None:
+    def __init__(self, name: str = "style_metric", model_name: str = settings.OPENAI_MODEL_ID) -> None:
         self.name = name
         self.llm_client = openai(model_name=model_name)
         self.prompt_template = """
@@ -51,7 +50,7 @@ Provide your evaluation in JSON format with the following structure:
         "score": 0
     }}
 }}
-""" # noqa: E501
+"""  # noqa: E501
 
     def score(self, input: str, output: str, **ignored_kwargs: Any):
         """
@@ -60,13 +59,11 @@ Provide your evaluation in JSON format with the following structure:
         Args:
             output: The output of an LLM to score.
             **ignored_kwargs: Any additional keyword arguments. This is important so that the metric can be used in the `evaluate` function.
-        """ # noqa: E501
+        """  # noqa: E501
 
         prompt = self.prompt_template.format(input=input, output=output)
 
-        model_output = self.llm_client.generate_string(
-            input=prompt, response_format=LLMJudgeStyleOutputResult
-        )
+        model_output = self.llm_client.generate_string(input=prompt, response_format=LLMJudgeStyleOutputResult)
 
         return self._parse_model_output(model_output)
 
@@ -75,14 +72,14 @@ Provide your evaluation in JSON format with the following structure:
             dict_content = json.loads(content)
         except Exception:
             pass
-            #raise exceptions.MetricComputationError("Failed to parse the model output.")
+            # raise exceptions.MetricComputationError("Failed to parse the model output.")
 
         score = dict_content["score"]
         try:
             assert 1 <= score <= 3, f"Invalid score value: {score}"
         except AssertionError:
             pass
-            #raise exceptions.MetricComputationError(str(e))
+            # raise exceptions.MetricComputationError(str(e))
 
         score = (score - 1) / 2.0  # Normalize the score to be between 0 and 1
 

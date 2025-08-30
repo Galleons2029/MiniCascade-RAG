@@ -27,9 +27,7 @@ def configure_opik() -> None:
                 client = OpikConfigurator(api_key=settings.COMET_API_KEY)
                 default_workspace = client._get_default_workspace()
             except Exception:
-                logger.warning(
-                    "Default workspace not found. Setting workspace to None and enabling interactive mode."
-                )
+                logger.warning("Default workspace not found. Setting workspace to None and enabling interactive mode.")
                 default_workspace = None
 
         os.environ["OPIK_PROJECT_NAME"] = settings.COMET_PROJECT
@@ -43,13 +41,11 @@ def configure_opik() -> None:
         logger.info("Opik configured successfully.")
     else:
         logger.warning(
-            "COMET_API_KEY and COMET_PROJECT are not set. Set them to enable prompt monitoring with Opik (powered by Comet ML)." # noqa: E501
+            "COMET_API_KEY and COMET_PROJECT are not set. Set them to enable prompt monitoring with Opik (powered by Comet ML)."  # noqa: E501
         )
 
 
-def create_dataset_from_artifacts(
-    dataset_name: str, artifact_names: list[str]
-) -> opik.Dataset | None:
+def create_dataset_from_artifacts(dataset_name: str, artifact_names: list[str]) -> opik.Dataset | None:
     client = opik.Opik()
     try:
         dataset = client.get_dataset(name=dataset_name)
@@ -57,9 +53,7 @@ def create_dataset_from_artifacts(
         dataset = None
 
     if dataset:
-        logger.warning(
-            f"Dataset '{dataset_name}' already exists. Skipping dataset creation."
-        )
+        logger.warning(f"Dataset '{dataset_name}' already exists. Skipping dataset creation.")
 
         return dataset
 
@@ -76,27 +70,21 @@ def create_dataset_from_artifacts(
             try:
                 logged_artifact = experiment.get_artifact(artifact_name)
                 logged_artifact.download(str(artifact_dir))
-                logger.info(
-                    f"Successfully downloaded  '{artifact_name}' at location '{tmp_dir}'"
-                )
+                logger.info(f"Successfully downloaded  '{artifact_name}' at location '{tmp_dir}'")
             except Exception as e:
                 logger.error(f"Error retrieving artifact: {str(e)}")
 
                 continue
 
             testing_artifact_file = list(artifact_dir.glob("*_testing.json"))
-            assert (
-                len(testing_artifact_file) == 1
-            ), "Expected exactly one testing artifact file."
+            assert len(testing_artifact_file) == 1, "Expected exactly one testing artifact file."
             testing_artifact_file = testing_artifact_file[0]
 
             logger.info(f"Loading testing data from: {testing_artifact_file}")
             with open(testing_artifact_file, "r") as file:
                 items = json.load(file)
 
-            enhanced_items = [
-                {**item, "artifact_name": artifact_name} for item in items
-            ]
+            enhanced_items = [{**item, "artifact_name": artifact_name} for item in items]
             dataset_items.extend(enhanced_items)
     experiment.end()
 

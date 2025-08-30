@@ -33,12 +33,14 @@ class Settings(BaseSettings):
 
     # LLM Model config
     HUGGINGFACE_ACCESS_TOKEN: str | None = None
-    MODEL_ID: str = "Qwen/Qwen3-8B" # Change this with your Hugging Face model ID to test out your fine-tuned LLM
+    MODEL_ID: str = "Qwen/Qwen3-8B"  # Change this with your Hugging Face model ID to test out your fine-tuned LLM
     DEPLOYMENT_ENDPOINT_NAME: str = "twin"
 
     MAX_INPUT_TOKENS: int = 1536  # Max length of input text.
     MAX_TOTAL_TOKENS: int = 2048  # Max length of the generation (including input text).
-    MAX_BATCH_TOTAL_TOKENS: int = 2048  # Limits the number of tokens that can be processed in parallel during the generation. # noqa: E501
+    MAX_BATCH_TOTAL_TOKENS: int = (
+        2048  # Limits the number of tokens that can be processed in parallel during the generation. # noqa: E501
+    )
 
     Silicon_api_key1: str | None = "sk-gxijztovbtakciuwjwwqyaoxarjfvhuargxkoawhuzsanssm"
     Silicon_api_key2: str | None = "sk-kutnkphezarrglswegiqwwaywqqwkvanwjobmwmdjututqkf"
@@ -53,5 +55,3 @@ class Settings(BaseSettings):
 
 
 settings = Settings()
-
-

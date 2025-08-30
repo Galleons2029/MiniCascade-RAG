@@ -6,15 +6,15 @@
 # 为了模拟使用多个Python模块，如'core'和'feature_pipeline'，
 # 我们将'./src'目录添加到PYTHONPATH中。这不适用于生产环境，
 # 仅用于开发和教学目的。
-#ROOT_DIR = str(Path(__file__).parent)
+# ROOT_DIR = str(Path(__file__).parent)
 
-#sys.path.append(ROOT_DIR)
+# sys.path.append(ROOT_DIR)
 
 from app.core import logger_utils
 from reasoning import ReasoningPipeline
 
 
-#settings.patch_localhost()
+# settings.patch_localhost()
 
 logger = logger_utils.get_logger(__name__)
 # logger.info(
@@ -36,9 +36,7 @@ if __name__ == "__main__":
             我特别感兴趣的是如何设计一个RAG系统。
         """
 
-    response = inference_endpoint.generate(
-        query=query, enable_rag=True, sample_for_evaluation=True, doc_names=['ddddd']
-    )
+    response = inference_endpoint.generate(query=query, enable_rag=True, sample_for_evaluation=True, doc_names=["ddddd"])
 
     logger.info("=" * 50)
     logger.info(f"问题：{query}")

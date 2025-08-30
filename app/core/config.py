@@ -8,11 +8,9 @@ ROOT_DIR = str(Path(__file__).parent.parent.parent)
 class AppSettings(BaseSettings):
     model_config = SettingsConfigDict(env_file=ROOT_DIR, env_file_encoding="utf-8")
 
-    PROJECT_NAME: str = 'Cascade-RAG'
+    PROJECT_NAME: str = "Cascade-RAG"
     # MongoDB配置
-    MONGO_DATABASE_HOST: str = (
-        "mongodb://mongo1:30001,mongo2:30002,mongo3:30003/?replicaSet=my-replica-set"
-    )
+    MONGO_DATABASE_HOST: str = "mongodb://mongo1:30001,mongo2:30002,mongo3:30003/?replicaSet=my-replica-set"
     MONGO_DATABASE_NAME: str = "twin"
 
     # 硅基流动API
@@ -23,8 +21,8 @@ class AppSettings(BaseSettings):
     Silicon_model_rerank: str | None = "BAAI/bge-reranker-v2-m3"
 
     MODEL_PATH: str = "/data/model_weights/Qwen3-4B"
-    LOCAL: str = 'http://localhost:9011/v1'
-    KEY: str = 'EMPTY'
+    LOCAL: str = "http://localhost:9011/v1"
+    KEY: str = "EMPTY"
 
     # 消息队列配置
     RABBITMQ_DEFAULT_USERNAME: str = "guest"

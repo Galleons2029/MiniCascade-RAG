@@ -1,15 +1,17 @@
 import pprint
 
-#import sagemaker
+# import sagemaker
 from app.pipeline.inference_pipeline.config import settings
 from app.core import logger_utils
-#from app.core.opik_utils import add_to_dataset_with_sampling
+
+# from app.core.opik_utils import add_to_dataset_with_sampling
 from app.core.rag.retriever import VectorRetriever
 from langchain.prompts import PromptTemplate
 
-#from opik import opik_context
+# from opik import opik_context
 from app.pipeline.inference_pipeline.prompt_templates import InferenceTemplate
-#from sagemaker.huggingface.model import HuggingFacePredictor
+
+# from sagemaker.huggingface.model import HuggingFacePredictor
 from app.pipeline.inference_pipeline.utils import compute_num_tokens, truncate_text_to_max_tokens
 from langchain_openai import ChatOpenAI
 
@@ -29,26 +31,22 @@ class ReasoningPipeline:
         )
         self.prompt_template_builder = InferenceTemplate()
 
-
     # def build_sagemaker_predictor(self) -> HuggingFacePredictor:
     #     return HuggingFacePredictor(
     #         endpoint_name=settings.DEPLOYMENT_ENDPOINT_NAME,
     #         sagemaker_session=sagemaker.Session(),
     #     )
 
-    #@opik.track(name="inference_pipeline.generate")
+    # @opik.track(name="inference_pipeline.generate")
     def generate(
         self,
         query: str,
         enable_rag: bool = False,
         sample_for_evaluation: bool = False,
-        doc_names: list[str] = ['dir_default']
+        doc_names: list[str] = ["dir_default"],
     ) -> dict:
-
         logger.debug(f"query: {query}， 开始生成答案。")
-        system_prompt, prompt_template = self.prompt_template_builder.create_template(
-            enable_rag=enable_rag
-        )
+        system_prompt, prompt_template = self.prompt_template_builder.create_template(enable_rag=enable_rag)
         prompt_template_variables = {"question": query}
 
         if enable_rag is True:
@@ -58,9 +56,7 @@ class ReasoningPipeline:
 
             multiquery = retriever.multi_query(to_expand_to_n_queries=3)
 
-            hits = retriever.retrieve_top_k(
-                k=settings.TOP_K, collections=doc_names, generated_queries=multiquery
-            )
+            hits = retriever.retrieve_top_k(k=settings.TOP_K, collections=doc_names, generated_queries=multiquery)
             logger.debug(f"检索结果：{hits}")
 
             context = retriever.rerank(hits=hits, keep_top_k=settings.KEEP_TOP_K)
@@ -70,15 +66,13 @@ class ReasoningPipeline:
         else:
             context = None
 
-        messages, input_num_tokens = self.format_prompt(
-            system_prompt, prompt_template, prompt_template_variables
-        )
+        messages, input_num_tokens = self.format_prompt(system_prompt, prompt_template, prompt_template_variables)
 
         logger.debug(f"Prompt: {pprint.pformat(messages)}")
         answer = self.call_llm_service(messages=messages)
         logger.debug(f"Answer: {answer}")
 
-        #num_answer_tokens = compute_num_tokens(answer)
+        # num_answer_tokens = compute_num_tokens(answer)
         # opik_context.update_current_trace(
         #     tags=["rag"],
         #     metadata={
@@ -101,7 +95,7 @@ class ReasoningPipeline:
 
         return result
 
-    #@opik.track(name="inference_pipeline.format_prompt")
+    # @opik.track(name="inference_pipeline.format_prompt")
     def format_prompt(
         self,
         system_prompt,
@@ -123,7 +117,7 @@ class ReasoningPipeline:
 
         return messages, total_input_tokens
 
-    #@opik.track(name="inference_pipeline.call_llm_service")
+    # @opik.track(name="inference_pipeline.call_llm_service")
     def call_llm_service(self, messages: list[dict[str, str]]) -> str:
         if self._mock is True:
             logger.warning("Mocking LLM service call.")
@@ -144,6 +138,6 @@ class ReasoningPipeline:
             #     },
             # }
         ).content
-        #answer = answer["choices"][0]["message"]["content"].strip()
+        # answer = answer["choices"][0]["message"]["content"].strip()
 
         return answer

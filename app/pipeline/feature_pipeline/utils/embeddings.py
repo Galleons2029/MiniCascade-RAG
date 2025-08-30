@@ -9,17 +9,18 @@
 """
 
 import logging
-#from xinference.client import Client
+
+# from xinference.client import Client
 import numpy as np
 import requests
 
 # 配置日志
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 logger = logging.getLogger(__name__)
-#os.environ['CUDA_VISIBLE_DEVICES'] = '2'
-#from FlagEmbedding import BGEM3FlagModel
-#embed_model_bge = BGEM3FlagModel('/data/model_cache/bge-m3', use_fp16=True)
-#from app.pipeline.feature_pipeline.config import settings
+# os.environ['CUDA_VISIBLE_DEVICES'] = '2'
+# from FlagEmbedding import BGEM3FlagModel
+# embed_model_bge = BGEM3FlagModel('/data/model_cache/bge-m3', use_fp16=True)
+# from app.pipeline.feature_pipeline.config import settings
 
 # TODO:重写代码以及图像嵌入
 # def embedd_repositories(text: str):
@@ -28,45 +29,37 @@ logger = logging.getLogger(__name__)
 #     instruction = "Represent the structure of the repository"
 #     return model.encode([instruction, sentence])
 
-#client = Client("http://localhost:9997")
-#embed_model_raw = client.get_model(settings.EMBEDDING_MODEL_ID)
-#embed_model = client.get_model(settings.EMBEDDING_MODEL_ID)
+# client = Client("http://localhost:9997")
+# embed_model_raw = client.get_model(settings.EMBEDDING_MODEL_ID)
+# embed_model = client.get_model(settings.EMBEDDING_MODEL_ID)
 
 
 url = "https://api.siliconflow.cn/v1/embeddings"
 headers = {
     "Authorization": "Bearer sk-ulkoelnhlbxhkhpoggtemmamkgnnoshpirggznctlevxlcqy",
-    "Content-Type": "application/json"
+    "Content-Type": "application/json",
 }
 
 
-
 def embedd_text(text: str) -> np.ndarray:
-    #embedding_list = embed_model.create_embedding(text)['data'][0]['embedding']
-    payload = {
-        "model": "BAAI/bge-m3",
-        "input": text
-    }
-    embedding_list = requests.post(url, json=payload, headers=headers).json()['data'][0]['embedding']
+    # embedding_list = embed_model.create_embedding(text)['data'][0]['embedding']
+    payload = {"model": "BAAI/bge-m3", "input": text}
+    embedding_list = requests.post(url, json=payload, headers=headers).json()["data"][0]["embedding"]
     return np.array(embedding_list)
 
 
 def embedd_text_tolist(text: str) -> list[int]:
-    #embedding_list = embed_model.create_embedding(text)['data'][0]['embedding']
-    payload = {
-        "model": "BAAI/bge-m3",
-        "input": text
-    }
-    embedding_list = requests.post(url, json=payload, headers=headers).json()['data'][0]['embedding']
+    # embedding_list = embed_model.create_embedding(text)['data'][0]['embedding']
+    payload = {"model": "BAAI/bge-m3", "input": text}
+    embedding_list = requests.post(url, json=payload, headers=headers).json()["data"][0]["embedding"]
     return embedding_list
 
 
 def hybrid_embedding(texts: list[str]) -> dict:
-    #output = embed_model_bge.encode(texts, return_dense=True, return_sparse=True, return_colbert_vecs=False)
-    #idx, vals = zip(*output['lexical_weights'][0].items())
-    #return {'dense': output['dense_vecs'][0], 'sparse': models.SparseVector(indices=idx, values=vals)}
+    # output = embed_model_bge.encode(texts, return_dense=True, return_sparse=True, return_colbert_vecs=False)
+    # idx, vals = zip(*output['lexical_weights'][0].items())
+    # return {'dense': output['dense_vecs'][0], 'sparse': models.SparseVector(indices=idx, values=vals)}
     pass
-
 
 
 # 代码嵌入模型
@@ -177,4 +170,3 @@ def hybrid_embedding(texts: list[str]) -> dict:
 #     end_time = time.time()
 #
 #     print(f"函数2执行时间为: {end_time - start_time:.6f} 秒")
-

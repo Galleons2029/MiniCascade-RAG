@@ -18,7 +18,6 @@ logger = logger_utils.get_logger(__name__)
 
 
 class QdrantDatabaseConnector:
-
     _instance: QdrantClient | None = None
 
     def __init__(self) -> None:
@@ -39,16 +38,12 @@ class QdrantDatabaseConnector:
         return self._instance.get_collection(collection_name=collection_name)
 
     def create_non_vector_collection(self, collection_name: str):
-        self._instance.create_collection(
-            collection_name=collection_name, vectors_config={}
-        )
+        self._instance.create_collection(collection_name=collection_name, vectors_config={})
 
     def create_vector_collection(self, collection_name: str):
         self._instance.create_collection(
             collection_name=collection_name,
-            vectors_config=models.VectorParams(
-                size=settings.EMBEDDING_SIZE, distance=models.Distance.COSINE
-            ),
+            vectors_config=models.VectorParams(size=settings.EMBEDDING_SIZE, distance=models.Distance.COSINE),
             quantization_config=models.ScalarQuantization(
                 scalar=models.ScalarQuantizationConfig(
                     type=models.ScalarType.INT8,
@@ -88,8 +83,6 @@ class QdrantDatabaseConnector:
             self._instance.close()
 
             logger.info("Connected to database has been closed.")
-
-
 
 
 class QdrantClientManager:

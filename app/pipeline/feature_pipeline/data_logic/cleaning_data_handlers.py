@@ -5,13 +5,12 @@ from app.pipeline.feature_pipeline.models.clean import (
     ArticleCleanedModel,
     DocumentCleanedModel,
     PostCleanedModel,
-    RepositoryCleanedModel
+    RepositoryCleanedModel,
 )
-from app.pipeline.feature_pipeline.models.raw import (
-    ArticleRawModel, PostsRawModel, RepositoryRawModel, DocumentRawModel
-)
+from app.pipeline.feature_pipeline.models.raw import ArticleRawModel, PostsRawModel, RepositoryRawModel, DocumentRawModel
 from app.pipeline.feature_pipeline.utils.cleaning import clean_text
 from pydantic import ValidationError
+
 
 class CleaningDataHandler(ABC):
     """
@@ -26,9 +25,7 @@ class CleaningDataHandler(ABC):
 
 class PostCleaningHandler(CleaningDataHandler):
     def clean(self, data_model: PostsRawModel) -> PostCleanedModel:
-        joined_text = (
-            "".join(data_model.content.values()) if data_model and data_model.content else None
-        )
+        joined_text = "".join(data_model.content.values()) if data_model and data_model.content else None
 
         return PostCleanedModel(
             entry_id=data_model.entry_id,
@@ -42,9 +39,7 @@ class PostCleaningHandler(CleaningDataHandler):
 
 class ArticleCleaningHandler(CleaningDataHandler):
     def clean(self, data_model: ArticleRawModel) -> ArticleCleanedModel:
-        joined_text = (
-            "".join(data_model.content.values()) if data_model and data_model.content else None
-        )
+        joined_text = "".join(data_model.content.values()) if data_model and data_model.content else None
 
         return ArticleCleanedModel(
             entry_id=data_model.entry_id,
@@ -58,9 +53,7 @@ class ArticleCleaningHandler(CleaningDataHandler):
 
 class RepositoryCleaningHandler(CleaningDataHandler):
     def clean(self, data_model: RepositoryRawModel) -> RepositoryCleanedModel:
-        joined_text = (
-            "".join(data_model.content.values()) if data_model and data_model.content else None
-        )
+        joined_text = "".join(data_model.content.values()) if data_model and data_model.content else None
 
         return RepositoryCleanedModel(
             entry_id=data_model.entry_id,
@@ -81,7 +74,7 @@ class DocumentCleaningHandler(CleaningDataHandler):
                 knowledge_id=data_model.knowledge_id,
                 doc_id=data_model.doc_id,
                 path=data_model.path,
-                filename=data_model.path.split('/')[-1],  # Extract filename from path
+                filename=data_model.path.split("/")[-1],  # Extract filename from path
                 cleaned_content=clean_text(data_model.content),
                 user_id=data_model.user_id,
                 image=data_model.image if data_model.image else None,

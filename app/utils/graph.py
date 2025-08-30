@@ -28,7 +28,7 @@ def dump_messages(messages) -> list[dict]:
         if isinstance(message, dict):
             # Already a dict, use as-is
             result.append(message)
-        elif hasattr(message, 'model_dump'):
+        elif hasattr(message, "model_dump"):
             # Message object, convert to dict
             result.append(message.model_dump())
         else:
@@ -58,4 +58,3 @@ def prepare_messages(messages: list[Message], llm: BaseChatModel, system_prompt:
         allow_partial=False,
     )
     return [Message(role="system", content=system_prompt)] + trimmed_messages
-

@@ -41,7 +41,8 @@ from app.configs.agent_config import settings
 from app.core.agent.tools import tools
 from app.core.agent.graph.intent_agent import build_unified_agent_graph
 from app.core.logger_utils import logger
-#from app.core.metrics import llm_inference_duration_seconds
+
+# from app.core.metrics import llm_inference_duration_seconds
 from app.core.prompts import SYSTEM_PROMPT
 from app.models import (
     GraphState,
@@ -63,14 +64,15 @@ class LangGraphAgent:
         """Initialize the LangGraph Agent with necessary components."""
         # Disable tiktoken for unsupported models like Qwen
         import os
+
         os.environ["TIKTOKEN_CACHE_DIR"] = ""
         os.environ["TOKENIZERS_PARALLELISM"] = "false"
         # Disable LangChain's automatic token tracking
         os.environ["LANGCHAIN_CALLBACKS_MANAGER"] = "false"
-        
+
         # CRITICAL: Monkey patch to completely disable token counting for Qwen models
         self._monkey_patch_token_counting()
-        
+
         # Use environment-specific LLM model
         self.llm = ChatOpenAI(
             model=llm_config.LLM_MODEL,
@@ -117,26 +119,25 @@ class LangGraphAgent:
         try:
             # Patch langchain_openai.chat_models.base to avoid token counting errors
             import langchain_openai.chat_models.base as base_module
-            
+
             # Store original method
-            if not hasattr(base_module, '_original_get_num_tokens_from_messages'):
+            if not hasattr(base_module, "_original_get_num_tokens_from_messages"):
                 base_module._original_get_num_tokens_from_messages = getattr(
-                    base_module.ChatOpenAI, 'get_num_tokens_from_messages', None
+                    base_module.ChatOpenAI, "get_num_tokens_from_messages", None
                 )
-            
+
             # Replace with a dummy method that returns 0
             def dummy_get_num_tokens_from_messages(self, messages):
                 """Dummy method to avoid token counting errors for unsupported models."""
                 return 0
-            
+
             # Apply the patch
             base_module.ChatOpenAI.get_num_tokens_from_messages = dummy_get_num_tokens_from_messages
-            
+
             logger.info(
-                "token_counting_monkey_patch_applied",
-                message="Successfully disabled token counting for Qwen models"
+                "token_counting_monkey_patch_applied", message="Successfully disabled token counting for Qwen models"
             )
-            
+
         except Exception as e:
             logger.warning("token_counting_monkey_patch_failed", error=str(e))
 
@@ -154,6 +155,7 @@ class LangGraphAgent:
                 # Psycopg AsyncConnectionPool expects a libpq/psycopg DSN (e.g. postgresql:// or key=value),
                 # not SQLAlchemy-style "postgresql+psycopg://". Convert if needed, or allow override via env.
                 import os
+
                 raw_url = os.getenv("POSTGRES_PG_DSN") or settings.POSTGRES_URL
                 conn_dsn = raw_url.replace("+psycopg", "", 1) if "+psycopg" in raw_url else raw_url
 
@@ -193,7 +195,7 @@ class LangGraphAgent:
             if isinstance(msg, dict):
                 # Message is already in dict format
                 messages.append(msg)
-            elif hasattr(msg, 'model_dump'):
+            elif hasattr(msg, "model_dump"):
                 # Message is a Pydantic model, convert to dict
                 messages.append(msg.model_dump())
             else:
@@ -207,7 +209,7 @@ class LangGraphAgent:
 
         for attempt in range(max_retries):
             try:
-                #with llm_inference_duration_seconds.labels(model=self.llm.model_name).time():
+                # with llm_inference_duration_seconds.labels(model=self.llm.model_name).time():
                 generated_state = {"messages": [await self.llm.ainvoke(dump_messages(messages))]}
                 logger.info(
                     "llm_response_generated",
@@ -231,9 +233,7 @@ class LangGraphAgent:
                 # In production, we might want to fall back to a more reliable model
                 if settings.ENVIRONMENT == Environment.PRODUCTION and attempt == max_retries - 2:
                     fallback_model = "gpt-4o"
-                    logger.warning(
-                        "using_fallback_model", model=fallback_model, environment=settings.ENVIRONMENT.value
-                    )
+                    logger.warning("using_fallback_model", model=fallback_model, environment=settings.ENVIRONMENT.value)
                     self.llm.model_name = fallback_model
 
                 continue
@@ -291,7 +291,7 @@ class LangGraphAgent:
         if self._graph is None:
             try:
                 graph_builder = StateGraph(GraphState)
-                
+
                 # Use the unified agent that handles intent detection, entity extraction,
                 # context resolution, query rewrite, and RAG retrieval internally
                 unified_agent = build_unified_agent_graph(self.llm)
@@ -306,9 +306,7 @@ class LangGraphAgent:
                 graph_builder.add_edge("unified_agent", "chat")
 
                 # Chat <-> Tool loop and finish at chat
-                graph_builder.add_conditional_edges(
-                    "chat", self._should_continue, {"continue": "tool_call", "end": END}
-                )
+                graph_builder.add_conditional_edges("chat", self._should_continue, {"continue": "tool_call", "end": END})
                 graph_builder.add_edge("tool_call", "chat")
                 graph_builder.set_entry_point("unified_agent")
                 graph_builder.set_finish_point("chat")
@@ -316,7 +314,7 @@ class LangGraphAgent:
                 # FORCE DISABLE: Skip PostgreSQL for testing
                 checkpointer = None
                 logger.warning("graph_creation", message="🔧 FORCED: PostgreSQL checkpointer disabled for testing")
-                
+
                 # TODO: Re-enable when PostgreSQL connection is fixed
                 # Get connection pool (maybe None in production if DB unavailable)
                 # try:
@@ -381,9 +379,7 @@ class LangGraphAgent:
             },
         }
         try:
-            response = await self._graph.ainvoke(
-                {"messages": dump_messages(messages), "session_id": session_id}, config
-            )
+            response = await self._graph.ainvoke({"messages": dump_messages(messages), "session_id": session_id}, config)
             return self.__process_messages(response["messages"])
         except Exception as e:
             logger.error(f"Error getting response: {str(e)}")

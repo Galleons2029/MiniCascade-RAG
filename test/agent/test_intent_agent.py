@@ -46,9 +46,11 @@ class EnhancedDummyLLM:
 
         # Default response
         else:
+
             class Response:
                 def __init__(self, content):
                     self.content = content
+
             return Response("Default response")
 
     def _classify_intent(self, user_content):
@@ -67,6 +69,7 @@ class EnhancedDummyLLM:
         class Response:
             def __init__(self, content):
                 self.content = content
+
         return Response(content)
 
     def _extract_entities(self, user_content):
@@ -82,14 +85,12 @@ class EnhancedDummyLLM:
         elif "上个月" in user_content:
             time_text = "上个月"
 
-        result = {
-            "entities": entities,
-            "time_text": time_text
-        }
+        result = {"entities": entities, "time_text": time_text}
 
         class Response:
             def __init__(self, content):
                 self.content = content
+
         return Response(json.dumps(result))
 
     def _rewrite_query(self, user_content):
@@ -99,6 +100,7 @@ class EnhancedDummyLLM:
         class Response:
             def __init__(self, content):
                 self.content = content
+
         return Response(rewritten)
 
 
@@ -141,7 +143,7 @@ async def test_full_rag_pipeline():
     # Mock VectorRetriever
     from unittest.mock import patch
 
-    with patch('app.core.agent.graph.intent_agent.VectorRetriever') as mock_retriever_class:
+    with patch("app.core.agent.graph.intent_agent.VectorRetriever") as mock_retriever_class:
         mock_retriever = MagicMock()
         mock_retriever.multi_query.return_value = ["expanded query 1", "expanded query 2"]
         mock_retriever.retrieve_top_k.return_value = ["hit1", "hit2"]
@@ -151,10 +153,9 @@ async def test_full_rag_pipeline():
         graph = build_unified_agent_graph(llm)
 
         # Test QA intent (should go through full pipeline)
-        result = await graph.ainvoke({
-            "messages": [{"role": "user", "content": "上周的账单情况如何？"}],
-            "session_id": "test-session"
-        })
+        result = await graph.ainvoke(
+            {"messages": [{"role": "user", "content": "上周的账单情况如何？"}], "session_id": "test-session"}
+        )
 
         # Verify all pipeline steps were executed
         assert "intent" in result
@@ -174,10 +175,9 @@ async def test_direct_response_intents():
     graph = build_unified_agent_graph(llm)
 
     # Test search intent (should skip RAG pipeline)
-    result = await graph.ainvoke({
-        "messages": [{"role": "user", "content": "搜索最新新闻"}],
-        "session_id": "test-session"
-    })
+    result = await graph.ainvoke(
+        {"messages": [{"role": "user", "content": "搜索最新新闻"}], "session_id": "test-session"}
+    )
 
     # Should only have intent detection, no RAG pipeline
     assert "intent" in result
@@ -193,21 +193,22 @@ async def test_context_inheritance():
     graph = build_unified_agent_graph(llm)
 
     # First turn - establish context
-    state1 = await graph.ainvoke({
-        "messages": [{"role": "user", "content": "上周的账单情况"}],
-        "session_id": "test-session"
-    })
+    state1 = await graph.ainvoke(
+        {"messages": [{"role": "user", "content": "上周的账单情况"}], "session_id": "test-session"}
+    )
 
     # Second turn - should inherit context
-    state2 = await graph.ainvoke({
-        "messages": [
-            {"role": "user", "content": "上周的账单情况"},
-            {"role": "assistant", "content": "上周账单总额为1000元"},
-            {"role": "user", "content": "上个月的呢？"}
-        ],
-        "session_id": "test-session",
-        "context_frame": state1.get("context_frame")
-    })
+    state2 = await graph.ainvoke(
+        {
+            "messages": [
+                {"role": "user", "content": "上周的账单情况"},
+                {"role": "assistant", "content": "上周账单总额为1000元"},
+                {"role": "user", "content": "上个月的呢？"},
+            ],
+            "session_id": "test-session",
+            "context_frame": state1.get("context_frame"),
+        }
+    )
 
     # Should inherit subject but update time
     if "context_frame" in state2:
@@ -228,15 +229,8 @@ async def test_error_handling():
     graph = build_unified_agent_graph(llm)
 
     # Should handle LLM failures gracefully
-    result = await graph.ainvoke({
-        "messages": [{"role": "user", "content": "测试消息"}],
-        "session_id": "test-session"
-    })
+    result = await graph.ainvoke({"messages": [{"role": "user", "content": "测试消息"}], "session_id": "test-session"})
 
     # Should have default values even when LLM fails
     assert "intent" in result
     assert result["intent"] == "other"  # default fallback
-
-
-
-

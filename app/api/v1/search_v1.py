@@ -8,8 +8,6 @@ rag 向量检索
 """
 
 
-
-
 # from PIL import Image
 #
 # find_image = model.get_query_embedding("Adventures on snow hills")

@@ -37,9 +37,7 @@ def unbold_text(text):
             return char  # 如果不是粗体数字或字母，则保持原样
 
     # 匹配粗体字符的正则表达式（数字、大写和小写字母）
-    bold_pattern = re.compile(
-        r"[\U0001D5D4-\U0001D5ED\U0001D5EE-\U0001D607\U0001D7CE-\U0001D7FF]"
-    )
+    bold_pattern = re.compile(r"[\U0001D5D4-\U0001D5ED\U0001D5EE-\U0001D607\U0001D7CE-\U0001D7FF]")
     text = bold_pattern.sub(convert_bold_char, text)
 
     return text
@@ -103,7 +101,7 @@ def clean_text(text_content: str | None) -> str:
     cleaned_text = remove_emojis_and_symbols(cleaned_text)
     cleaned_text = clean(cleaned_text)
     cleaned_text = replace_unicode_quotes(cleaned_text)
-    #cleaned_text = clean_non_ascii_chars(cleaned_text)
+    # cleaned_text = clean_non_ascii_chars(cleaned_text)
     cleaned_text = replace_urls_with_placeholder(cleaned_text)
 
     return cleaned_text

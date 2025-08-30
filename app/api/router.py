@@ -18,10 +18,7 @@ from app.core.db.postgre import engine
 
 
 # 配置日志格式
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(message)s'
-)
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(message)s")
 
 
 @asynccontextmanager
@@ -54,8 +51,6 @@ fake_db = {
     "foo": {"id": "foo", "title": "Foo", "description": "There goes my hero"},
     "bar": {"id": "bar", "title": "Bar", "description": "The bartenders"},
 }
-
-
 
 
 class Item(BaseModel):

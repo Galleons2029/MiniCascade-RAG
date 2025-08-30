@@ -28,7 +28,7 @@ class RabbitMQConnection:
         password: str | None = None,
         virtual_host: str = "/",
         fail_silently: bool = False,
-        queue_names: List[str] = ['test_files'],
+        queue_names: List[str] = ["test_files"],
         **kwargs,
     ) -> None:
         self.host = host or settings.RABBITMQ_HOST

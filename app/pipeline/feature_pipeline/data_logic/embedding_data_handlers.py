@@ -5,7 +5,7 @@ from app.pipeline.feature_pipeline.models.chunk import (
     ArticleChunkModel,
     DocumentChunkModel,
     PostChunkModel,
-    RepositoryChunkModel
+    RepositoryChunkModel,
 )
 from app.pipeline.feature_pipeline.models.embedded_chunk import (
     ArticleEmbeddedChunkModel,
@@ -66,7 +66,7 @@ class RepositoryEmbeddingHandler(EmbeddingDataHandler):
             owner_id=data_model.owner_id,
             type=data_model.type,
         )
-    
+
 
 class DocumentEmbeddingHandler(EmbeddingDataHandler):
     def embedd(self, data_model: DocumentChunkModel) -> DocumentEmbeddedChunkModel:
@@ -79,7 +79,7 @@ class DocumentEmbeddingHandler(EmbeddingDataHandler):
             chunk_id=data_model.chunk_id,
             chunk_content=data_model.chunk_content,
             embedded_content=embedd_text(data_model.chunk_content),
-            #hybrid_vec=hybrid_embedding([data_model.chunk_content]),
+            # hybrid_vec=hybrid_embedding([data_model.chunk_content]),
             user_id=data_model.user_id,
             type=data_model.type,
         )

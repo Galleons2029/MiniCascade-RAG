@@ -7,9 +7,10 @@
 无需运行实际的agent实例。
 """
 
+
 def generate_mermaid_graph():
     """基于代码分析生成Mermaid图定义"""
-    
+
     mermaid_def = """graph TD
     %% MiniCascade-RAG Agent Flow Diagram
     
@@ -68,12 +69,13 @@ def generate_mermaid_graph():
         L4[对话生成] :::chatNode
         L5[工具调用] :::toolNode
     end"""
-    
+
     return mermaid_def
+
 
 def generate_simple_ascii():
     """生成简化的ASCII图"""
-    
+
     ascii_art = """
 MiniCascade-RAG Agent 流程图:
 
@@ -132,67 +134,66 @@ MiniCascade-RAG Agent 流程图:
 """
     return ascii_art
 
+
 def analyze_agent_components():
     """分析agent组件"""
-    
+
     components = {
         "子图模块": [
             "intent_agent.py - 意图检测子图",
-            "entity_agent.py - 实体提取子图", 
+            "entity_agent.py - 实体提取子图",
             "context_agent.py - 上下文解析子图",
             "rewrite_agent.py - 查询改写子图",
-            "rag_agent.py - RAG检索子图"
+            "rag_agent.py - RAG检索子图",
         ],
         "路由节点": [
             "route_rag - QA/写作任务路由",
             "route_search - 搜索任务路由",
-            "route_exec - 执行任务路由", 
+            "route_exec - 执行任务路由",
             "route_smalltalk - 闲聊路由",
-            "route_other - 其他任务路由"
+            "route_other - 其他任务路由",
         ],
-        "核心节点": [
-            "chat - 对话生成和管理",
-            "tool_call - 工具调用处理"
-        ],
+        "核心节点": ["chat - 对话生成和管理", "tool_call - 工具调用处理"],
         "流程特点": [
             "只有qa/write意图走完整RAG流程",
             "其他意图直接进入对话生成",
             "支持多轮工具调用",
-            "使用LangGraph状态管理"
-        ]
+            "使用LangGraph状态管理",
+        ],
     }
-    
+
     return components
+
 
 def main():
     """主函数"""
     print("🎯 MiniCascade-RAG Agent图结构静态分析")
     print("=" * 60)
-    
+
     # 生成Mermaid图
     print("\n📊 生成Mermaid图定义...")
     mermaid = generate_mermaid_graph()
-    
+
     # 保存Mermaid文件
     with open("agent_graph_static.mermaid", "w", encoding="utf-8") as f:
         f.write(mermaid)
-    
+
     print("✅ Mermaid图已保存到: agent_graph_static.mermaid")
-    
+
     # 显示ASCII图
     print("\n📋 ASCII流程图:")
     ascii_art = generate_simple_ascii()
     print(ascii_art)
-    
+
     # 分析组件
     print("\n🔍 Agent组件分析:")
     components = analyze_agent_components()
-    
+
     for category, items in components.items():
         print(f"\n{category}:")
         for i, item in enumerate(items, 1):
             print(f"  {i}. {item}")
-    
+
     # 生成分析报告
     print("\n📝 生成分析报告...")
     report = """# MiniCascade-RAG Agent架构分析报告
@@ -243,23 +244,24 @@ MiniCascade-RAG采用LangGraph框架构建的多智能体RAG系统，具有清�
 
 生成时间: {__import__('datetime').datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
 """
-    
+
     with open("agent_analysis_report.md", "w", encoding="utf-8") as f:
         f.write(report)
-    
+
     print("✅ 分析报告已保存到: agent_analysis_report.md")
-    
+
     print("\n💾 生成的文件:")
     print("  - agent_graph_static.mermaid (Mermaid图定义)")
     print("  - agent_analysis_report.md (架构分析报告)")
-    
+
     print("\n💡 使用提示:")
     print("  1. 复制Mermaid代码到 https://mermaid.live 查看交互图")
     print("  2. 查看分析报告了解详细架构说明")
     print("  3. 基于静态分析理解agent工作流程")
-    
+
     print("\n" + "=" * 60)
     print("🎉 静态分析完成!")
+
 
 if __name__ == "__main__":
     try:
@@ -269,4 +271,5 @@ if __name__ == "__main__":
     except Exception as e:
         print(f"❌ 程序异常: {e}")
         import traceback
+
         traceback.print_exc()

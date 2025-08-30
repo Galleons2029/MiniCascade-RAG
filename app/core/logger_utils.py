@@ -27,6 +27,7 @@ from app.configs import (
     agent_config as settings,
 )
 
+
 def get_logger(cls: str):
     return structlog.get_logger().bind(cls=cls)
 
@@ -188,4 +189,3 @@ logger.info(
     log_level=settings.LOG_LEVEL,
     log_format=settings.LOG_FORMAT,
 )
-
