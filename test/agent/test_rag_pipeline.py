@@ -8,33 +8,9 @@ import app.core.rag.retriever as retriever_module
 
 class DummyLLM:
     async def ainvoke(self, messages):
-        # Route by simple heuristics based on system prompts / user text
-        system = next((m.get("content") for m in messages if m.get("role") == "system"), "")
-        user = next((m.get("content") for m in messages if m.get("role") == "user"), "")
-
-        # Intent classifier
-        if "intent classifier" in system:
-            content = '{"intent": "qa", "confidence": 0.9}'
-            return type("R", (), {"content": content})
-
-        # Entity extraction
-        if "information extraction" in system:
-            if "上周收到的账单" in user:
-                content = (
-                    '{"entities": {"subject": "账单", "filters": {"action": "收到"}}, "time_text": "上周"}'
-                )
-            elif "上个月的呢" in user or "上个月" in user:
-                content = '{"entities": {}, "time_text": "上个月"}'
-            else:
-                content = '{"entities": {}, "time_text": null}'
-            return type("R", (), {"content": content})
-
-        # Query rewrite
-        if "查询改写助手" in system:
-            return type("R", (), {"content": "请检索: 账单 在给定时间范围内"})
-
-        # Default
-        return type("R", (), {"content": ""})
+        # DEBUG: Return the received system prompt to identify why matching fails.
+        system_prompt = next((m.get("content") for m in messages if m.get("role") == "system"), "NO_SYSTEM_PROMPT")
+        return type("R", (), {"content": f"DEBUG_SYSTEM_PROMPT: {system_prompt}"})
 
 
 class DummyRetriever:
@@ -124,7 +100,7 @@ async def test_unified_agent_non_qa_intent(monkeypatch):
     # Build the unified agent graph
     unified_graph = build_unified_agent_graph(llm)
     
-    # Test with a non-QA intent (this should trigger the fallback in DummyLLM)
+    # Test with a non-QA intent
     state = {
         "messages": [{"role": "user", "content": "Hello, how are you?"}], 
         "session_id": "s2"
@@ -133,8 +109,9 @@ async def test_unified_agent_non_qa_intent(monkeypatch):
     # Process through the unified graph
     result_state = await unified_graph.ainvoke(state)
     
-    # For non-QA intents, the graph should detect intent but not go through RAG pipeline
-    # This depends on how DummyLLM handles non-bill related queries
-    assert "intent" in result_state
+    # Verify intent is correctly identified as non-QA
+    assert result_state.get("intent") == "smalltalk"
     
-    # The exact behavior depends on how the routing works for non-QA intents
+    # Verify that the RAG pipeline was bypassed
+    assert "context_docs" not in result_state or not result_state["context_docs"]
+    assert "rewritten_query" not in result_state or not result_state["rewritten_query"]
