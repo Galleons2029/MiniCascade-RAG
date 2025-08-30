@@ -42,7 +42,11 @@ venv.bak/
 test_unified_agent.py
 test_intent_simple.py
 test_intent_detection.py
+debug_intent_classification.py
 *_test_temp.py
+*_debug.py
+*_temp_test.py
+test_*.py.bak
 .pytest_cache/
 .coverage
 htmlcov/
@@ -53,6 +57,18 @@ nosetests.xml
 coverage.xml
 *.cover
 .hypothesis/
+test_results/
+test_output/
+
+# 根目录下的临时测试文件（保留 test/ 目录下的正式测试）
+debug_*.py
+test_*.py
+temp_*.py
+quick_*.py
+scratch_*.py
+# 但是保留 test/ 目录下的正式测试文件
+!test/
+!test/**/*.py
 
 # 日志文件
 *.log
@@ -100,7 +116,12 @@ AGENT_MERGE_SUMMARY.md
 agent_analysis_report.md
 *_temp.md
 *_draft.md
+*_debug.md
+*_test_report.md
 temp_*
+debug_*
+test_session_*
+intent_test_*
 
 # 配置文件 (保留.example文件)
 .env
@@ -117,6 +138,21 @@ rabbitmq/
 .cache/
 cache/
 *.cache
+
+# LangSmith/LangChain 相关
+.langsmith/
+langsmith_cache/
+langchain_cache/
+*.langsmith
+.langfuse/
+
+# 调试和分析文件
+debug_output/
+analysis_results/
+performance_reports/
+*.debug
+*.analysis
+profiling_results/
 
 # Jupyter Notebook
 .ipynb_checkpoints/
@@ -142,3 +178,33 @@ Desktop.ini
 
 # Linux相关
 *~
+
+# 个人测试和实验文件
+my_test_*.py
+personal_*.py
+experiment_*.py
+playground_*.py
+scratch_*.py
+quick_test.py
+temp_script.py
+
+# 脚本输出文件
+script_output/
+run_logs/
+execution_logs/
+*.out
+*.err
+
+# 个人笔记和文档
+NOTES.md
+TODO.md
+PERSONAL_README.md
+my_notes/
+personal_docs/
+
+# IDE 和编辑器特定文件
+.vscode/settings.json
+.vscode/launch.json
+.idea/workspace.xml
+.idea/tasks.xml
+*.sublime-*

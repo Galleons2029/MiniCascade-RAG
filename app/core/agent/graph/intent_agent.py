@@ -156,18 +156,33 @@ def build_unified_agent_graph(llm) -> CompiledStateGraph:
             logger.info("llm_raw_response", content=content, user_message=latest_user)
 
             try:
-                # 处理可能包含 markdown 代码块的 JSON
+                # 处理可能包含 markdown 代码块和额外内容的 JSON
                 json_content = content
                 if isinstance(content, str):
                     # 移除 markdown 代码块标记
                     json_content = content.strip()
-                    if json_content.startswith("```json"):
-                        json_content = json_content[7:]  # 移除 ```json
-                    if json_content.startswith("```"):
-                        json_content = json_content[3:]   # 移除 ```
-                    if json_content.endswith("```"):
-                        json_content = json_content[:-3]  # 移除结尾的 ```
-                    json_content = json_content.strip()
+
+                    # 查找 JSON 代码块
+                    if "```json" in json_content:
+                        # 提取 ```json 和 ``` 之间的内容
+                        start_idx = json_content.find("```json") + 7
+                        end_idx = json_content.find("```", start_idx)
+                        if end_idx != -1:
+                            json_content = json_content[start_idx:end_idx].strip()
+                    elif json_content.startswith("```"):
+                        # 处理普通代码块
+                        json_content = json_content[3:]
+                        if json_content.endswith("```"):
+                            json_content = json_content[:-3]
+                        json_content = json_content.strip()
+
+                    # 如果还有额外内容，尝试只提取 JSON 部分
+                    if json_content and not json_content.startswith("{"):
+                        # 查找第一个 { 和最后一个 }
+                        start_brace = json_content.find("{")
+                        end_brace = json_content.rfind("}")
+                        if start_brace != -1 and end_brace != -1 and end_brace > start_brace:
+                            json_content = json_content[start_brace:end_brace+1]
 
                 data = json.loads(json_content) if json_content else {}
                 detected_intent = str(data.get("intent", detected_intent))
