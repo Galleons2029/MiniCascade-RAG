@@ -13,6 +13,7 @@ import logging
 import numpy as np
 import requests
 from app.configs import llm_config
+from openai import OpenAI
 
 # 配置日志
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -40,7 +41,6 @@ headers = {
     "Content-Type": "application/json"
 }
 
-from openai import OpenAI
 client = OpenAI(api_key=llm_config.SILICON_KEY,
                 base_url=llm_config.SILICON_BASE_URL,)
 
