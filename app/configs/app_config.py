@@ -53,6 +53,11 @@ def get_environment() -> Environment:
 class AppConfig(BaseSettings):
     model_config = SettingsConfigDict(env_file=ROOT_DIR, env_file_encoding="utf-8", extra='ignore')
 
+    # langfuse platform
+    public_key:str | None = None,
+    secret_key:str | None = None,
+    localhost:str | None = "https://cloud.langfuse.com"
+    cloud_host:str | None = "https://cloud.langfuse.com"
 
 
     ENVIRONMENT: str = get_environment()

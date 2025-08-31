@@ -151,3 +151,118 @@ class ReasoningPipeline:
         #answer = answer["choices"][0]["message"]["content"].strip()
 
         return answer
+
+
+if __name__ == "__main__":
+    # import requests
+    # import json
+    #
+    # GATEWAY_BASE_URL = "https://chat.noc.pku.edu.cn"
+    # GATEWAY_API_KEY = "LiuJiaLong_Fe71jJHfr6NO"
+    # MODEL_NAME = "deepseek-r1-250528"
+    #
+    # API_ENDPOINT = f"{GATEWAY_BASE_URL}/v1/chat/completions"
+    #
+    # headers = {
+    #     "Content-Type": "application/json",
+    #     "Authorization": f"Bearer {GATEWAY_API_KEY}"
+    # }
+    #
+    # data = {
+    #     "model": MODEL_NAME,
+    #     "messages": [{"role": "user", "content": "Who are you?"}],
+    #     "stream": True,
+    #     "temperature": 0.7
+    # }
+    #
+    # try:
+    #     response = requests.post(API_ENDPOINT, headers=headers, json=data, stream=True, timeout=300)
+    #     response.raise_for_status()
+    #     print(f"Streaming response from Gateway (Model: {MODEL_NAME}):")
+    #     for line in response.iter_lines():
+    #         if line:
+    #             decoded_line = line.decode('utf-8')
+    #             if decoded_line.startswith('data: '):
+    #                 content = decoded_line[len('data: '):].strip()
+    #                 if content == "[DONE]":
+    #                     print("\n[DONE]")
+    #                     break
+    #                 try:
+    #                     chunk = json.loads(content)
+    #                     if chunk.get("choices") and chunk["choices"][0].get("delta", {}).get("content"):
+    #                         print(chunk["choices"][0]["delta"]["content"], end="")
+    #                 except json.JSONDecodeError:
+    #                     print(f"\nRaw (non-JSON): {content}")
+    #     print("\n--- Stream Complete ---")
+    # except Exception as e:
+    #     print(f"error: {e}")
+
+    # from openai import OpenAI
+    #
+    # client = OpenAI(api_key=llm_config.SILICON_KEY,
+    #                 base_url=settings.Silicon_base_url)
+    #
+    # response = client.embeddings.create(
+    #     input="Your text string goes here",
+    #     model="BAAI/bge-m3"
+    # )
+    #
+    # print(response.data[0].embedding)
+    #
+    # def get_embedding(text, model="BAAI/bge-m3"):
+    #     text = text.replace("\n", " ")
+    #     return client.embeddings.create(input = [text], model=model).data[0].embedding
+    #
+
+    from langchain_openai import OpenAIEmbeddings
+
+    embeddings = OpenAIEmbeddings(
+        api_key=llm_config.SILICON_KEY,
+        base_url=settings.Silicon_base_url,
+        model="BAAI/bge-m3",
+    )
+
+    # Create a vector store with a sample text
+    from langchain_core.vectorstores import InMemoryVectorStore
+
+    text = "LangChain is the framework for building context-aware reasoning applications"
+
+    vectorstore = InMemoryVectorStore.from_texts(
+        [text],
+        embedding=embeddings,
+    )
+
+    # Use the vectorstore as a retriever
+    retriever = vectorstore.as_retriever()
+
+    # Retrieve the most similar text
+    retrieved_documents = retriever.invoke("What is LangChain?")
+
+    # show the retrieved document's content
+    print(retrieved_documents[0].page_content)
+
+    from langchain_core.messages import convert_to_messages
+
+    input = {
+        "messages": convert_to_messages(
+            [
+                {
+                    "role": "user",
+                    "content": "What does Lilian Weng say about types of reward hacking?",
+                },
+                {
+                    "role": "assistant",
+                    "content": "",
+                    "tool_calls": [
+                        {
+                            "id": "1",
+                            "name": "retrieve_blog_posts",
+                            "args": {"query": "types of reward hacking"},
+                        }
+                    ],
+                },
+                {"role": "tool", "content": "meow", "tool_call_id": "1"},
+            ]
+        )
+    }
+    print(input)

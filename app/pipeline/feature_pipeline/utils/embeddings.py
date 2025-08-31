@@ -40,6 +40,14 @@ headers = {
     "Content-Type": "application/json"
 }
 
+from openai import OpenAI
+client = OpenAI(api_key=llm_config.SILICON_KEY,
+                base_url=llm_config.SILICON_BASE_URL,)
+
+def get_embedding(text, model="BAAI/bge-m3"):
+    text = text.replace("\n", " ")
+    return client.embeddings.create(input = [text], model=model).data[0].embedding
+
 
 
 def embedd_text(text: str) -> np.ndarray:

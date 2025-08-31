@@ -31,7 +31,6 @@ class QueryExpansion:
         # else:
             #chain = chain.with_config({"callbacks": [QueryExpansion.opik_tracer]})
 
-        logger.debug(f"stream: {stream}")
         response = chain.invoke({"question": query})
         response = response.content
 

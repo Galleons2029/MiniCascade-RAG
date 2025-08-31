@@ -115,6 +115,36 @@ class VectorRetriever:
 
         return hits
 
+
+    def _get_relevant_documents(self,
+                       k: int,
+                       collections: list[str] = ['zsk_test1'],
+                       filter_setting: dict | None = None,
+                       to_expand_to_n_queries: int = 3,
+                       ) -> list:
+
+        generated_queries = self._query_expander.generate_response(
+            self.query, to_expand_to_n=to_expand_to_n_queries
+        )
+        logger.info(
+            "成功进行多查询检索",
+            num_queries=len(generated_queries),
+        )
+        with concurrent.futures.ThreadPoolExecutor() as executor:
+            search_tasks = [
+                executor.submit(self._search_single_query, query, collections, filter_setting, k)
+                for query in generated_queries
+            ]
+
+            hits = [
+                task.result() for task in concurrent.futures.as_completed(search_tasks)
+            ]
+            hits = lib.flatten(hits)
+
+        logger.info("All documents retrieved successfully.", num_documents=len(hits))
+
+        return hits
+
     @opik.track(name="retriever.rerank")
     def rerank(self, hits: list, keep_top_k: int) -> list[str]:
         content_list = [hit.payload["content"] for hit in hits]
