@@ -164,7 +164,10 @@ async def test_full_rag_pipeline():
 
         # Test QA intent (should go through full pipeline) - use complex query
         result = await graph.ainvoke(
-            {"messages": [{"role": "user", "content": "请详细分析上周的销售数据趋势，并比较与上个月的差异"}], "session_id": "test-session"}
+            {
+                "messages": [{"role": "user", "content": "请详细分析上周的销售数据趋势，并比较与上个月的差异"}],
+                "session_id": "test-session"
+            }
         )
 
         # Verify all pipeline steps were executed

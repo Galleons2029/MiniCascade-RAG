@@ -12,7 +12,7 @@ agent coordination.
 """
 
 import pytest
-from unittest.mock import AsyncMock, MagicMock
+from unittest.mock import MagicMock
 from langchain_core.messages import HumanMessage
 
 from app.core.agent.graph.supervisor_agent import build_supervisor_graph, SupervisorState, classify_task_simple

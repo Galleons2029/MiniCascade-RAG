@@ -86,7 +86,10 @@ async def test_unified_rag_pipeline(monkeypatch):
     unified_graph = build_unified_agent_graph(llm)
 
     # Turn 1: Test QA intent with entity extraction and RAG retrieval - use complex query
-    state = {"messages": [{"role": "user", "content": "请详细分析上周收到的账单数据，并比较与上个月的差异"}], "session_id": "s1"}
+    state = {
+        "messages": [{"role": "user", "content": "请详细分析上周收到的账单数据，并比较与上个月的差异"}],
+        "session_id": "s1"
+    }
 
     # Process through the unified graph
     result_state = await unified_graph.ainvoke(state)
