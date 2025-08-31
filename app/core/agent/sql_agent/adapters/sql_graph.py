@@ -31,7 +31,7 @@ API_KEY = "sk-wdsylcaafxprwpvyrlmpvhsrpjzgrdnftpstmpgzeknwzpsq"
 BASE_URL = settings.Silicon_base_url
 
 sql_llm = ChatOpenAI(
-    model="Qwen/Qwen3-8B",
+    model="Qwen/Qwen3-4B",
     api_key=API_KEY,
     base_url=BASE_URL,
     temperature=0.0
