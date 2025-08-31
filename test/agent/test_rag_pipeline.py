@@ -58,9 +58,7 @@ class DummyRetriever:
         self.query = query
 
     def multi_query(self, to_expand_to_n_queries: int = 3, stream: bool | None = False):
-        result = [self.query]
-        print(f"DEBUG: multi_query returning {type(result)}: {result}")
-        return result
+        return [self.query]
 
     def retrieve_top_k(
         self, k: int, collections: list[str], filter_setting: dict | None = None, generated_queries=list[str]
@@ -69,14 +67,10 @@ class DummyRetriever:
             def __init__(self, content):
                 self.payload = {"content": content}
 
-        result = [Hit("证据段落A"), Hit("证据段落B"), Hit("证据段落C")]
-        print(f"DEBUG: retrieve_top_k returning {type(result)}: {[h.payload['content'] for h in result]}")
-        return result
+        return [Hit("证据段落A"), Hit("证据段落B"), Hit("证据段落C")]
 
     def rerank(self, hits: list, keep_top_k: int) -> list[str]:
-        result = [h.payload["content"] for h in hits][:keep_top_k]
-        print(f"DEBUG: rerank returning {type(result)}: {result}")
-        return result
+        return [h.payload["content"] for h in hits][:keep_top_k]
 
 
 @pytest.mark.asyncio

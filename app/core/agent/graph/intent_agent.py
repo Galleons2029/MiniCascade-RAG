@@ -356,12 +356,19 @@ def build_unified_agent_graph(llm) -> CompiledStateGraph:
         try:
             retriever = VectorRetriever(query=query)
             generated = retriever.multi_query(to_expand_to_n_queries=3)
+            # Ensure generated is a list (in case it's a generator)
+            if hasattr(generated, '__iter__') and not isinstance(generated, (str, bytes)):
+                generated = list(generated)
+
             hits = retriever.retrieve_top_k(
                 k=rag_settings.TOP_K,
                 collections=collections,
                 generated_queries=generated,
             )
             passages = retriever.rerank(hits=hits, keep_top_k=rag_settings.KEEP_TOP_K)
+            # Ensure passages is a list (in case it's a generator)
+            if hasattr(passages, '__iter__') and not isinstance(passages, (str, bytes)):
+                passages = list(passages)
 
             # Optionally inject as system message
             system_msg = {
