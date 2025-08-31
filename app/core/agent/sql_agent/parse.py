@@ -154,7 +154,7 @@ def extract_all_comparison_from_node(node: Token) -> List[Comparison]:
     if hasattr(node, "tokens"):
         for t in node.tokens:
             comparison_list.extend(extract_all_comparison_from_node(t))
-    if type(node) == Comparison:
+    if isinstance(node, Comparison):
         comparison_list.append(node)
     return comparison_list
 
@@ -176,7 +176,7 @@ def extract_info_from_comparison(comparison_node: Comparison) -> Dict[str, Any]:
 
     returned_dict = {"left": left, "op": op.value, "right": right}
 
-    if type(left) != Identifier:
+    if isinstance(left, Identifier):
         return returned_dict
 
     table = None
@@ -184,12 +184,12 @@ def extract_info_from_comparison(comparison_node: Comparison) -> Dict[str, Any]:
         table = left.tokens[0].value.lower()
     col = left.tokens[-1].value
 
-    if type(right) == Identifier:
-        if len(right.tokens) == 1 and type(right.tokens[0]) == sqlparse.sql.Token:
+    if isinstance(right, Identifier):
+        if len(right.tokens) == 1 and isinstance(right.tokens[0], sqlparse.sql.Token):
             right_val = right.tokens[0].value
         else:
             return returned_dict
-    elif type(right) == sqlparse.sql.Token:
+    elif isinstance(right, sqlparse.sql.Token):
         right_val = right.value
     else:
         return returned_dict

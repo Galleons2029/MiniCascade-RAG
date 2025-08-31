@@ -1,13 +1,5 @@
 [
     {
-        "query": "SELECT date FROM weather WHERE max_temperature_f  >  85",
-        "question": "Give me the dates when the max temperature was higher than 85."
-    },
-    {
-        "query": "SELECT date FROM weather WHERE max_temperature_f  >  85",
-        "question": "What are the dates with a maximum temperature higher than 85?"
-    },
-    {
         "query": "SELECT name FROM station WHERE lat  <  37.5",
         "question": "What are the names of stations that have latitude lower than 37.5?"
     },
@@ -55,14 +47,7 @@
         "query": "SELECT sum(duration) ,  max(duration) FROM trip WHERE bike_id  =  636",
         "question": "What is the total and maximum duration for all trips with the bike id 636?"
     },
-    {
-        "query": "SELECT zip_code  ,  avg(mean_temperature_f) FROM weather WHERE date LIKE \"8/%\" GROUP BY zip_code",
-        "question": "For each zip code, return the average mean temperature of August there."
-    },
-    {
-        "query": "SELECT zip_code  ,  avg(mean_temperature_f) FROM weather WHERE date LIKE \"8/%\" GROUP BY zip_code",
-        "question": "For each zip code, what is the average mean temperature for all dates that start with '8'?"
-    },
+
     {
         "query": "SELECT count(DISTINCT bike_id) FROM trip",
         "question": "From the trip record, find the number of unique bikes."
@@ -111,14 +96,7 @@
         "query": "SELECT bike_id FROM trip WHERE zip_code  =  94002 GROUP BY bike_id ORDER BY COUNT(*) DESC LIMIT 1",
         "question": "What is the id of the bike that traveled the most in 94002?"
     },
-    {
-        "query": "SELECT COUNT(*) FROM weather WHERE mean_humidity  >  50 AND mean_visibility_miles  >  8",
-        "question": "How many days had both mean humidity above 50 and mean visibility above 8?"
-    },
-    {
-        "query": "SELECT COUNT(*) FROM weather WHERE mean_humidity  >  50 AND mean_visibility_miles  >  8",
-        "question": "What is the number of days that had an average humity above 50 and an average visibility above 8?"
-    },
+
     {
         "query": "SELECT T1.lat ,  T1.long ,  T1.city FROM station AS T1 JOIN trip AS T2 ON T1.id  =  T2.start_station_id ORDER BY T2.duration LIMIT 1",
         "question": "What is the latitude, longitude, city of the station from which the shortest trip started?"
@@ -143,22 +121,7 @@
         "query": "SELECT T1.name ,  T1.id FROM station AS T1 JOIN status AS T2 ON T1.id  =  T2.station_id GROUP BY T2.station_id HAVING avg(T2.bikes_available)  >  14 UNION SELECT name ,  id FROM station WHERE installation_date LIKE \"12/%\"",
         "question": "What are the names and ids of all stations that have more than 14 bikes available on average or had bikes installed in December?"
     },
-    {
-        "query": "SELECT cloud_cover FROM weather WHERE zip_code  =  94107 GROUP BY cloud_cover ORDER BY COUNT (*) DESC LIMIT 3",
-        "question": "What is the 3 most common cloud cover rates in the region of zip code 94107?"
-    },
-    {
-        "query": "SELECT cloud_cover FROM weather WHERE zip_code  =  94107 GROUP BY cloud_cover ORDER BY COUNT (*) DESC LIMIT 3",
-        "question": "What are the 3 most common cloud covers in the zip code of 94107?"
-    },
-    {
-        "query": "SELECT zip_code FROM weather GROUP BY zip_code ORDER BY avg(mean_sea_level_pressure_inches) LIMIT 1",
-        "question": "What is the zip code in which the average mean sea level pressure is the lowest?"
-    },
-    {
-        "query": "SELECT zip_code FROM weather GROUP BY zip_code ORDER BY avg(mean_sea_level_pressure_inches) LIMIT 1",
-        "question": "What is the zip code that has the lowest average mean sea level pressure?"
-    },
+
     {
         "query": "SELECT avg(bikes_available) FROM status WHERE station_id NOT IN (SELECT id FROM station WHERE city  =  \"Palo Alto\")",
         "question": "What is the average bike availability in stations that are not located in Palo Alto?"
@@ -174,38 +137,6 @@
     {
         "query": "SELECT avg(long) FROM station WHERE id NOT IN (SELECT station_id FROM status GROUP BY station_id HAVING max(bikes_available)  >  10)",
         "question": "What is the mean longitude for all stations that have never had more than 10 bikes available?"
-    },
-    {
-        "query": "SELECT date ,  zip_code FROM weather WHERE max_temperature_f  >=  80",
-        "question": "When and in what zip code did max temperature reach 80?"
-    },
-    {
-        "query": "SELECT date ,  zip_code FROM weather WHERE max_temperature_f  >=  80",
-        "question": "What zip codes have a station with a max temperature greater than or equal to 80 and when did it reach that temperature?"
-    },
-    {
-        "query": "SELECT T1.id FROM trip AS T1 JOIN weather AS T2 ON T1.zip_code  =  T2.zip_code GROUP BY T2.zip_code HAVING avg(T2.mean_temperature_f)  >  60",
-        "question": "Give me ids for all the trip that took place in a zip code area with average mean temperature above 60."
-    },
-    {
-        "query": "SELECT T1.id FROM trip AS T1 JOIN weather AS T2 ON T1.zip_code  =  T2.zip_code GROUP BY T2.zip_code HAVING avg(T2.mean_temperature_f)  >  60",
-        "question": "For each zip code, find the ids of all trips that have a higher average mean temperature above 60?"
-    },
-    {
-        "query": "SELECT zip_code , count(*) FROM weather WHERE max_wind_Speed_mph  >=  25 GROUP BY zip_code",
-        "question": "For each zip code, return how many times max wind speed reached 25?"
-    },
-    {
-        "query": "SELECT zip_code , count(*) FROM weather WHERE max_wind_Speed_mph  >=  25 GROUP BY zip_code",
-        "question": "For each zip code, how many times has the maximum wind speed reached 25 mph?"
-    },
-    {
-        "query": "SELECT date ,  zip_code FROM weather WHERE min_dew_point_f  <  (SELECT min(min_dew_point_f) FROM weather WHERE zip_code  =  94107)",
-        "question": "On which day and in which zip code was the min dew point lower than any day in zip code 94107?"
-    },
-    {
-        "query": "SELECT date ,  zip_code FROM weather WHERE min_dew_point_f  <  (SELECT min(min_dew_point_f) FROM weather WHERE zip_code  =  94107)",
-        "question": "Which days had a minimum dew point smaller than any day in zip code 94107, and in which zip codes were those measurements taken?"
     },
     {
         "query": "SELECT T1.id ,  T2.installation_date FROM trip AS T1 JOIN station AS T2 ON T1.end_station_id  =  T2.id",
@@ -232,14 +163,6 @@
         "question": "How many trips did not end in San Francisco?"
     },
     {
-        "query": "SELECT date FROM weather WHERE zip_code  =  94107 AND EVENTS != \"Fog\" AND EVENTS != \"Rain\"",
-        "question": "In zip code 94107, on which day neither Fog nor Rain was not observed?"
-    },
-    {
-        "query": "SELECT date FROM weather WHERE zip_code  =  94107 AND EVENTS != \"Fog\" AND EVENTS != \"Rain\"",
-        "question": "On which day has it neither been foggy nor rained in the zip code of 94107?"
-    },
-    {
         "query": "SELECT id FROM station WHERE lat  >  37.4 EXCEPT SELECT station_id FROM status GROUP BY station_id HAVING min(bikes_available)  <  7",
         "question": "What are the ids of stations that have latitude above 37.4 and never had bike availability below 7?"
     },
@@ -264,14 +187,6 @@
         "question": "What is the name, latitude, and city of the station that is located the furthest South?"
     },
     {
-        "query": "SELECT date ,  mean_temperature_f ,  mean_humidity FROM weather ORDER BY max_gust_speed_mph DESC LIMIT 3",
-        "question": "What are the date, mean temperature and mean humidity for the top 3 days with the largest max gust speeds?"
-    },
-    {
-        "query": "SELECT date ,  mean_temperature_f ,  mean_humidity FROM weather ORDER BY max_gust_speed_mph DESC LIMIT 3",
-        "question": "What is the date, average temperature and mean humidity for the days with the 3 largest maximum gust speeds?"
-    },
-    {
         "query": "SELECT city ,  COUNT(*) FROM station GROUP BY city HAVING COUNT(*)  >=  15",
         "question": "List the name and the number of stations for all the cities that have at least 15 stations."
     },
@@ -287,14 +202,7 @@
         "query": "SELECT start_station_id ,  start_station_name FROM trip GROUP BY start_station_name HAVING COUNT(*)  >=  200",
         "question": "What are the ids and names of all start stations that were the beginning of at least 200 trips?"
     },
-    {
-        "query": "SELECT zip_code FROM weather GROUP BY zip_code HAVING avg(mean_visibility_miles)  <  10",
-        "question": "Find the zip code in which the average mean visibility is lower than 10."
-    },
-    {
-        "query": "SELECT zip_code FROM weather GROUP BY zip_code HAVING avg(mean_visibility_miles)  <  10",
-        "question": "For each zip code, select all those that have an average mean visiblity below 10."
-    },
+
     {
         "query": "SELECT city FROM station GROUP BY city ORDER BY max(lat) DESC",
         "question": "List all the cities in a decreasing order of each city's stations' highest latitude."
@@ -303,14 +211,7 @@
         "query": "SELECT city FROM station GROUP BY city ORDER BY max(lat) DESC",
         "question": "For each city, list their names in decreasing order by their highest station latitude."
     },
-    {
-        "query": "SELECT date ,  cloud_cover FROM weather ORDER BY cloud_cover DESC LIMIT 5",
-        "question": "What are the dates that had the top 5 cloud cover rates? Also tell me the cloud cover rate."
-    },
-    {
-        "query": "SELECT date ,  cloud_cover FROM weather ORDER BY cloud_cover DESC LIMIT 5",
-        "question": "What are the dates that have the 5 highest cloud cover rates and what are the rates?"
-    },
+
     {
         "query": "SELECT id ,  duration FROM trip ORDER BY duration DESC LIMIT 3",
         "question": "What are the ids and durations of the trips with the top 3 durations?"
@@ -343,14 +244,7 @@
         "query": "SELECT DISTINCT start_station_name FROM trip WHERE duration  <  100",
         "question": "What are all the different start station names for a trip that lasted less than 100?"
     },
-    {
-        "query": "SELECT DISTINCT zip_code FROM weather EXCEPT SELECT DISTINCT zip_code FROM weather WHERE max_dew_point_f  >=  70",
-        "question": "Find all the zip codes in which the max dew point have never reached 70."
-    },
-    {
-        "query": "SELECT DISTINCT zip_code FROM weather EXCEPT SELECT DISTINCT zip_code FROM weather WHERE max_dew_point_f  >=  70",
-        "question": "What are all the different zip codes that have a maximum dew point that was always below 70?"
-    },
+
     {
         "query": "SELECT id FROM trip WHERE duration  >=  (SELECT avg(duration) FROM trip WHERE zip_code  =  94103)",
         "question": "Find the id for the trips that lasted at least as long as the average duration of trips in zip code 94103."
@@ -359,22 +253,8 @@
         "query": "SELECT id FROM trip WHERE duration  >=  (SELECT avg(duration) FROM trip WHERE zip_code  =  94103)",
         "question": "What are the ids of all trips that had a duration as long as the average trip duration in the zip code 94103?"
     },
-    {
-        "query": "SELECT date FROM weather WHERE mean_sea_level_pressure_inches BETWEEN 30.3 AND 31",
-        "question": "What are the dates in which the mean sea level pressure was between 30.3 and 31?"
-    },
-    {
-        "query": "SELECT date FROM weather WHERE mean_sea_level_pressure_inches BETWEEN 30.3 AND 31",
-        "question": "What are the dates that have an average sea level pressure between 30.3 and 31?"
-    },
-    {
-        "query": "SELECT date ,  max_temperature_f - min_temperature_f FROM weather ORDER BY max_temperature_f - min_temperature_f LIMIT 1",
-        "question": "Find the day in which the difference between the max temperature and min temperature was the smallest. Also report the difference."
-    },
-    {
-        "query": "SELECT date ,  max_temperature_f - min_temperature_f FROM weather ORDER BY max_temperature_f - min_temperature_f LIMIT 1",
-        "question": "What are the days that had the smallest temperature range, and what was that range?"
-    },
+
+
     {
         "query": "SELECT DISTINCT T1.id ,  T1.name FROM station AS T1 JOIN status AS T2 ON T1.id  =  T2.station_id WHERE T2.bikes_available  >  12",
         "question": "What are the id and name of the stations that have ever had more than 12 bikes available?"
@@ -383,14 +263,7 @@
         "query": "SELECT DISTINCT T1.id ,  T1.name FROM station AS T1 JOIN status AS T2 ON T1.id  =  T2.station_id WHERE T2.bikes_available  >  12",
         "question": "What are the different ids and names of the stations that have had more than 12 bikes available?"
     },
-    {
-        "query": "SELECT zip_code FROM weather GROUP BY zip_code HAVING avg(mean_humidity)  <  70 INTERSECT SELECT zip_code FROM trip GROUP BY zip_code HAVING count(*)  >=  100",
-        "question": "Give me the zip code where the average mean humidity is below 70 and at least 100 trips took place."
-    },
-    {
-        "query": "SELECT zip_code FROM weather GROUP BY zip_code HAVING avg(mean_humidity)  <  70 INTERSECT SELECT zip_code FROM trip GROUP BY zip_code HAVING count(*)  >=  100",
-        "question": "What are the zip codes that have an average mean humidity below 70 and had at least 100 trips come through there?"
-    },
+
     {
         "query": "SELECT name FROM station WHERE city  =  \"Palo Alto\" EXCEPT SELECT end_station_name FROM trip GROUP BY end_station_name HAVING count(*)  >  100",
         "question": "What are the names of stations that are located in Palo Alto city but have never been the ending point of trips more than 100 times?"

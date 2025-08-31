@@ -3,16 +3,21 @@
 # @Author  : zqh
 # @File    : sql_graph_verl.py
  # 配置大模型
+import json
 import os
 
 from langchain_openai import ChatOpenAI
 import re
-from typing import Any, Literal, List, TypedDict, Annotated
+from typing import Any, Literal, TypedDict, Annotated
 
 from langgraph.graph.state import CompiledStateGraph
 
 from app.configs import postgres_config
-from app.core.agent.sql_agent.adapters.sql_config import WRITE_QUERY_PROMPT, CHECK_QUERY_PROMPT, REWRITE_QUERY_PROMPT, MERGE_RESULTS_PROMPT, DECOMPOSE_QUESTION_PROMPT
+from app.core.agent.sql_agent.adapters.sql_prompt import DECOMPOSE_QUESTION_PROMPT
+from app.core.agent.sql_agent.adapters.sql_prompt import WRITE_QUERY_PROMPT
+from app.core.agent.sql_agent.adapters.sql_prompt import MERGE_RESULTS_PROMPT
+from app.core.agent.sql_agent.adapters.sql_prompt import CHECK_QUERY_PROMPT
+from app.core.agent.sql_agent.adapters.sql_prompt import REWRITE_QUERY_PROMPT
 from app.core.agent.sql_agent.exec_eval_match import eval_exec_match
 from app.core.config import settings
 from langchain_core.messages import BaseMessage, HumanMessage
@@ -52,7 +57,7 @@ class State(MessagesState):
     feedback: str
     num_turns: int
     messages: list[BaseMessage]
-    table_info: str
+    user_input_table: str
 
 
 
@@ -77,11 +82,56 @@ class SQLAgent:
         return result
 
 
-    def get_table_info(self) -> str:
-        """Get the table information in a human-readable format."""
-        table_info = self.db.get_table_info()
-        return table_info
+    # def get_table_info(self) -> str:
+    #     """Get the table information in a human-readable format."""
+    #     table_info = self.db.get_table_info()
+    #     return table_info
+    import re
 
+
+    def get_table_info(self) -> str:
+        """Parse the table information from a string and return it in a dictionary format."""
+        import psycopg2
+        # 连接到数据库
+        conn = psycopg2.connect(
+            host=pg_host,
+            port=pg_port,
+            user=pg_user,
+            password=pg_password,
+            dbname=pg_db
+        )
+
+        # 创建游标
+        cur = conn.cursor()
+
+        # 查询数据库中所有表及其列信息
+        cur.execute("""
+                    SELECT table_name, column_name
+                    FROM information_schema.columns
+                    WHERE table_schema = 'public'
+                    """)
+
+        # 获取查询结果
+        rows = cur.fetchall()
+
+        # 将表及其列信息保存到字典中
+        tables_columns = {}
+        for row in rows:
+            table_name, column_name = row
+            if table_name not in tables_columns:
+                tables_columns[table_name] = []
+            tables_columns[table_name].append(column_name)
+
+        # 关闭游标和连接
+        cur.close()
+        conn.close()
+        # 将字典转换为格式化的字符串
+        formatted_str = ""
+        for table, columns in tables_columns.items():
+            formatted_str += f"Table: {table}\n"
+            formatted_str += "Columns: " + ", ".join(columns) + "\n\n"
+
+        return formatted_str
 
     def write_query(self,state: State):
         """
@@ -93,7 +143,11 @@ class SQLAgent:
         # ---------- 1. 拆解问题 ----------
         decompose_prompt = DECOMPOSE_QUESTION_PROMPT.invoke({"input": state["question"]})
         decompose_res = self.invoke_prompt(decompose_prompt)
-        sub_questions: List[str] = [q.strip() for q in decompose_res.content.splitlines() if q.strip() and q.strip()[0].isdigit()]
+        sub_questions = [
+            q.strip()
+            for q in decompose_res.content.splitlines()
+            if q.strip() and q.strip()[0].isdigit()
+        ]
         # if not sub_questions:               # 兜底：拆不出时退化成原问题
         #     sub_questions = [state["question"]]
         # ---------- 2. 子问题逐个生成 & 执行 ----------
@@ -266,7 +320,8 @@ class SQLAgent:
             "answer": "",
             "feedback": "",
             "num_turns": 0,
-            "messages": []
+            "messages": [],
+            "user_input_table":"Activity,Addresses,Allergy_Type,Apartment_Bookings,Apartment_Buildings,Apartments,Assessment_Notes,Assets,Behavior_Incident,Detention,Faculty,Faculty_Participates_in,Fault_Log,Guests,Maintenance_Contracts,Part_Faults,Participates_in,Parts,Ref_Address_Types,Ref_Detention_Type,Ref_Incident_Type,Skills,Staff,Student,Student_Addresses,Students,Teachers,Third_Party_Companies,accelerator_compatible_browser,aircraft,airport,airport_aircraft,architect,author,battle,body_builder,book,bridge,browser,conference,death,domain,journal,keyword,match,mill,organization,people,pilot,publication,ship,station,status,web_client_accelerator"
         }
         final_state = self.graph().invoke(initial_state)  # 调用graph()方法获取编译后的图
         return {
@@ -274,16 +329,11 @@ class SQLAgent:
             "query": final_state["query"],
             "execution": final_state["execution"]
         }
-def evaluate_query(query: str, ground_truth: str, database: str, raise_on_error: bool = True) -> float:
+def evaluate_query(query: str, ground_truth: str, raise_on_error: bool = True) -> float:
 
     try:
-        #database = os.path.abspath(database)
-        if not os.path.exists(database):
-            raise FileNotFoundError(f"Database file {database} does not exist.")
-
         # Parameters following the default setting
         exec_score = eval_exec_match(
-            db=database,
             p_str=query,
             g_str=ground_truth,
             plug_value=False,
@@ -305,9 +355,17 @@ def evaluate_query(query: str, ground_truth: str, database: str, raise_on_error:
 def main():
     # 创建SQLAgent实例时传入数据库连接URI
     agent = SQLAgent(db=db_uri)
-    question = "客户的姓名、国家、客户购买过的艺术家数量。"
+    # 读取 test.json
+    with open("../test.json", "r") as f:
+        test_data = json.load(f)
+
+    # 提取所有 question
+    questions = [item["question"] for item in test_data]
+    truly_truth = [item["query"] for item in test_data]
+    question_test = questions[119]
+    ground_truth = truly_truth[119]
     try:
-        result = agent.run(question)
+        result = agent.run(question_test)
         print("\n" + "=" * 50)
         print(f"问题: {result['question']}")
         print("-" * 50)
@@ -315,20 +373,10 @@ def main():
         print("-" * 50)
         print(f"执行结果:\n{result['execution']}")
         print("=" * 50)
-        ground_truth = """SELECT artist.artistid, artist.name, COUNT(track.trackid) \
-                          FROM artist \
-                                   JOIN album ON artist.artistid = album.artistid \
-                                   JOIN track ON album.albumid = track.albumid \
-                                   JOIN genre ON track.genreid = genre.genreid \
-                          WHERE genre.name = 'Rock' \
-                          GROUP BY artist.artistid, artist.name \
-                          ORDER BY COUNT(track.trackid) DESC LIMIT 1;"""
-        db_path = "/opt/MiniCascade-RAG/app/core/agent/sql_agent/mydata.sqlite"
         # 评估查询准确性
         accuracy = evaluate_query(
             result['query'],
             ground_truth,
-            db_path,
             raise_on_error=False
         )
         print(f"查询准确度: {accuracy:.2f}")

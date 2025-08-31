@@ -1,20 +1,41 @@
 import os
 import re
-import asyncio
 import sqlite3
 import threading
 from typing import Tuple, Any, List, Set
 from itertools import product
 from collections import defaultdict
-import tqdm
 import random
+
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+
+from app.configs import postgres_config
 from .parse import get_all_preds_for_execution, remove_distinct
 from itertools import chain
+from sqlalchemy import text
 threadLock = threading.Lock()
 TIMEOUT = 60
 EXEC_TMP_DIR = "/tmp/"
+pg_host = postgres_config.PG_HOST
+pg_port = postgres_config.PG_PORT
+pg_user = postgres_config.PG_USER
+pg_password = postgres_config.PG_PASSWORD
+pg_db = postgres_config.PG_DB
+db_uri = f"postgresql+psycopg://{pg_user}:{pg_password}@{pg_host}:{pg_port}/{pg_db}"
+engine = create_engine(db_uri)
+Session = sessionmaker(bind=engine)
+session = Session()
 
 
+def exec_on_db(query: str) -> Tuple[str, Any]:
+    query = replace_cur_year(query)
+    try:
+        result = session.execute(text(query))
+        rows = result.fetchall()
+        return "result", rows
+    except Exception as e:
+        return "exception", e
 def permute_tuple(element: Tuple, perm: Tuple) -> Tuple:
     assert len(element) == len(perm)
     return tuple([element[i] for i in perm])
@@ -149,32 +170,14 @@ async def exec_on_db_(sqlite_path: str, query: str) -> Tuple[str, Any]:
         cursor.connection.close()
         return "exception", e
 
-
-async def exec_on_db(sqlite_path: str, query: str, process_id: str = "", timeout: int = TIMEOUT) -> Tuple[str, Any]:
-    try:
-        return await asyncio.wait_for(exec_on_db_(sqlite_path, query), timeout)
-    except asyncio.TimeoutError:
-        return ("exception", TimeoutError)
-    except Exception as e:
-        return ("exception", e)
-
-
 # postprocess the model predictions to avoid execution errors
 # e.g. removing spaces between ">" and "="
 def postprocess(query: str) -> str:
     query = query.replace("> =", ">=").replace("< =", "<=").replace("! =", "!=")
     return query
 
-
-# approximate whether p_str and g_str are semantically equivalent
-# db is the database path
-# we are going to evaluate whether they are equivalent in all the databases
-# that are in the same directory as db
-# 0 if denotationally equivalent
-# 1 otherwise
-# the meaning of each auxillary argument can be seen in the parser definition in evaluation.py
 def eval_exec_match(
-    db: str, p_str: str, g_str: str, plug_value: bool, keep_distinct: bool, progress_bar_for_each_datapoint: bool
+     p_str: str, g_str: str, plug_value: bool, keep_distinct: bool, progress_bar_for_each_datapoint: bool
 ) -> int:
     # post-process the prediction.
     # e.g. removing spaces between ">" and "="
@@ -183,16 +186,7 @@ def eval_exec_match(
         p_str = remove_distinct(p_str)
         g_str = remove_distinct(g_str)
 
-    # we decide whether two denotations are equivalent based on "bag semantics"
-    # https://courses.cs.washington.edu/courses/cse444/10sp/lectures/lecture16.pdf
-    # if there is order by in query, then we assume order of the rows matter
-    # order by might also be used to find the max/min instead of sorting,
-    # but in that case the result mostly only contains one row and hence order_matters does not make a difference
     order_matters = "order by" in g_str.lower()
-
-    # find all databases in the same directory
-    db_dir = os.path.dirname(db)
-    db_paths = [os.path.join(db_dir, basename) for basename in os.listdir(db_dir) if ".sqlite" in basename]
 
     preds = [p_str]
     # if plug in value (i.e. we do not consider value prediction correctness)
@@ -209,27 +203,21 @@ def eval_exec_match(
         pred_passes = 1
         # compare the gold and predicted denotations on each database in the directory
         # wrap with progress bar if required
-        if progress_bar_for_each_datapoint:
-            ranger = tqdm.tqdm(db_paths)
-        else:
-            ranger = db_paths
+        g_flag, g_denotation = exec_on_db(g_str)
+        p_flag, p_denotation = exec_on_db(pred)
 
-        for db_path in ranger:
-            g_flag, g_denotation = asyncio.run(exec_on_db(db_path, g_str))
-            p_flag, p_denotation = asyncio.run(exec_on_db(db_path, pred))
+        # we should expect the gold to be succesfully executed on the database
+        assert g_flag != "exception", "gold query %s has error" % (g_str)
 
-            # we should expect the gold to be succesfully executed on the database
-            assert g_flag != "exception", "gold query %s has error on database file %s" % (g_str, db_path)
+        # wrong if execution fails
+        if p_flag == "exception":
+            pred_passes = 0
 
-            # wrong if execution fails
-            if p_flag == "exception":
-                pred_passes = 0
-
-            # if denotations are not equivalent, the prediction must be wrong
-            elif not result_eq(g_denotation, p_denotation, order_matters=order_matters):
-                pred_passes = 0
-            if pred_passes == 0:
-                break
+        # if denotations are not equivalent, the prediction must be wrong
+        elif not result_eq(g_denotation, p_denotation, order_matters=order_matters):
+            pred_passes = 0
+        if pred_passes == 0:
+            break
 
         # the model prediction has the same denotation as the gold for all databases
         if pred_passes == 1:

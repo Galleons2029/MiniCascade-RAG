@@ -2,8 +2,9 @@
 # @Time    : 2025/8/28 15:39 
 # @Author  : zqh
 # @File    : sql_graph.py
+import json
 import re
-from typing import Any, Literal, List, TypedDict, Annotated
+from typing import Any, Literal
 
 from langchain_community.tools import QuerySQLDatabaseTool
 from langchain_community.utilities import SQLDatabase
@@ -12,9 +13,11 @@ from langgraph.constants import START, END
 from langgraph.graph import StateGraph, MessagesState
 from langchain_core.messages import BaseMessage, HumanMessage
 from app.configs import postgres_config
-from app.core.agent.sql_agent.adapters.sql_config import DECOMPOSE_QUESTION_PROMPT, WRITE_QUERY_PROMPT, \
-    MERGE_RESULTS_PROMPT, CHECK_QUERY_PROMPT, REWRITE_QUERY_PROMPT
-from app.core.agent.sql_agent.adapters.sql_graph_verl import evaluate_query
+from app.core.agent.sql_agent.adapters.sql_prompt import DECOMPOSE_QUESTION_PROMPT
+from app.core.agent.sql_agent.adapters.sql_prompt import WRITE_QUERY_PROMPT
+from app.core.agent.sql_agent.adapters.sql_prompt import MERGE_RESULTS_PROMPT
+from app.core.agent.sql_agent.adapters.sql_prompt import CHECK_QUERY_PROMPT
+from app.core.agent.sql_agent.adapters.sql_prompt import REWRITE_QUERY_PROMPT
 from app.core.config import settings
 
 pg_host = postgres_config.PG_HOST
@@ -28,7 +31,7 @@ API_KEY = "sk-wdsylcaafxprwpvyrlmpvhsrpjzgrdnftpstmpgzeknwzpsq"
 BASE_URL = settings.Silicon_base_url
 
 sql_llm = ChatOpenAI(
-    model="deepseek-ai/DeepSeek-V3.1",
+    model="Qwen/Qwen3-8B",
     api_key=API_KEY,
     base_url=BASE_URL,
     temperature=0.0
@@ -41,7 +44,7 @@ class State(MessagesState):
     feedback: str
     num_turns: int
     messages: list[BaseMessage]
-    table_info: str
+    user_input_talbe: str
 
 def parse_query(message: BaseMessage) -> str | None:
     result = None
@@ -66,7 +69,11 @@ def write_query(state: State):
     # ---------- 1. 拆解问题 ----------
     decompose_prompt = DECOMPOSE_QUESTION_PROMPT.invoke({"input": state["question"]})
     decompose_res = invoke_prompt(decompose_prompt)
-    sub_questions: List[str] = [q.strip() for q in decompose_res.content.splitlines() if q.strip() and q.strip()[0].isdigit()]
+    sub_questions = [
+        q.strip()
+        for q in decompose_res.content.splitlines()
+        if q.strip() and q.strip()[0].isdigit()
+    ]
     # if not sub_questions:               # 兜底：拆不出时退化成原问题
     #     sub_questions = [state["question"]]
     # ---------- 2. 子问题逐个生成 & 执行 ----------
@@ -231,9 +238,17 @@ sql_graph_test=builder.compile()
 
 
 if __name__ == "__main__":
-    question = "客户的姓名、国家、客户购买过的艺术家数量。"
+    # 读取 test.json
+    with open("../test.json", "r") as f:
+        test_data = json.load(f)
+
+    # 提取所有 question
+    questions = [item["question"] for item in test_data]
+    truly_truth = [item["query"] for item in test_data]
+    question_test = questions[119]
+    ground_truth = truly_truth[119]
     try:
-        result = sql_graph_test.invoke({"question": question})
+        result = sql_graph_test.invoke({"question": question_test})
         print("\n" + "=" * 50)
         print(f"问题: {result['question']}")
         print("-" * 50)
@@ -241,22 +256,5 @@ if __name__ == "__main__":
         print("-" * 50)
         print(f"执行结果:\n{result['execution']}")
         print("=" * 50)
-        ground_truth = """SELECT artist.artistid, artist.name, COUNT(track.trackid) \
-                          FROM artist \
-                                   JOIN album ON artist.artistid = album.artistid \
-                                   JOIN track ON album.albumid = track.albumid \
-                                   JOIN genre ON track.genreid = genre.genreid \
-                          WHERE genre.name = 'Rock' \
-                          GROUP BY artist.artistid, artist.name \
-                          ORDER BY COUNT(track.trackid) DESC LIMIT 1;"""
-        db_path = "/opt/MiniCascade-RAG/app/core/agent/sql_agent/mydata.sqlite"
-        # 评估查询准确性
-        accuracy = evaluate_query(
-            result['query'],
-            ground_truth,
-            db_path,
-            raise_on_error=False
-        )
-        print(f"查询准确度: {accuracy:.2f}")
     except Exception as e:
         print(f"执行出错: {str(e)}")
