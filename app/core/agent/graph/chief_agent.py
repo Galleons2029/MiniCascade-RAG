@@ -40,6 +40,7 @@ from app.configs import (
 from app.configs.agent_config import settings
 from app.core.agent.tools import tools
 from app.core.agent.graph.intent_agent import build_unified_agent_graph
+from app.core.agent.graph.supervisor_agent import build_supervisor_graph
 from app.core.logger_utils import logger
 
 # from app.core.metrics import llm_inference_duration_seconds
@@ -292,23 +293,22 @@ class LangGraphAgent:
             try:
                 graph_builder = StateGraph(GraphState)
 
-                # Use the unified agent that handles intent detection, entity extraction,
-                # context resolution, query rewrite, and RAG retrieval internally
-                unified_agent = build_unified_agent_graph(self.llm)
-                graph_builder.add_node("unified_agent", unified_agent)
+                # Use supervisor-based multi-agent system for intelligent task routing
+                supervisor_graph = build_supervisor_graph(self.llm)
+                graph_builder.add_node("supervisor", supervisor_graph)
 
-                # Main chat/tool nodes
+                # Main chat/tool nodes for final response processing
                 graph_builder.add_node("chat", self._chat)
                 graph_builder.add_node("tool_call", self._tool_call)
 
-                # The unified agent handles all RAG processing internally based on intent.
-                # After processing, we go directly to chat for final response generation.
-                graph_builder.add_edge("unified_agent", "chat")
+                # The supervisor handles task classification, routing, and agent coordination.
+                # After processing, we go to chat for final response generation.
+                graph_builder.add_edge("supervisor", "chat")
 
                 # Chat <-> Tool loop and finish at chat
                 graph_builder.add_conditional_edges("chat", self._should_continue, {"continue": "tool_call", "end": END})
                 graph_builder.add_edge("tool_call", "chat")
-                graph_builder.set_entry_point("unified_agent")
+                graph_builder.set_entry_point("supervisor")
                 graph_builder.set_finish_point("chat")
 
                 # FORCE DISABLE: Skip PostgreSQL for testing
@@ -335,10 +335,11 @@ class LangGraphAgent:
                 )
 
                 logger.info(
-                    "graph_created",
-                    graph_name=f"{settings.PROJECT_NAME} Agent",
+                    "supervisor_graph_created",
+                    graph_name=f"{settings.PROJECT_NAME} Supervisor Agent",
                     environment=settings.ENVIRONMENT.value,
                     has_checkpointer=checkpointer is not None,
+                    architecture="supervisor-based multi-agent system",
                 )
             except Exception as e:
                 logger.error("graph_creation_failed", error=str(e), environment=settings.ENVIRONMENT.value)

@@ -19,10 +19,17 @@ class RAGConfig(BaseSettings):
         extra="ignore",
     )
 
-    # Before adding any config,
-    # please consider to arrange it in the proper config group of existed or added
-    # for better readability and maintainability.
-    # Thanks for your concentration and consideration.
+    # RAG Configuration Settings
+    TOP_K: int = 10
+    KEEP_TOP_K: int = 5
+    CHUNK_SIZE: int = 1000
+    CHUNK_OVERLAP: int = 200
+    SIMILARITY_THRESHOLD: float = 0.7
+
+    # Vector Database Settings
+    VECTOR_DB_HOST: str = "localhost"
+    VECTOR_DB_PORT: int = 6333
+    COLLECTION_NAME: str = "default"
 
     @classmethod
     def settings_customise_sources(
@@ -37,3 +44,7 @@ class RAGConfig(BaseSettings):
             init_settings,
             env_settings,
         )
+
+
+# Create a global instance of RAG settings
+rag_settings = RAGConfig()

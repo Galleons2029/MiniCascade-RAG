@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # @Time   : 2025/8/17 10:12
-# @Author : Galleons
+# @Author : ggbond
 # @File   : intent_agent.py
 
 """
