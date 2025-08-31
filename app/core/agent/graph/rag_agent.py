@@ -10,11 +10,9 @@
 from typing import Annotated, Sequence, TypedDict, Literal
 
 from langchain_openai import ChatOpenAI
-from langchain import hub
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import PromptTemplate
 from langchain_core.messages import BaseMessage, HumanMessage
-from langchain.tools.retriever import create_retriever_tool
 from langchain.tools import tool
 
 from langgraph.graph.message import add_messages
@@ -22,7 +20,7 @@ from langgraph.graph import START, END, StateGraph
 from langgraph.prebuilt import tools_condition, ToolNode
 
 from app.core.rag.retriever import VectorRetriever
-from app.configs import llm_config, app_config
+from app.configs import llm_config
 from pydantic import BaseModel, Field
 from qdrant_client import QdrantClient
 from langchain_openai import OpenAIEmbeddings

@@ -23,7 +23,6 @@ import asyncio
 
 from typing_extensions import Literal
 
-from langchain.chat_models import init_chat_model
 from langchain_core.messages import (
     HumanMessage,
     BaseMessage,
@@ -36,12 +35,12 @@ from langgraph.types import Command
 
 from app.core.prompts.prompts import lead_researcher_prompt
 from app.core.agent.graph.rag_agent import rag_agent
-from app.models.states.state_multi_agent_supervisor import (
+from app.core.agent.states.state_multi_agent_supervisor import (
     SupervisorState,
     ConductResearch,
     ResearchComplete
 )
-from deep_research_from_scratch.utils import get_today_str, think_tool
+from app.core.agent.tools.supervisor_tools import get_today_str, think_tool
 
 def get_notes_from_tool_calls(messages: list[BaseMessage]) -> list[str]:
     """Extract research notes from ToolMessage objects in supervisor message history.
@@ -195,7 +194,8 @@ async def supervisor_tools(state: SupervisorState) -> Command[Literal["superviso
             if conduct_research_calls:
                 # Launch parallel research agents
                 coros = [
-                    researcher_agent.ainvoke({
+                    # 并行调用
+                    rag_agent.ainvoke({
                         "researcher_messages": [
                             HumanMessage(content=tool_call["args"]["research_topic"])
                         ],
