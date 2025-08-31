@@ -14,7 +14,7 @@ from typing import List, Dict, Any, Optional
 from pydantic import BaseModel, Field
 from datetime import datetime
 
-from langchain_core.messages import BaseMessage, HumanMessage, AIMessage, SystemMessage
+from langchain_core.messages import HumanMessage, AIMessage
 from langgraph.graph import StateGraph, END, START
 from langgraph.graph.state import CompiledStateGraph
 
@@ -71,7 +71,8 @@ def build_research_agent_graph(llm) -> CompiledStateGraph:
         if not latest_user:
             return {"research_status": "failed"}
         
-        system_prompt = """You are a research planning expert. Given a research request, create a comprehensive research plan.
+        system_prompt = """You are a research planning expert. Given a research request, create a \
+comprehensive research plan.
 
 Your task is to:
 1. Analyze the research request and identify key aspects to investigate
@@ -203,7 +204,8 @@ Research approaches:
         context = "\n\n".join(all_passages[:10])  # Limit context size
         original_request = _get_latest_user_message(state.messages)
         
-        system_prompt = """You are a research analyst. Analyze the gathered research information and provide comprehensive findings.
+        system_prompt = """You are a research analyst. Analyze the gathered research information and \
+provide comprehensive findings.
 
 Your task is to:
 1. Synthesize the information from multiple sources

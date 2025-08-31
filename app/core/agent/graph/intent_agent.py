@@ -89,7 +89,8 @@ def _evaluate_task_complexity(user_input: str, intent: str, intent_confidence: f
         complexity_score += 0.1
 
     # Count sentences
-    sentence_count = user_input.count('。') + user_input.count('？') + user_input.count('！') + user_input.count('.') + user_input.count('?') + user_input.count('!')
+    sentence_count = (user_input.count('。') + user_input.count('？') + user_input.count('！') +
+                     user_input.count('.') + user_input.count('?') + user_input.count('!'))
     if sentence_count > 2:
         complexity_score += 0.1
 
@@ -151,7 +152,9 @@ def _evaluate_task_complexity(user_input: str, intent: str, intent_confidence: f
     return complexity_score
 
 
-async def _evaluate_complexity_and_route(state: GraphState) -> Literal["direct_response", "rag_pipeline", "supervisor_pipeline"]:
+async def _evaluate_complexity_and_route(
+    state: GraphState
+) -> Literal["direct_response", "rag_pipeline", "supervisor_pipeline"]:
     """Evaluate task complexity and route to appropriate pipeline."""
     intent = (state.intent or "other").lower()
     intent_confidence = state.intent_confidence or 0.5

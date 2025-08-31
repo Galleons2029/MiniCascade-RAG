@@ -11,11 +11,9 @@ between different agents. It provides core task classification and routing logic
 without complex multi-agent orchestration.
 """
 
-from typing import List, Optional, Dict, Any
-from pydantic import BaseModel, Field
-from datetime import datetime
+from typing import Optional
 
-from langchain_core.messages import BaseMessage, HumanMessage, AIMessage
+from langchain_core.messages import HumanMessage
 from langgraph.graph import StateGraph, END, START
 from langgraph.graph.state import CompiledStateGraph
 from langgraph.types import Command
@@ -95,7 +93,6 @@ def build_supervisor_graph(llm) -> CompiledStateGraph:
         """Step 2: Simple task routing - currently only routes to unified_agent."""
         task_type = state.task_type or "simple_qa"
         task_confidence = state.task_confidence or 0.5
-        latest_user = _get_latest_user_message(state.messages)
 
         # For now, always route to unified_agent
         # This can be extended later to route to other agents

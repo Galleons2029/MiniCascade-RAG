@@ -15,19 +15,17 @@ import asyncio
 import sys
 import os
 from pathlib import Path
+from langchain_openai import ChatOpenAI
+from langchain_core.messages import HumanMessage
 
 # Add the project root to Python path
 project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 
-from langchain_openai import ChatOpenAI
-from langchain_core.messages import HumanMessage
-
-from app.configs import llm_config
-from app.configs.agent_config import settings
-from app.core.agent.graph.supervisor_agent import build_supervisor_graph, SupervisorState, classify_task_simple
-from app.core.agent.supervisor_config import TASK_CLASSIFICATION_KEYWORDS
-from app.core.logger_utils import logger
+from app.configs import llm_config  # noqa: E402
+from app.configs.agent_config import settings  # noqa: E402
+from app.core.agent.graph.supervisor_agent import build_supervisor_graph, SupervisorState, classify_task_simple  # noqa: E402
+from app.core.logger_utils import logger  # noqa: E402
 
 
 class LightweightSupervisorDemo:
@@ -70,7 +68,7 @@ class LightweightSupervisorDemo:
             task_type, confidence = classify_task_simple(query)
 
             print(f"   🔍 Classification: {task_type} (confidence: {confidence:.2f})")
-            print(f"   🎯 Will route to: unified_agent")
+            print("   🎯 Will route to: unified_agent")
 
     async def demo_full_execution(self):
         """Demonstrate full supervisor execution."""
@@ -172,11 +170,11 @@ class LightweightSupervisorDemo:
                     
                     # Check if routing matches expectation
                     if actual_agent == case['expected_agent']:
-                        print(f"   ✅ Routing: CORRECT")
+                        print("   ✅ Routing: CORRECT")
                     else:
                         print(f"   ⚠️  Routing: UNEXPECTED (expected {case['expected_agent']})")
                 else:
-                    print(f"   ❌ No agent assigned")
+                    print("   ❌ No agent assigned")
                     
             except Exception as e:
                 print(f"   ❌ Error: {str(e)}")
@@ -188,7 +186,8 @@ class LightweightSupervisorDemo:
         
         # Step 1: Classify task
         latest_user = self._get_latest_user_message(state.messages)
-        keyword_scores = classify_task_by_keywords(latest_user)
+        task_type, confidence = classify_task_simple(latest_user)
+        keyword_scores = {task_type: confidence}
         best_type = max(keyword_scores.items(), key=lambda x: x[1])
         
         # Step 2: Route task (simplified)
@@ -231,48 +230,7 @@ class LightweightSupervisorDemo:
                 return m.content
         return ""
     
-    async def demo_full_execution(self):
-        """Demonstrate full supervisor execution with a simple query."""
-        print("\n" + "="*60)
-        print("🎬 FULL EXECUTION DEMO")
-        print("="*60)
-        
-        query = "什么是RAG系统的核心组件？"
-        print(f"📝 Query: {query}")
-        
-        state = SupervisorState(
-            messages=[HumanMessage(content=query)],
-            session_id="demo-full-execution"
-        )
-        
-        try:
-            print("🚀 Starting supervisor execution...")
-            result = await self.supervisor_graph.ainvoke(state)
-            
-            print("✅ Execution completed!")
-            print(f"📊 Result keys: {list(result.keys())}")
-            
-            # Display results
-            if "agent_results" in result:
-                agent_results = result["agent_results"]
-                print(f"🤖 Agent Results: {len(agent_results)} results")
-                for i, agent_result in enumerate(agent_results):
-                    agent_name = agent_result.get("agent_name", "unknown")
-                    status = agent_result.get("status", "unknown")
-                    print(f"   Agent {i+1}: {agent_name} - {status}")
-            
-            if "messages" in result and result["messages"]:
-                final_messages = result["messages"]
-                print(f"💬 Final Messages: {len(final_messages)} messages")
-                for msg in final_messages[-2:]:  # Show last 2 messages
-                    if hasattr(msg, 'content'):
-                        content_preview = msg.content[:100] + "..." if len(msg.content) > 100 else msg.content
-                        print(f"   📄 {type(msg).__name__}: {content_preview}")
-                        
-        except Exception as e:
-            print(f"❌ Execution failed: {str(e)}")
-            logger.error("demo_execution_failed", error=str(e))
-    
+
     async def run_all_demos(self):
         """Run all demonstration scenarios."""
         print("🎭 SUPERVISOR AGENT SYSTEM DEMO")

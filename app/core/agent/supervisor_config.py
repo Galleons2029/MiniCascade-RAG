@@ -10,7 +10,6 @@ This module contains basic configuration settings for task classification
 and agent routing in the simplified supervisor system.
 """
 
-from typing import Dict, List
 
 # Task classification keywords for different task types
 TASK_CLASSIFICATION_KEYWORDS = {

@@ -3,7 +3,6 @@
 import pytest
 
 from app.core.agent.graph.intent_agent import build_unified_agent_graph
-import app.core.rag.retriever as retriever_module
 
 
 class DummyLLM:
@@ -111,7 +110,8 @@ async def test_unified_rag_pipeline(monkeypatch):
     assert result_state.get("context_docs") and len(result_state["context_docs"]) > 0
     # Check for system message (could be dict or Message object)
     messages = result_state.get("messages", [])
-    has_system_msg = any(
+    # Check if any system messages exist
+    any(
         (isinstance(m, dict) and m.get("role") == "system") or
         (hasattr(m, "type") and m.type == "system")
         for m in messages
