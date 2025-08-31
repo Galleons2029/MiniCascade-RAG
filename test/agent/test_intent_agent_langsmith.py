@@ -229,11 +229,11 @@ async def test_rag_pipeline_tracing():
 
         graph = build_unified_agent_graph(llm)
 
-        # 运行完整的 RAG 流程
+        # 运行完整的 RAG 流程 - use complex query to ensure RAG pipeline
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S_%f")[:-3]
         result = await graph.ainvoke(
             {
-                "messages": [{"role": "user", "content": "上周的销售数据分析报告"}],
+                "messages": [{"role": "user", "content": "请详细分析上周的销售数据趋势，并比较与同期历史数据的差异"}],
                 "session_id": f"rag-pipeline-test-{timestamp}",
             }
         )
