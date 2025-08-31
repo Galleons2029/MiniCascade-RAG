@@ -55,14 +55,24 @@ class EnhancedDummyLLM:
 
     def _classify_intent(self, user_content):
         """Classify intent based on user content"""
-        if any(k in user_content for k in ["搜索", "search", "找一下"]):
-            content = '{"intent": "search", "confidence": 0.9}'
-        elif any(k in user_content for k in ["执行", "run", "执行任务", "清理"]):
-            content = '{"intent": "exec", "confidence": 0.85}'
-        elif any(k in user_content for k in ["写", "总结", "summarize", "写作", "write"]):
-            content = '{"intent": "write", "confidence": 0.8}'
-        elif any(k in user_content for k in ["你好", "hello", "hi", "how are you"]):
+        # Extract actual user message from the prompt
+        import re
+        match = re.search(r'\*\*当前用户消息\*\*:\s*"([^"]+)"', user_content)
+        if match:
+            actual_message = match.group(1).lower()
+        else:
+            actual_message = user_content.lower()
+
+        # Check for smalltalk first (most specific)
+        if any(k in actual_message for k in ["你好", "hello", "hi", "how are you"]):
             content = '{"intent": "smalltalk", "confidence": 0.7}'
+        # Check for write intent
+        elif any(k in actual_message for k in ["写", "总结", "summarize", "写作", "write"]):
+            content = '{"intent": "write", "confidence": 0.8}'
+        elif any(k in actual_message for k in ["搜索", "search", "找一下"]):
+            content = '{"intent": "search", "confidence": 0.9}'
+        elif any(k in actual_message for k in ["执行", "run", "执行任务", "清理"]):
+            content = '{"intent": "exec", "confidence": 0.85}'
         else:
             content = '{"intent": "qa", "confidence": 0.75}'
 
