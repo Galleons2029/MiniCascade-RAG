@@ -180,11 +180,8 @@ REWRITTEN QUERY
 {execution}
 ```
 
-## Feedback ##
 
-{feedback}
-
-Please rewrite the query to address the feedback.""",
+Please rewrite the query.""",
         ),
     ]
 )
