@@ -33,13 +33,14 @@ class DummyLLM:
 
         # Entity extraction
         elif "information extraction" in system_content or "信息提取" in system_content:
+            import json
             entities = {}
             time_text = None
             if "账单" in user_content:
                 entities["subject"] = "账单"
             if "上周" in user_content:
                 time_text = "上周"
-            content = f'{{"entities": {entities}, "time_text": "{time_text}"}}'
+            content = json.dumps({"entities": entities, "time_text": time_text}, ensure_ascii=False)
 
         # Query rewrite
         elif "查询改写" in system_content:
@@ -57,7 +58,9 @@ class DummyRetriever:
         self.query = query
 
     def multi_query(self, to_expand_to_n_queries: int = 3, stream: bool | None = False):
-        return [self.query]
+        result = [self.query]
+        print(f"DEBUG: multi_query returning {type(result)}: {result}")
+        return result
 
     def retrieve_top_k(
         self, k: int, collections: list[str], filter_setting: dict | None = None, generated_queries=list[str]
@@ -66,10 +69,14 @@ class DummyRetriever:
             def __init__(self, content):
                 self.payload = {"content": content}
 
-        return [Hit("证据段落A"), Hit("证据段落B"), Hit("证据段落C")]
+        result = [Hit("证据段落A"), Hit("证据段落B"), Hit("证据段落C")]
+        print(f"DEBUG: retrieve_top_k returning {type(result)}: {[h.payload['content'] for h in result]}")
+        return result
 
     def rerank(self, hits: list, keep_top_k: int) -> list[str]:
-        return [h.payload["content"] for h in hits][:keep_top_k]
+        result = [h.payload["content"] for h in hits][:keep_top_k]
+        print(f"DEBUG: rerank returning {type(result)}: {result}")
+        return result
 
 
 @pytest.mark.asyncio
