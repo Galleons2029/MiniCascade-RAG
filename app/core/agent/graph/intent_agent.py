@@ -68,6 +68,136 @@ def _get_latest_user_message(messages) -> Optional[str]:
     return None
 
 
+def _evaluate_task_complexity(user_input: str, intent: str, intent_confidence: float) -> float:
+    """Evaluate task complexity based on multiple factors.
+
+    Args:
+        user_input: User's input text
+        intent: Detected intent
+        intent_confidence: Confidence of intent detection
+
+    Returns:
+        float: Complexity score (0.0 - 1.0)
+    """
+    complexity_score = 0.0
+
+    # Factor 1: Text length and structure (0.0 - 0.3)
+    text_length = len(user_input)
+    if text_length > 100:
+        complexity_score += 0.2
+    elif text_length > 50:
+        complexity_score += 0.1
+
+    # Count sentences
+    sentence_count = user_input.count('。') + user_input.count('？') + user_input.count('！') + user_input.count('.') + user_input.count('?') + user_input.count('!')
+    if sentence_count > 2:
+        complexity_score += 0.1
+
+    # Factor 2: Complexity keywords (0.0 - 0.4)
+    high_complexity_keywords = [
+        # 中文复杂关键词
+        "分析", "比较", "评估", "研究", "调查", "综合", "详细", "深入", "全面", "系统",
+        "优缺点", "利弊", "对比", "差异", "相似", "关联", "影响", "原因", "结果", "趋势",
+        "策略", "方案", "建议", "解决方案", "实施", "步骤", "流程", "工作流",
+        # 英文复杂关键词
+        "analyze", "compare", "evaluate", "research", "investigate", "comprehensive", "detailed",
+        "in-depth", "systematic", "pros and cons", "advantages", "disadvantages", "differences",
+        "similarities", "correlations", "impact", "causes", "effects", "trends", "strategy",
+        "solution", "implementation", "workflow", "process"
+    ]
+
+    multi_step_keywords = [
+        "步骤", "流程", "工作流", "如何", "怎么", "教程", "指南", "方法", "过程",
+        "首先", "然后", "接下来", "最后", "第一", "第二", "第三",
+        "step", "process", "workflow", "how to", "tutorial", "guide", "method",
+        "first", "then", "next", "finally", "step by step"
+    ]
+
+    user_lower = user_input.lower()
+
+    # Check for high complexity keywords
+    high_complexity_count = sum(1 for keyword in high_complexity_keywords if keyword in user_lower)
+    complexity_score += min(high_complexity_count * 0.1, 0.3)
+
+    # Check for multi-step keywords
+    multi_step_count = sum(1 for keyword in multi_step_keywords if keyword in user_lower)
+    complexity_score += min(multi_step_count * 0.1, 0.2)
+
+    # Factor 3: Intent-based complexity (0.0 - 0.2)
+    if intent == "write":
+        complexity_score += 0.1  # Writing tasks are generally more complex
+    elif intent == "search":
+        complexity_score += 0.05  # Search tasks can be complex
+
+    # Factor 4: Intent confidence (0.0 - 0.1)
+    # Lower confidence might indicate more complex/ambiguous requests
+    if intent_confidence < 0.7:
+        complexity_score += 0.1
+    elif intent_confidence < 0.8:
+        complexity_score += 0.05
+
+    # Factor 5: Question complexity patterns (0.0 - 0.2)
+    complex_patterns = [
+        "为什么", "怎么样", "如何实现", "什么原因", "有什么区别", "哪个更好",
+        "why", "how does", "what causes", "what's the difference", "which is better"
+    ]
+
+    pattern_count = sum(1 for pattern in complex_patterns if pattern in user_lower)
+    complexity_score += min(pattern_count * 0.1, 0.2)
+
+    # Normalize to 0.0 - 1.0 range
+    complexity_score = min(complexity_score, 1.0)
+
+    return complexity_score
+
+
+async def _evaluate_complexity_and_route(state: GraphState) -> Literal["direct_response", "rag_pipeline", "supervisor_pipeline"]:
+    """Evaluate task complexity and route to appropriate pipeline."""
+    intent = (state.intent or "other").lower()
+    intent_confidence = state.intent_confidence or 0.5
+    latest_user = _get_latest_user_message(state.messages)
+
+    if not latest_user:
+        return "direct_response"
+
+    # Step 1: Check if it's a simple intent that doesn't need RAG
+    if intent in ("smalltalk", "exec"):
+        logger.info("routing_decision",
+                   route="direct_response",
+                   reason="Simple intent, no RAG needed",
+                   intent=intent)
+        return "direct_response"
+
+    # Step 2: Evaluate complexity for qa/write/search intents
+    complexity_score = _evaluate_task_complexity(latest_user, intent, intent_confidence)
+
+    # Step 3: Route based on complexity
+    if complexity_score < 0.3:
+        # Simple questions - direct response without RAG
+        logger.info("routing_decision",
+                   route="direct_response",
+                   reason="Low complexity, direct response",
+                   complexity_score=complexity_score,
+                   intent=intent)
+        return "direct_response"
+    elif complexity_score < 0.7:
+        # Medium complexity - use RAG
+        logger.info("routing_decision",
+                   route="rag_pipeline",
+                   reason="Medium complexity, use RAG",
+                   complexity_score=complexity_score,
+                   intent=intent)
+        return "rag_pipeline"
+    else:
+        # High complexity - use supervisor for advanced processing
+        logger.info("routing_decision",
+                   route="supervisor_pipeline",
+                   reason="High complexity, use supervisor",
+                   complexity_score=complexity_score,
+                   intent=intent)
+        return "supervisor_pipeline"
+
+
 def build_unified_agent_graph(llm) -> CompiledStateGraph:
     """Build a unified agent graph that combines all RAG processing steps.
 
@@ -382,14 +512,37 @@ def build_unified_agent_graph(llm) -> CompiledStateGraph:
             logger.warning("rag_retrieval_failed", error=str(e))
             return {}
 
-    async def _route_by_intent(state: GraphState) -> Literal["rag_pipeline", "direct_response"]:
-        """Route based on detected intent."""
-        intent = (state.intent or "other").lower()
-        if intent in ("qa", "write"):
-            return "rag_pipeline"
-        else:
-            # For search, exec, smalltalk, other - skip RAG pipeline
-            return "direct_response"
+    async def _handle_supervisor_pipeline(state: GraphState) -> dict:
+        """Step 6: Handle complex tasks using supervisor agent."""
+        try:
+            # Import supervisor graph builder
+            from app.core.agent.graph.supervisor_agent import build_supervisor_graph
+            
+            # Build and execute supervisor graph
+            supervisor_graph = build_supervisor_graph(llm)
+            
+            result = await supervisor_graph.ainvoke({
+                "messages": state.messages,
+                "session_id": state.session_id,
+                "intent": state.intent,
+                "intent_confidence": state.intent_confidence
+            })
+            
+            logger.info("supervisor_pipeline_completed", 
+                       intent=state.intent,
+                       session_id=state.session_id)
+            
+            return {
+                "messages": result.get("messages", []),
+                "task_type": result.get("task_type"),
+                "assigned_agent": result.get("assigned_agent"),
+                "supervisor_reasoning": result.get("supervisor_reasoning")
+            }
+            
+        except Exception as e:
+            logger.error("supervisor_pipeline_failed", error=str(e))
+            # Fallback to direct response
+            return {"messages": []}
 
     # Build the graph
     graph = StateGraph(GraphState)
@@ -400,17 +553,19 @@ def build_unified_agent_graph(llm) -> CompiledStateGraph:
     graph.add_node("resolve_context", _resolve_context)
     graph.add_node("rewrite_query", _rewrite_query)
     graph.add_node("retrieve_documents", _retrieve_documents)
+    graph.add_node("handle_supervisor_pipeline", _handle_supervisor_pipeline)
 
     # Set entry point
     graph.set_entry_point("detect_intent")
 
-    # Add conditional routing after intent detection
+    # Add conditional routing after intent detection with complexity evaluation
     graph.add_conditional_edges(
         "detect_intent",
-        _route_by_intent,
+        _evaluate_complexity_and_route,
         {
             "rag_pipeline": "extract_entities",
             "direct_response": END,
+            "supervisor_pipeline": "handle_supervisor_pipeline",
         },
     )
 
@@ -419,6 +574,9 @@ def build_unified_agent_graph(llm) -> CompiledStateGraph:
     graph.add_edge("resolve_context", "rewrite_query")
     graph.add_edge("rewrite_query", "retrieve_documents")
     graph.add_edge("retrieve_documents", END)
+    
+    # For supervisor pipeline: intent -> supervisor -> END
+    graph.add_edge("handle_supervisor_pipeline", END)
 
     return graph.compile(name="UnifiedAgentGraph")
 
