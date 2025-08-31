@@ -12,7 +12,7 @@ from langgraph.constants import START, END
 from langgraph.graph import StateGraph, MessagesState
 from langchain_core.messages import BaseMessage, HumanMessage
 from app.configs import postgres_config
-from app.core.agent.sql_agent.adapters.sql_config import DECOMPOSE_QUESTION_PROMPT, WRITE_QUERY_PROMPT, \
+from app.core.agent.sql_agent.graph.sql_prompt import DECOMPOSE_QUESTION_PROMPT, WRITE_QUERY_PROMPT, \
     MERGE_RESULTS_PROMPT, CHECK_QUERY_PROMPT, REWRITE_QUERY_PROMPT
 from app.core.config import settings
 
@@ -27,7 +27,7 @@ API_KEY = "sk-wdsylcaafxprwpvyrlmpvhsrpjzgrdnftpstmpgzeknwzpsq"
 BASE_URL = settings.Silicon_base_url
 num_turns = 1
 sql_llm = ChatOpenAI(
-    model="deepseek-ai/DeepSeek-V3.1",
+    model="Qwen/Qwen3-8B",
     api_key=API_KEY,
     base_url=BASE_URL,
     temperature=0.0
