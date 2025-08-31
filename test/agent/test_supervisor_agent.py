@@ -24,71 +24,28 @@ class MockLLM:
     
     def __init__(self):
         self.call_count = 0
-        self.responses = {}
+    
+    async def ainvoke(self, messages):
+        """Mock LLM ainvoke method."""
+        self.call_count += 1
+        
+        # Extract user content
+        user_content = ""
+        for msg in messages:
+            if isinstance(msg, dict) and msg.get("role") == "user":
+                user_content = msg.get("content", "")
+                break
+            elif hasattr(msg, 'content'):
+                user_content = msg.content
+                break
+        
+        # Mock response for unified agent
+        from types import SimpleNamespace
+        return SimpleNamespace(content=f"Mock response to: {user_content}")
     
     def with_structured_output(self, output_class):
-        """Mock structured output binding."""
-        mock_llm = AsyncMock()
-        
-        async def mock_ainvoke(messages):
-            self.call_count += 1
-            
-            # Extract the user content for routing decisions
-            user_content = ""
-            for msg in messages:
-                if isinstance(msg, dict) and msg.get("role") == "user":
-                    user_content = msg.get("content", "").lower()
-                    break
-            
-            # Mock responses based on output class and content
-            if output_class.__name__ == "TaskType":
-                if "研究" in user_content or "research" in user_content:
-                    return output_class(
-                        task_type="complex_research",
-                        confidence=0.85,
-                        reasoning="Contains research keywords"
-                    )
-                elif "步骤" in user_content or "step" in user_content:
-                    return output_class(
-                        task_type="multi_step",
-                        confidence=0.8,
-                        reasoning="Contains step-by-step keywords"
-                    )
-                else:
-                    return output_class(
-                        task_type="simple_qa",
-                        confidence=0.9,
-                        reasoning="Simple question format"
-                    )
-            
-            elif output_class.__name__ == "SupervisorDecision":
-                if "research" in user_content or "研究" in user_content:
-                    return output_class(
-                        assignments=[
-                            output_class.__annotations__["assignments"].__args__[0](
-                                agent_name="unified_agent",
-                                task_description="Conduct research on the topic",
-                                priority=1
-                            )
-                        ],
-                        execution_mode="sequential",
-                        reasoning="Research task assigned to unified agent"
-                    )
-                else:
-                    return output_class(
-                        assignments=[
-                            output_class.__annotations__["assignments"].__args__[0](
-                                agent_name="unified_agent",
-                                task_description="Answer the question",
-                                priority=1
-                            )
-                        ],
-                        execution_mode="sequential",
-                        reasoning="Simple QA task assigned to unified agent"
-                    )
-        
-        mock_llm.ainvoke = mock_ainvoke
-        return mock_llm
+        """Mock structured output binding - returns self since supervisor uses simple classification."""
+        return self
 
 
 @pytest.fixture
@@ -177,10 +134,10 @@ class TestSupervisorGraph:
         result = await graph.ainvoke(sample_state)
         
         # Should have task classification
-        assert "task_type" in result or result.get("agent_results")
+        assert "task_type" in result or result.get("task_type")
         
         # Should have routed to an agent
-        assert "agent_assignments" in result or result.get("agent_results")
+        assert "assigned_agent" in result or result.get("assigned_agent")
     
     async def test_research_task_routing(self, mock_llm):
         """Test routing for research tasks."""
